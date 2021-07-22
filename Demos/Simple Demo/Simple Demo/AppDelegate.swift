@@ -58,7 +58,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 }
 
 class Mountain {
-	let identifier = DSFQuickActionBar.CompletionIdentity()
+	let identifier = DSFQuickActionBar.ItemIdentifier()
 	let name: String
 	public init(name: String) {
 		self.name = name
@@ -69,7 +69,7 @@ class Mountain {
 
 extension AppDelegate: DSFQuickActionBarDelegate {
 
-	func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTerm term: String) -> [DSFQuickActionBar.CompletionIdentity] {
+	func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTerm term: String) -> [DSFQuickActionBar.ItemIdentifier] {
 
 //		// Display ALL items when there's no search term
 //		if term.isEmpty {
@@ -82,16 +82,19 @@ extension AppDelegate: DSFQuickActionBarDelegate {
 			return []
 		}
 
+		/// Return the item identifiers for the matching mountains
 		let matches = allMountains
 			.filter { $0.name.localizedCaseInsensitiveContains(term) }
 			.sorted(by: { a, b in a.name < b.name } )
 			.prefix(100)
 			.map { $0.identifier }
 
-		return [DSFQuickActionBar.CompletionIdentity](matches)
+		return [DSFQuickActionBar.ItemIdentifier](matches)
 	}
 
-	func quickActionBar(_ quickActionBar: DSFQuickActionBar, viewForIdentifier identifier: DSFQuickActionBar.CompletionIdentity) -> NSView? {
+	func quickActionBar(_ quickActionBar: DSFQuickActionBar, viewForIdentifier identifier: DSFQuickActionBar.ItemIdentifier) -> NSView? {
+
+		// Find the item with the specified item identifier
 		guard let mountain = allMountains.filter({ $0.identifier == identifier }).first else {
 			return nil
 		}
@@ -117,7 +120,7 @@ extension AppDelegate: DSFQuickActionBarDelegate {
 		return item
 	}
 	
-	func quickActionBar(_ quickActionBar: DSFQuickActionBar, didSelectIdentifier item: DSFQuickActionBar.CompletionIdentity) {
+	func quickActionBar(_ quickActionBar: DSFQuickActionBar, didSelectIdentifier item: DSFQuickActionBar.ItemIdentifier) {
 		guard let mountain = allMountains.filter({ $0.identifier == item }).first else {
 			fatalError()
 		}

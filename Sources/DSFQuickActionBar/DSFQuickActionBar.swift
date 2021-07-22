@@ -29,6 +29,11 @@ import AppKit
 
 public class DSFQuickActionBar {
 
+	/// A unique identifier for a actionable item.
+	///
+	/// Each available item to be presented in the results must be able to be identified using an ItemIdentifier
+	public typealias ItemIdentifier = UUID
+
 	/// The default width for the quick action bar
 	public static let DefaultWidth: CGFloat = 500.0
 

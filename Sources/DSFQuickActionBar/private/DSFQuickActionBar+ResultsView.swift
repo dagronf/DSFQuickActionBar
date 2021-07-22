@@ -35,7 +35,7 @@ extension DSFQuickActionBar {
 
 		var quickActionBar: DSFQuickActionBar!
 
-		var identifiers: [DSFQuickActionBar.CompletionIdentity] = [] {
+		var identifiers: [DSFQuickActionBar.ItemIdentifier] = [] {
 			didSet {
 				self.isHidden = identifiers.count == 0
 				self.tableView.reloadData()
@@ -120,8 +120,8 @@ extension DSFQuickActionBar.ResultsView: NSTableViewDelegate, NSTableViewDataSou
 
 	func tableView(_: NSTableView, viewFor _: NSTableColumn?, row: Int) -> NSView? {
 		// Swift.print("view for \(row)")
-		let completionIdentity = self.identifiers[row]
-		return self.quickActionBar.delegate?.quickActionBar(self.quickActionBar, viewForIdentifier: completionIdentity)
+		let itemIdentifier = self.identifiers[row]
+		return self.quickActionBar.delegate?.quickActionBar(self.quickActionBar, viewForIdentifier: itemIdentifier)
 	}
 }
 
@@ -138,8 +138,8 @@ extension DSFQuickActionBar.ResultsView {
 			return
 		}
 
-		let completionIdentity = self.identifiers[selectedRow]
-		self.quickActionBar.delegate?.quickActionBar(self.quickActionBar, didSelectIdentifier: completionIdentity)
+		let itemIdentifier = self.identifiers[selectedRow]
+		self.quickActionBar.delegate?.quickActionBar(self.quickActionBar, didSelectIdentifier: itemIdentifier)
 
 		self.window?.resignKey()
 	}

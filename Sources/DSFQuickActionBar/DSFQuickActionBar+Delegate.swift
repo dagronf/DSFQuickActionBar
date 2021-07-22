@@ -1,5 +1,5 @@
 //
-//  DSFQuickActionBarDelegate.swift
+//  DSFQuickActionBar+Delegate.swift
 //  DSFQuickActionBar
 //
 //  Created by Darren Ford on 22/7/21
@@ -30,13 +30,13 @@ import AppKit
 /// Delegate for a QSFQuickActionBar instance
 public protocol DSFQuickActionBarDelegate: NSObjectProtocol {
 	/// Return an array of the identifiers to be displayed for the specified search term
-	func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTerm term: String) -> [DSFQuickActionBar.CompletionIdentity]
+	func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTerm term: String) -> [DSFQuickActionBar.ItemIdentifier]
 
 	/// Return the view to be displayed for the specified identifier
-	func quickActionBar(_ quickActionBar: DSFQuickActionBar, viewForIdentifier identifier: DSFQuickActionBar.CompletionIdentity) -> NSView?
+	func quickActionBar(_ quickActionBar: DSFQuickActionBar, viewForIdentifier identifier: DSFQuickActionBar.ItemIdentifier) -> NSView?
 
 	/// Called when the specified identifier is 'activated' (double clicked, return key pressed etc)
-	func quickActionBar(_ quickActionBar: DSFQuickActionBar, didSelectIdentifier identifier: DSFQuickActionBar.CompletionIdentity)
+	func quickActionBar(_ quickActionBar: DSFQuickActionBar, didSelectIdentifier identifier: DSFQuickActionBar.ItemIdentifier)
 
 	/// Called when the quick action bar was dismissed without selecting an item (optional)
 	func quickActionBarDidCancel(_ quickActionBar: DSFQuickActionBar)
@@ -46,12 +46,5 @@ extension DSFQuickActionBarDelegate {
 	/// Default implementation for cancel
 	public func quickActionBarDidCancel(_ quickActionBar: DSFQuickActionBar) {
 		// Do nothing
-	}
-}
-
-extension DSFQuickActionBar {
-	public struct CompletionIdentity: Identifiable, Equatable {
-		public let id = UUID()
-		public init() { }
 	}
 }
