@@ -28,19 +28,32 @@
 import AppKit
 
 public class DSFQuickActionBar {
-	public static let DefaultWidth: CGFloat = 500.0
-	public static let DefaultImage = NSImage(named: "NSQuickLookTemplate")
 
+	/// The default width for the quick action bar
+	public static let DefaultWidth: CGFloat = 500.0
+
+	// The default placeholder text to display in the edit field
+	public static let DefaultPlaceholderString: String = "Quick Actions"
+
+	/// The default image to display in the search field
+	public static let DefaultImage: NSImage = {
+		let image = DSFQuickActionBar.DefaultSearchImage()
+		image.isTemplate = true
+		return image
+	}()
+
+	/// The delegate for the bar
 	public weak var delegate: DSFQuickActionBarDelegate?
 
+	/// Create a DSFQuickActionBar instance
+	public init() {}
+
+	// MARK: - Private
 	internal weak var quickActionBarWindow: DSFQuickActionBar.Window?
 	internal var quickBarController: DSFQuickActionBar.WindowController?
 
-	var width: CGFloat = 100
-	var placeholderText: String = "Quick Actions"
-	var searchImage: NSImage?
-
-	public init() {}
+	internal var width: CGFloat = 100
+	internal var searchImage: NSImage?
 }
 
 public extension DSFQuickActionBar {
@@ -48,13 +61,13 @@ public extension DSFQuickActionBar {
 	/// - Parameters:
 	///   - parent: the window to center the quick action bar in
 	///   - placeholderText: the placeholder text to display in the search field
-	///   - searchImage: the image to use as the search image
+	///   - searchImage: the image to use as the search image. If nil, no search field image is displayed
 	///   - initialSearchText: the text to initially populate the search field with
 	///   - width: the width of the quick action bar to display
 	func present(
 		in parent: NSWindow,
-		placeholderText: String? = nil,
-		searchImage: NSImage? = DefaultImage,
+		placeholderText: String = DSFQuickActionBar.DefaultPlaceholderString,
+		searchImage: NSImage? = DSFQuickActionBar.DefaultImage,
 		initialSearchText: String? = nil,
 		width: CGFloat = DSFQuickActionBar.DefaultWidth
 	) {
@@ -69,11 +82,11 @@ public extension DSFQuickActionBar {
 	/// Presents a DSFQuickActionBar on the main screen
 	/// - Parameters:
 	///   - placeholderText: the placeholder text to display in the search field
-	///   - searchImage: the image to use as the search image
+	///   - searchImage: the image to use as the search image. If nil, no search field image is displayed
 	///   - initialSearchText: the text to initially populate the search field with
 	///   - width: the width of the quick action bar to display
 	func presentOnMainScreen(
-		placeholderText: String? = nil,
+		placeholderText: String = DSFQuickActionBar.DefaultPlaceholderString,
 		searchImage: NSImage? = DefaultImage,
 		initialSearchText: String? = nil,
 		width: CGFloat = DSFQuickActionBar.DefaultWidth
@@ -86,21 +99,19 @@ public extension DSFQuickActionBar {
 						 initialSearchText: initialSearchText,
 						 width: width)
 	}
+}
 
+extension DSFQuickActionBar {
 	private func present(
 		in originRect: CGRect,
 		parentWindow: NSWindow?,
-		placeholderText: String? = nil,
+		placeholderText: String = DSFQuickActionBar.DefaultPlaceholderString,
 		searchImage: NSImage? = DefaultImage,
 		initialSearchText: String? = nil,
 		width: CGFloat = DSFQuickActionBar.DefaultWidth
 	) {
 		self.width = width
 		self.searchImage = searchImage
-
-		if let text = placeholderText {
-			self.placeholderText = text
-		}
 
 		let w2: CGFloat = width // the width of the action bar
 		let h2: CGFloat = 100 // just a default height
@@ -116,6 +127,8 @@ public extension DSFQuickActionBar {
 		quickBarWindow.setFrame(posRect, display: true)
 		quickBarWindow.setup(parentWindow: parentWindow, initialSearchText: initialSearchText)
 		quickBarWindow.makeKey()
+
+		quickBarWindow.placeholderText = placeholderText
 
 		self.quickBarController = WindowController(window: quickBarWindow)
 		self.quickBarController?.setupWindowListener { [weak self] in

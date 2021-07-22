@@ -29,7 +29,6 @@ import AppKit
 
 extension DSFQuickActionBar {
 	class Window: NSWindow {
-
 		// The actionbar instance
 		var quickActionBar: DSFQuickActionBar!
 
@@ -39,6 +38,13 @@ extension DSFQuickActionBar {
 		// Allow the window to become key
 		override var canBecomeKey: Bool { return true }
 		override var canBecomeMain: Bool { return true }
+
+		// The placeholder text for the edit field
+		var placeholderText: String = "" {
+			didSet {
+				self.editLabel.placeholderString = self.placeholderText
+			}
+		}
 
 		// Primary container
 		private lazy var primaryStack: NSStackView = {
@@ -73,6 +79,7 @@ extension DSFQuickActionBar {
 			t.isEnabled = true
 			t.isEditable = true
 			t.isSelectable = true
+			t.placeholderString = DSFQuickActionBar.DefaultPlaceholderString
 
 			t.focusRingType = .none
 
@@ -88,7 +95,7 @@ extension DSFQuickActionBar {
 			imageView.translatesAutoresizingMaskIntoConstraints = false
 			imageView.setContentHuggingPriority(.defaultLow, for: .horizontal)
 			imageView.setContentHuggingPriority(.defaultLow, for: .vertical)
-			imageView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: 28))
+			imageView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: 32))
 			imageView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 32))
 			imageView.imageScaling = .scaleProportionallyUpOrDown
 
@@ -139,7 +146,6 @@ extension DSFQuickActionBar.Window {
 }
 
 internal extension DSFQuickActionBar.Window {
-
 	// Build the quick action bar display
 	func setup(parentWindow: NSWindow? = nil, initialSearchText: String?) {
 		self.autorecalculatesKeyViewLoop = true
@@ -171,13 +177,10 @@ internal extension DSFQuickActionBar.Window {
 		results.isHidden = true
 		primaryStack.addArrangedSubview(results)
 
-		editLabel.placeholderString = self.quickActionBar.placeholderText
 		editLabel.delegate = self
 
 		self.makeFirstResponder(editLabel)
-
 		self.invalidateShadow()
-
 		self.level = .floating
 
 		if let parent = parentWindow {
@@ -190,12 +193,11 @@ internal extension DSFQuickActionBar.Window {
 			self.editLabel.stringValue = initialText
 		}
 
-		textChanged()
+		self.textChanged()
 	}
 }
 
 extension DSFQuickActionBar.Window {
-
 	// Called when the user presses 'escape' when the window is present
 	override func cancelOperation(_: Any?) {
 		self.quickActionBar.delegate?.quickActionBarDidCancel(self.quickActionBar)

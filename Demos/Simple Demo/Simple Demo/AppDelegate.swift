@@ -52,7 +52,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	@IBAction func showGlobalQuickActions(_ sender: Any) {
 		resultLabel.stringValue = ""
 		self.quickActionBar.presentOnMainScreen(
-			placeholderText: "Search Mountains",
+			placeholderText: "Search Mountains Globally",
 			width: 800)
 	}
 }
