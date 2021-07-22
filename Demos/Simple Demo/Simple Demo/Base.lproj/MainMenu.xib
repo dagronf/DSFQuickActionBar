@@ -181,6 +181,11 @@
                                     <action selector="showQuickActions:" target="Voe-Tx-rLC" id="o96-JQ-6tU"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Show Global Quick Actions…" keyEquivalent="G" id="i4S-fo-8IP">
+                                <connections>
+                                    <action selector="showGlobalQuickActions:" target="Voe-Tx-rLC" id="7S8-Hz-asm"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="Ef0-YN-LRy"/>
                             <menuItem title="Find" id="4EN-yA-p0u">
                                 <modifierMask key="keyEquivalentModifierMask"/>

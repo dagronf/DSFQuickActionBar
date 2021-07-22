@@ -35,20 +35,27 @@ extension DSFQuickActionBar {
 
 		var quickActionBar: DSFQuickActionBar!
 
+		var identifiers: [DSFQuickActionBar.CompletionIdentity] = [] {
+			didSet {
+				self.isHidden = identifiers.count == 0
+				self.tableView.reloadData()
+			}
+		}
+
 		override init(frame frameRect: NSRect) {
 			super.init(frame: frameRect)
 			self.translatesAutoresizingMaskIntoConstraints = false
 			self.setContentHuggingPriority(.defaultLow, for: .horizontal)
 		}
 
-		required init?(coder: NSCoder) {
+		@available(*, unavailable)
+		required init?(coder _: NSCoder) {
 			fatalError("init(coder:) has not been implemented")
 		}
 	}
 }
 
 extension DSFQuickActionBar.ResultsView {
-
 	func configure() {
 		self.translatesAutoresizingMaskIntoConstraints = false
 
@@ -99,49 +106,51 @@ extension DSFQuickActionBar.ResultsView {
 		tableView.doubleAction = #selector(didDoubleClickRow(_:))
 
 		// Table column
-
 		let c = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("searchresult"))
 		tableView.addTableColumn(c)
 	}
-
-
 }
 
+// MARK: - Table Data
+
 extension DSFQuickActionBar.ResultsView: NSTableViewDelegate, NSTableViewDataSource {
-	func numberOfRows(in tableView: NSTableView) -> Int {
-		return self.quickActionBar.matches.count
+	func numberOfRows(in _: NSTableView) -> Int {
+		return self.identifiers.count
 	}
 
-	func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-		//Swift.print("view for \(row)")
-		let completionIdentity = self.quickActionBar.matches[row]
-		return self.quickActionBar.delegate?.quickBar(self.quickActionBar, viewForIdentifier: completionIdentity)
+	func tableView(_: NSTableView, viewFor _: NSTableColumn?, row: Int) -> NSView? {
+		// Swift.print("view for \(row)")
+		let completionIdentity = self.identifiers[row]
+		return self.quickActionBar.delegate?.quickActionBar(self.quickActionBar, viewForIdentifier: completionIdentity)
 	}
+}
 
-	@objc func didDoubleClickRow(_ sender: Any) {
+// MARK: - Table Actions
+
+extension DSFQuickActionBar.ResultsView {
+	@objc func didDoubleClickRow(_: Any) {
 		self.rowAction()
 	}
 
 	func rowAction() {
 		let selectedRow = self.tableView.selectedRow
-		if selectedRow < 0 || selectedRow >= self.quickActionBar.matches.count {
+		if selectedRow < 0 || selectedRow >= self.identifiers.count {
 			return
 		}
 
-		let completionIdentity = self.quickActionBar.matches[selectedRow]
-		self.quickActionBar.delegate?.quickBar(self.quickActionBar, didSelectItem: completionIdentity)
+		let completionIdentity = self.identifiers[selectedRow]
+		self.quickActionBar.delegate?.quickActionBar(self.quickActionBar, didSelectIdentifier: completionIdentity)
 
 		self.window?.resignKey()
 	}
-
 }
 
 extension DSFQuickActionBar {
 	class ResultsTableView: NSTableView {
 		weak var parent: DSFQuickActionBar.ResultsView?
 		override func keyDown(with event: NSEvent) {
-			if event.keyCode == 0x24 { //kVK_Return {
-				parent?.rowAction()
+			if event.keyCode == 0x24 { // kVK_Return {
+				self.parent?.rowAction()
 			}
 			else {
 				super.keyDown(with: event)

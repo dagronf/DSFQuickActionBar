@@ -138,7 +138,7 @@ extension DSFQuickActionBar.Window {
 
 internal extension DSFQuickActionBar.Window {
 
-	func setup(parentWindow: NSWindow) {
+	func setup(parentWindow: NSWindow? = nil) {
 
 		self.autorecalculatesKeyViewLoop = true
 
@@ -179,15 +179,19 @@ internal extension DSFQuickActionBar.Window {
 
 		self.level = .floating
 
-		self.order(.above, relativeTo: parentWindow.windowNumber)
+		if let parent = parentWindow {
+			self.order(.above, relativeTo: parent.windowNumber)
+		}
 
 		self.primaryStack.layoutSubtreeIfNeeded()
+
+		textChanged()
 	}
 }
 
 extension DSFQuickActionBar.Window {
 	override func cancelOperation(_ sender: Any?) {
-		self.quickActionBar.delegate?.quickBarDidCancel(self.quickActionBar)
+		self.quickActionBar.delegate?.quickActionBarDidCancel(self.quickActionBar)
 		self.resignKey()
 	}
 }
@@ -201,8 +205,15 @@ extension DSFQuickActionBar.Window: NSTextFieldDelegate {
 	}
 
 	func textChanged() {
+		guard let delegate = self.quickActionBar.delegate else { return }
+
 		let currentSearch = self.editLabel.stringValue
-		self.quickActionBar.updateSearch(currentSearch)
+
+		// Get a list of the identifiers than match
+		let identifiers = delegate.quickActionBar(self.quickActionBar, itemsForSearchTerm: currentSearch)
+
+		// And update the display list
+		self.results.identifiers = identifiers
 	}
 
 	func control(_ control: NSControl, textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {

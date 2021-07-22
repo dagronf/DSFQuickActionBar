@@ -19,9 +19,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		return b
 	}()
 
-	private let allMountains: [DSFQuickActionBar.CompletionIdentity] = mountainsRawData.components(separatedBy: .newlines).map { line in
+	private let allMountains: [Mountain] = mountainsRawData.components(separatedBy: .newlines).map { line in
 		 let name = line.components(separatedBy: ",")[0]
-		 return DSFQuickActionBar.CompletionIdentity(matchString: name)
+		 return Mountain(name: name)
 	}
 
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
@@ -40,26 +40,65 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		quickActionBar.present(in: self.window, placeholderText: "Search Mountains")
 	}
 
-
+	@IBAction func showGlobalQuickActions(_ sender: Any) {
+		quickActionBar.presentOnMainScreen(placeholderText: "Search Mountains", width: 800)
+	}
 }
 
-extension AppDelegate: DSFQuickActionBarDelegate {
-	func quickBarCompletions(for quickActionBar: DSFQuickActionBar) -> [DSFQuickActionBar.CompletionIdentity] {
-		return allMountains
+class Mountain {
+	let identifier = DSFQuickActionBar.CompletionIdentity()
+	let name: String
+	public init(name: String) {
+		self.name = name
 	}
-	
-	func quickBar(_ quickActionBar: DSFQuickActionBar, viewForIdentifier: DSFQuickActionBar.CompletionIdentity) -> NSView? {
+}
+
+
+
+extension AppDelegate: DSFQuickActionBarDelegate {
+
+	func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTerm term: String) -> [DSFQuickActionBar.CompletionIdentity] {
+
+//		// Display ALL items when there's no search term
+//		if term.isEmpty {
+//			return allMountains.map { $0.identifier }
+//		}
+
+		if term.isEmpty {
+			return []
+		}
+
+		let matches = allMountains
+			.filter { $0.name.localizedCaseInsensitiveContains(term) }
+			.sorted(by: { a, b in a.name < b.name } )
+			.prefix(100)
+			.map { $0.identifier }
+
+		return [DSFQuickActionBar.CompletionIdentity](matches)
+	}
+
+	func quickActionBar(_ quickActionBar: DSFQuickActionBar, viewForIdentifier identifier: DSFQuickActionBar.CompletionIdentity) -> NSView? {
+		guard let mountain = allMountains.filter({ $0.identifier == identifier }).first else {
+			return nil
+		}
+
 		let item = MountainCellQuickView()
-		item.actionName.stringValue = viewForIdentifier.matchString
-		item.actionDescription.stringValue = "\(viewForIdentifier.matchString) description"
+
+		item.actionName.stringValue = mountain.name
+		item.actionDescription.stringValue = "\(mountain.name) description"
 		return item
 	}
 	
-	func quickBar(_ quickActionBar: DSFQuickActionBar, didSelectItem item: DSFQuickActionBar.CompletionIdentity) {
-		Swift.print("Quick Bar did select '\(item.matchString)'")
+	func quickActionBar(_ quickActionBar: DSFQuickActionBar, didSelectIdentifier item: DSFQuickActionBar.CompletionIdentity) {
+
+		guard let mountain = allMountains.filter({ $0.identifier == item }).first else {
+			fatalError()
+		}
+
+		Swift.print("Quick Bar did select '\(mountain.name)'")
 	}
 
-	func quickBarDidCancel(_ quickActionBar: DSFQuickActionBar) {
+	func quickActionBarDidCancel(_ quickActionBar: DSFQuickActionBar) {
 		Swift.print("Quick Bar did cancel")
 	}
 	

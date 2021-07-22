@@ -42,28 +42,6 @@ public class DSFQuickActionBar {
 	public init() {
 
 	}
-
-	/// The current list of completions
-	var completions: [DSFQuickActionBar.CompletionIdentity] = []
-
-	/// Current search results
-	var matches: [DSFQuickActionBar.CompletionIdentity] = []
-
-	/// Update with new search text
-	func updateSearch(_ searchText: String) {
-		matches = [DSFQuickActionBar.CompletionIdentity](completions
-			.filter { $0.matchString.localizedCaseInsensitiveContains(searchText) }
-			.sorted(by: { a, b in a.matchString < b.matchString } )
-			.prefix(100))
-		quickActionBarWindow?.reloadData()
-
-		if matches.count == 0 {
-			self.quickActionBarWindow?.results.isHidden = true
-		}
-		else {
-			self.quickActionBarWindow?.results.isHidden = false
-		}
-	}
 }
 
 public extension DSFQuickActionBar {
@@ -71,14 +49,32 @@ public extension DSFQuickActionBar {
 	func present(in parent: NSWindow,
 					 placeholderText: String? = nil,
 					 width: CGFloat = DSFQuickActionBar.DefaultWidth) {
+		self.present(in: parent.frame,
+						 parentWindow: parent,
+						 placeholderText: placeholderText,
+						 width: width)
+	}
 
-		let originRect = parent.frame
+	/// Presents the DSFQuickActionBar on the main screen
+	func presentOnMainScreen(placeholderText: String? = nil,
+					 width: CGFloat = DSFQuickActionBar.DefaultWidth) {
+		guard let rect = NSScreen.main?.frame else { return }
+		self.present(in: rect,
+						 parentWindow: nil,
+						 placeholderText: placeholderText,
+						 width: width)
+	}
+
+
+	private func present(in originRect: CGRect,
+								parentWindow: NSWindow?,
+								placeholderText: String? = nil,
+								width: CGFloat = DSFQuickActionBar.DefaultWidth) {
 
 		self.width = width
 		if let text = placeholderText {
 			self.placeholderText = text
 		}
-
 
 		let w2: CGFloat = width //whatever you want the width to be
 		let h2: CGFloat = 100   //whatever you want the height to be
@@ -93,29 +89,20 @@ public extension DSFQuickActionBar {
 
 		quickBarWindow.quickActionBar = self
 		quickBarWindow.setFrame(posRect, display: true)
-		quickBarWindow.setup(parentWindow: parent)
+		quickBarWindow.setup(parentWindow: parentWindow)
 		quickBarWindow.makeKey()
 
 		quickBarController = WindowController(window: quickBarWindow)
 		quickBarController?.setupWindowListener { [weak self] in
 			self?.quickBarController = nil
 		}
-
-		self.completions = self.delegate?.quickBarCompletions(for: self) ?? []
-
 	}
-
 }
 
 extension DSFQuickActionBar {
 
 	func reloadData() {
-		guard let d = delegate else { return }
-
-		// Ask the delegate for the current list of completions
-		self.completions = d.quickBarCompletions(for: self)
-
-		// ... and ask the window to update itself
+		// the window to update itself
 		self.quickActionBarWindow?.reloadData()
 
 	}

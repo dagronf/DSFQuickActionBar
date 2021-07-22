@@ -28,24 +28,28 @@
 import AppKit
 
 public protocol DSFQuickActionBarDelegate: NSObjectProtocol {
-	func quickBarCompletions(for quickActionBar: DSFQuickActionBar) -> [DSFQuickActionBar.CompletionIdentity]
-	func quickBar(_ quickActionBar: DSFQuickActionBar, viewForIdentifier: DSFQuickActionBar.CompletionIdentity) -> NSView?
-	func quickBar(_ quickActionBar: DSFQuickActionBar, didSelectItem item: DSFQuickActionBar.CompletionIdentity)
-	func quickBarDidCancel(_ quickActionBar: DSFQuickActionBar)
+	/// Return an array of the identifiers to be displayed for the specified search term
+	func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTerm term: String) -> [DSFQuickActionBar.CompletionIdentity]
+
+	/// Return the view to be displayed for the specified identifier
+	func quickActionBar(_ quickActionBar: DSFQuickActionBar, viewForIdentifier identifier: DSFQuickActionBar.CompletionIdentity) -> NSView?
+
+	/// Called when the specified identifier is 'activated' (double clicked, return key pressed etc)
+	func quickActionBar(_ quickActionBar: DSFQuickActionBar, didSelectIdentifier identifier: DSFQuickActionBar.CompletionIdentity)
+
+	/// The quick action bar was dismissed without selecting an item.
+	func quickActionBarDidCancel(_ quickActionBar: DSFQuickActionBar)
 }
 
 extension DSFQuickActionBarDelegate {
-	public func quickBarDidCancel(_ quickActionBar: DSFQuickActionBar) {
+	public func quickActionBarDidCancel(_ quickActionBar: DSFQuickActionBar) {
 		// Do nothing
 	}
 }
 
 extension DSFQuickActionBar {
-	public struct CompletionIdentity: Identifiable {
+	public struct CompletionIdentity: Identifiable, Equatable {
 		public let id = UUID()
-		public let matchString: String
-		public init(matchString: String) {
-			self.matchString = matchString
-		}
+		public init() { }
 	}
 }
