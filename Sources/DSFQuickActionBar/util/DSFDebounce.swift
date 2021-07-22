@@ -26,10 +26,9 @@
 //
 
 import Foundation
-
 import Dispatch
 
-public class DSFDebounce {
+class DSFDebounce {
 
 	// MARK: - Properties
 	private let queue = DispatchQueue.main

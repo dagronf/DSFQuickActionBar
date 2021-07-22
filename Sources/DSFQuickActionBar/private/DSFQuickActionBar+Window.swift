@@ -28,11 +28,12 @@
 import AppKit
 
 extension DSFQuickActionBar {
-
 	class Window: NSWindow {
 
+		// The actionbar instance
 		var quickActionBar: DSFQuickActionBar!
 
+		// To minimise the number of calls during edit
 		let debouncer = DSFDebounce(seconds: 0.2)
 
 		// Allow the window to become key
@@ -91,8 +92,7 @@ extension DSFQuickActionBar {
 			imageView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 32))
 			imageView.imageScaling = .scaleProportionallyUpOrDown
 
-			let image = NSImage(named: "NSQuickLookTemplate")!
-			image.isTemplate = true
+			let image = self.quickActionBar.searchImage!
 			imageView.image = image
 			return imageView
 		}()
@@ -103,7 +103,9 @@ extension DSFQuickActionBar {
 			stack.translatesAutoresizingMaskIntoConstraints = false
 			stack.orientation = .horizontal
 
-			stack.addArrangedSubview(searchImage)
+			if let _ = self.quickActionBar.searchImage {
+				stack.addArrangedSubview(searchImage)
+			}
 
 			stack.addArrangedSubview(editLabel)
 			editLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
@@ -138,8 +140,8 @@ extension DSFQuickActionBar.Window {
 
 internal extension DSFQuickActionBar.Window {
 
-	func setup(parentWindow: NSWindow? = nil) {
-
+	// Build the quick action bar display
+	func setup(parentWindow: NSWindow? = nil, initialSearchText: String?) {
 		self.autorecalculatesKeyViewLoop = true
 
 		primaryStack.translatesAutoresizingMaskIntoConstraints = false
@@ -174,7 +176,6 @@ internal extension DSFQuickActionBar.Window {
 
 		self.makeFirstResponder(editLabel)
 
-
 		self.invalidateShadow()
 
 		self.level = .floating
@@ -185,25 +186,30 @@ internal extension DSFQuickActionBar.Window {
 
 		self.primaryStack.layoutSubtreeIfNeeded()
 
+		if let initialText = initialSearchText {
+			self.editLabel.stringValue = initialText
+		}
+
 		textChanged()
 	}
 }
 
 extension DSFQuickActionBar.Window {
-	override func cancelOperation(_ sender: Any?) {
+
+	// Called when the user presses 'escape' when the window is present
+	override func cancelOperation(_: Any?) {
 		self.quickActionBar.delegate?.quickActionBarDidCancel(self.quickActionBar)
 		self.resignKey()
 	}
 
+	// Called from the results view when the user presses the left arrow
 	func pressedLeftArrowInResultsView() {
 		self.makeFirstResponder(self.editLabel)
 	}
-
 }
 
 extension DSFQuickActionBar.Window: NSTextFieldDelegate {
-
-	func controlTextDidChange(_ obj: Notification) {
+	func controlTextDidChange(_: Notification) {
 		self.debouncer.debounce { [weak self] in
 			self?.textChanged()
 		}
@@ -221,7 +227,7 @@ extension DSFQuickActionBar.Window: NSTextFieldDelegate {
 		self.results.identifiers = identifiers
 	}
 
-	func control(_ control: NSControl, textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
+	func control(_: NSControl, textView _: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
 		if commandSelector == #selector(moveDown(_:)) {
 			self.makeFirstResponder(self.results.tableView)
 			let selection: Int = (self.results.tableView.selectedRow == -1) ? 0 : self.results.tableView.selectedRow
@@ -232,7 +238,6 @@ extension DSFQuickActionBar.Window: NSTextFieldDelegate {
 	}
 }
 
-
 // MARK: - WindowController
 
 extension DSFQuickActionBar {
@@ -241,14 +246,16 @@ extension DSFQuickActionBar {
 			NotificationCenter.default.addObserver(
 				forName: NSWindow.didResignKeyNotification,
 				object: self.window,
-				queue: .main) { [weak self] _ in
-				  self?.close()
+				queue: .main
+			) { [weak self] _ in
+				self?.close()
 			}
 
 			NotificationCenter.default.addObserver(
 				forName: NSWindow.willCloseNotification,
 				object: self.window,
-				queue: .main) { _ in
+				queue: .main
+			) { _ in
 				completion()
 			}
 		}

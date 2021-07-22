@@ -15,6 +15,7 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="Simple_Demo" customModuleProvider="target">
             <connections>
+                <outlet property="resultLabel" destination="eSB-gj-LlT" id="k5a-KI-YM6"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="gIp-Ho-8D9"/>
             </connections>
         </customObject>
@@ -697,15 +698,18 @@
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="335" y="390" width="480" height="359"/>
             <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
-            <view key="contentView" id="EiT-Mj-1SZ">
-                <rect key="frame" x="0.0" y="0.0" width="480" height="359"/>
+            <view key="contentView" misplaced="YES" id="EiT-Mj-1SZ">
+                <rect key="frame" x="0.0" y="0.0" width="480" height="369"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <textField verticalHuggingPriority="100" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="ASO-EU-b27">
-                        <rect key="frame" x="18" y="67" width="444" height="272"/>
-                        <textFieldCell key="cell" selectable="YES" id="dEe-sg-TaH">
-                            <font key="font" usesAppearanceFont="YES"/>
-                            <mutableString key="title">A simple demo for the DSFQuickActionBar
+                    <stackView distribution="fill" orientation="vertical" alignment="trailing" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cen-GY-ltQ">
+                        <rect key="frame" x="20" y="20" width="440" height="332"/>
+                        <subviews>
+                            <textField verticalHuggingPriority="100" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="ASO-EU-b27">
+                                <rect key="frame" x="-2" y="28" width="444" height="304"/>
+                                <textFieldCell key="cell" selectable="YES" id="dEe-sg-TaH">
+                                    <font key="font" usesAppearanceFont="YES"/>
+                                    <mutableString key="title">A simple demo for the DSFQuickActionBar
 
 Open a quick action bar :-
 
@@ -716,21 +720,41 @@ Start typing in the quick action bar and the results will appear below. For exam
 
 Keyboard commands :-
 
-Hitting the down arrow when focussed on the search field will move the focus to the results table
-Hitting the left arrow when the results table is focussed will move the focus back to the search text</mutableString>
-                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
+* The down arrow (when focussed on the search field) will move the focus to the results table
+* The left arrow (when the results table is focussed) will move the focus back to the search text
+* The escape key will dismiss the quick action bar
+</mutableString>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField horizontalHuggingPriority="100" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="eSB-gj-LlT">
+                                <rect key="frame" x="-2" y="0.0" width="444" height="20"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="Label" id="ZMt-8v-jpc">
+                                    <font key="font" metaFont="system" size="17"/>
+                                    <color key="textColor" name="systemRedColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                        </subviews>
+                        <visibilityPriorities>
+                            <integer value="1000"/>
+                            <integer value="1000"/>
+                        </visibilityPriorities>
+                        <customSpacing>
+                            <real value="3.4028234663852886e+38"/>
+                            <real value="3.4028234663852886e+38"/>
+                        </customSpacing>
+                    </stackView>
                 </subviews>
                 <constraints>
-                    <constraint firstAttribute="trailing" secondItem="ASO-EU-b27" secondAttribute="trailing" constant="20" symbolic="YES" id="8ea-r9-BcU"/>
-                    <constraint firstItem="ASO-EU-b27" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="20" symbolic="YES" id="ChT-Yq-uCP"/>
-                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="ASO-EU-b27" secondAttribute="bottom" constant="20" symbolic="YES" id="HjP-rk-VPY"/>
-                    <constraint firstItem="ASO-EU-b27" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" symbolic="YES" id="uXT-eo-Jnr"/>
+                    <constraint firstItem="cen-GY-ltQ" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" symbolic="YES" id="FFF-Jt-oV6"/>
+                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="cen-GY-ltQ" secondAttribute="bottom" constant="20" symbolic="YES" id="mHM-AY-WMs"/>
+                    <constraint firstItem="cen-GY-ltQ" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="20" symbolic="YES" id="sN2-jy-Xh2"/>
+                    <constraint firstAttribute="trailing" secondItem="cen-GY-ltQ" secondAttribute="trailing" constant="20" symbolic="YES" id="yCF-1m-1z0"/>
                 </constraints>
             </view>
-            <point key="canvasLocation" x="201" y="428"/>
+            <point key="canvasLocation" x="201" y="427.5"/>
         </window>
     </objects>
 </document>

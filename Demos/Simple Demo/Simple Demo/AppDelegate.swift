@@ -13,6 +13,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	@IBOutlet var window: NSWindow!
 
+	@IBOutlet weak var resultLabel: NSTextField!
+
 	var currentSearch = ""
 
 	lazy var quickActionBar: DSFQuickActionBar = {
@@ -28,6 +30,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
 		// Insert code here to initialize your application
+		resultLabel.stringValue = ""
 	}
 
 	func applicationWillTerminate(_ aNotification: Notification) {
@@ -39,11 +42,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 
 	@IBAction func showQuickActions(_ sender: Any) {
-		quickActionBar.present(in: self.window, placeholderText: "Search Mountains")
+		resultLabel.stringValue = ""
+		self.quickActionBar.present(
+			in: self.window,
+			placeholderText: "Search Mountains",
+			searchImage: NSImage(named: "mountain-template")!)
 	}
 
 	@IBAction func showGlobalQuickActions(_ sender: Any) {
-		quickActionBar.presentOnMainScreen(placeholderText: "Search Mountains", width: 800)
+		resultLabel.stringValue = ""
+		self.quickActionBar.presentOnMainScreen(
+			placeholderText: "Search Mountains",
+			width: 800)
 	}
 }
 
@@ -108,17 +118,14 @@ extension AppDelegate: DSFQuickActionBarDelegate {
 	}
 	
 	func quickActionBar(_ quickActionBar: DSFQuickActionBar, didSelectIdentifier item: DSFQuickActionBar.CompletionIdentity) {
-
 		guard let mountain = allMountains.filter({ $0.identifier == item }).first else {
 			fatalError()
 		}
-
-		Swift.print("Quick Bar did select '\(mountain.name)'")
+		resultLabel.stringValue = "Quick Action Bar selected '\(mountain.name)'"
 	}
 
 	func quickActionBarDidCancel(_ quickActionBar: DSFQuickActionBar) {
-		Swift.print("Quick Bar did cancel")
+		resultLabel.stringValue = "Quick Action Bar cancelled"
 	}
-	
-	
+
 }

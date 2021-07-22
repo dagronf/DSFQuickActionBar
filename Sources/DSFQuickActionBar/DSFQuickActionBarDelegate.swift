@@ -27,6 +27,7 @@
 
 import AppKit
 
+/// Delegate for a QSFQuickActionBar instance
 public protocol DSFQuickActionBarDelegate: NSObjectProtocol {
 	/// Return an array of the identifiers to be displayed for the specified search term
 	func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTerm term: String) -> [DSFQuickActionBar.CompletionIdentity]
@@ -37,11 +38,12 @@ public protocol DSFQuickActionBarDelegate: NSObjectProtocol {
 	/// Called when the specified identifier is 'activated' (double clicked, return key pressed etc)
 	func quickActionBar(_ quickActionBar: DSFQuickActionBar, didSelectIdentifier identifier: DSFQuickActionBar.CompletionIdentity)
 
-	/// The quick action bar was dismissed without selecting an item.
+	/// Called when the quick action bar was dismissed without selecting an item (optional)
 	func quickActionBarDidCancel(_ quickActionBar: DSFQuickActionBar)
 }
 
 extension DSFQuickActionBarDelegate {
+	/// Default implementation for cancel
 	public func quickActionBarDidCancel(_ quickActionBar: DSFQuickActionBar) {
 		// Do nothing
 	}
