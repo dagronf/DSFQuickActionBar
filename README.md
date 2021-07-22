@@ -1,6 +1,6 @@
 # DSFQuickActionBar
 
-A spotlight-inspired quick action bar for macOS
+A spotlight-inspired quick action bar for macOS.
 
 <p align="center">
     <img src="https://img.shields.io/github/v/tag/dagronf/DSFQuickActionBar" />
@@ -11,14 +11,28 @@ A spotlight-inspired quick action bar for macOS
         <img src="https://img.shields.io/badge/spm-compatible-brightgreen.svg?style=flat" alt="Swift Package Manager" /></a>
 </p>
 
+<p align="center">
+   <a href="https://github.com/dagronf/dagronf.github.io/blob/master/art/projects/DSFQuickActionBar/qab_search.png?raw=true">
+      <img src="https://github.com/dagronf/dagronf.github.io/blob/master/art/projects/DSFQuickActionBar/qab_search.png?raw=true" alt="Swift Package Manager" width="400"/></a>
+   </a>
+   <a href="https://github.com/dagronf/dagronf.github.io/blob/master/art/projects/DSFQuickActionBar/qab_results.png?raw=true">
+      <img src="https://github.com/dagronf/dagronf.github.io/blob/master/art/projects/DSFQuickActionBar/qab_results.png?raw=true" alt="Swift Package Manager" width="400"/></a>
+   </a>
+</p>
 
 ## Why?
 
-I wanted to.
+I've seen this in other mac applications (particularly spotlight) and it's very useful.
+
+## Integration
+
+### Swift package manager
+
+Add `https://github.com/dagronf/DSFDockTile` to your project.
 
 ## Features
 
-You can present a quick action bar in the context of a window (where it will be centered above and within the bounds of the window) or centered in the current screen (like Spotlight currently does)
+You can present a quick action bar in the context of a window (where it will be centered above and within the bounds of the window as is shown in the image above) or centered in the current screen (like Spotlight currently does).
 
 | Name | Type | Description |
 |------|--------|-------------|
@@ -27,10 +41,23 @@ You can present a quick action bar in the context of a window (where it will be 
 | width             | `CGFloat` (optional) | Force the width of the action bar |
 | initialSearchText | `String` (optional) | Provide an initial search string to appear when the bar displays |
 
+## Process
+
+1. Present the quick action bar, automatically focussing on the edit field so your hands can stay on the keyboard
+2. User starts typing in the search field
+3. For each change to the search term -
+   1. The delegate will be asked for the identifiers that 'match' the search term (`itemsForSearchTerm`)
+   2. For each item, the delegate will be asked to provide a view which will appear in the result table for that identifier (`viewForIdentifier`)
+   3. When the user either double-clicks on, or presses the return key on a selected identifier row, the delegate will be provided with the identifier (`didSelectIdentifier`)
+4. The quick action bar will automatically dismiss if
+	1. The user clicks outside the quick action bar (ie. it loses focus)
+	2. The user presses the escape key
+	3. The user double-clicks an item in the result table
+	4. The user selects a row and presses 'return'
 
 ### Delegate
 
-The delegate provides the content for the quick action bar.
+The delegate provides the content and feedback for the quick action bar.
 
 #### itemsForSearchTerm
 
@@ -46,7 +73,7 @@ Returns an array of the unique identifiers for items that match the search term.
 func quickActionBar(_ quickActionBar: DSFQuickActionBar, viewForIdentifier identifier: DSFQuickActionBar.ItemIdentifier) -> NSView? {
 ```
 
-Returns the view to be displayed in the row for the item that match the identifier
+Return the view to be displayed in the row for the item that matches the identifier.
 
 #### didSelectIdentifier
 
