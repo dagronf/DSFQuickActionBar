@@ -75,7 +75,7 @@ class Mountain {
 }
 
 extension AppDelegate: DSFQuickActionBarDelegate {
-	func quickActionBar(_: DSFQuickActionBar, itemsForSearchTerm term: String) -> [DSFQuickActionBar.ItemIdentifier] {
+	func quickActionBar(_: DSFQuickActionBar, identifiersForSearchTerm term: String) -> [DSFQuickActionBar.ItemIdentifier] {
 
 		// Display ALL items when there's no search term
 		if showAllWhenEmpty && term.isEmpty {
@@ -97,7 +97,7 @@ extension AppDelegate: DSFQuickActionBarDelegate {
 			.prefix(100)
 			.map { $0.identifier }
 
-		return [DSFQuickActionBar.ItemIdentifier](matches)
+		return matches
 	}
 
 	func quickActionBar(_: DSFQuickActionBar, viewForIdentifier identifier: DSFQuickActionBar.ItemIdentifier) -> NSView? {
@@ -114,6 +114,17 @@ extension AppDelegate: DSFQuickActionBarDelegate {
 		}
 
 		fatalError()
+	}
+
+	func quickActionBar(_: DSFQuickActionBar, didSelectIdentifier identifier: DSFQuickActionBar.ItemIdentifier) {
+		guard let mountain = allMountains.filter({ $0.identifier == identifier }).first else {
+			fatalError()
+		}
+		self.resultLabel.stringValue = "Quick Action Bar selected '\(mountain.name)'"
+	}
+
+	func quickActionBarDidCancel(_: DSFQuickActionBar) {
+		self.resultLabel.stringValue = "Quick Action Bar cancelled"
 	}
 }
 
@@ -140,17 +151,6 @@ extension AppDelegate {
 		}
 		item.actionDescription.stringValue = "\(mountain.name) description"
 		return item
-	}
-
-	func quickActionBar(_: DSFQuickActionBar, didSelectIdentifier item: DSFQuickActionBar.ItemIdentifier) {
-		guard let mountain = allMountains.filter({ $0.identifier == item }).first else {
-			fatalError()
-		}
-		self.resultLabel.stringValue = "Quick Action Bar selected '\(mountain.name)'"
-	}
-
-	func quickActionBarDidCancel(_: DSFQuickActionBar) {
-		self.resultLabel.stringValue = "Quick Action Bar cancelled"
 	}
 }
 

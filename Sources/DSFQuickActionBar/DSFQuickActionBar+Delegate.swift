@@ -30,7 +30,7 @@ import AppKit
 /// Delegate for a QSFQuickActionBar instance
 public protocol DSFQuickActionBarDelegate: NSObjectProtocol {
 	/// Return an array of the identifiers to be displayed for the specified search term
-	func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTerm term: String) -> [DSFQuickActionBar.ItemIdentifier]
+	func quickActionBar(_ quickActionBar: DSFQuickActionBar, identifiersForSearchTerm term: String) -> [DSFQuickActionBar.ItemIdentifier]
 
 	/// Return the view to be displayed for the specified identifier
 	func quickActionBar(_ quickActionBar: DSFQuickActionBar, viewForIdentifier identifier: DSFQuickActionBar.ItemIdentifier) -> NSView?

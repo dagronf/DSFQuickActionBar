@@ -229,7 +229,7 @@ extension DSFQuickActionBar.Window: NSTextFieldDelegate {
 		let currentSearch = self.editLabel.stringValue
 
 		// Get a list of the identifiers than match
-		let identifiers = delegate.quickActionBar(self.quickActionBar, itemsForSearchTerm: currentSearch)
+		let identifiers = delegate.quickActionBar(self.quickActionBar, identifiersForSearchTerm: currentSearch)
 
 		// And update the display list
 		self.results.identifiers = identifiers
