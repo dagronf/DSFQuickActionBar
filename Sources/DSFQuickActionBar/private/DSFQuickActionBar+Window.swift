@@ -73,7 +73,7 @@ extension DSFQuickActionBar {
 			t.drawsBackground = false
 			t.isBordered = false
 			t.isBezeled = false
-			t.font = NSFont.systemFont(ofSize: 28, weight: .light)
+			t.font = NSFont.systemFont(ofSize: 24, weight: .light)
 			t.textColor = NSColor.textColor
 			t.alignment = .left
 			t.isEnabled = true
@@ -84,7 +84,9 @@ extension DSFQuickActionBar {
 			t.focusRingType = .none
 
 			t.setContentHuggingPriority(.defaultLow, for: .horizontal)
+			t.setContentHuggingPriority(.defaultHigh, for: .vertical)
 			t.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+			t.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
 
 			return t
 		}()
@@ -95,8 +97,8 @@ extension DSFQuickActionBar {
 			imageView.translatesAutoresizingMaskIntoConstraints = false
 			imageView.setContentHuggingPriority(.defaultLow, for: .horizontal)
 			imageView.setContentHuggingPriority(.defaultLow, for: .vertical)
-			imageView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: 32))
-			imageView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 32))
+			imageView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: 24))
+			imageView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 28))
 			imageView.imageScaling = .scaleProportionallyUpOrDown
 
 			let image = self.quickActionBar.searchImage!
