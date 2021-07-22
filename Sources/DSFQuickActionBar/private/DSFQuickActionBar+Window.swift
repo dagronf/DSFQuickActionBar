@@ -162,7 +162,7 @@ internal extension DSFQuickActionBar.Window {
 			self.contentView = primaryStack
 
 			self.backgroundColor = NSColor.clear
-			self.isOpaque = false
+			self.isOpaque = true
 			self.styleMask = [.borderless]
 			self.isMovableByWindowBackground = false
 			self.makeKeyAndOrderFront(self)
@@ -171,7 +171,7 @@ internal extension DSFQuickActionBar.Window {
 			let baseLayer = primaryStack.layer!
 
 			baseLayer.cornerRadius = 10
-			baseLayer.backgroundColor = NSColor.underPageBackgroundColor.cgColor
+			baseLayer.backgroundColor = NSColor.windowBackgroundColor.cgColor
 			baseLayer.borderColor = NSColor.controlColor.cgColor
 			baseLayer.borderWidth = 1
 
