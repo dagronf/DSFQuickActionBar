@@ -702,11 +702,11 @@
                 <rect key="frame" x="0.0" y="0.0" width="480" height="359"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
-                    <stackView distribution="fill" orientation="vertical" alignment="trailing" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cen-GY-ltQ">
-                        <rect key="frame" x="20" y="20" width="440" height="332"/>
+                    <stackView distribution="fill" orientation="vertical" alignment="centerX" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cen-GY-ltQ">
+                        <rect key="frame" x="20" y="20" width="440" height="374"/>
                         <subviews>
                             <textField verticalHuggingPriority="100" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="ASO-EU-b27">
-                                <rect key="frame" x="-2" y="28" width="444" height="304"/>
+                                <rect key="frame" x="-2" y="70" width="444" height="304"/>
                                 <textFieldCell key="cell" selectable="YES" id="dEe-sg-TaH">
                                     <font key="font" usesAppearanceFont="YES"/>
                                     <string key="title">A simple demo for the DSFQuickActionBar
@@ -728,20 +728,87 @@ Keyboard commands :-
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <textField horizontalHuggingPriority="100" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="eSB-gj-LlT">
-                                <rect key="frame" x="-2" y="0.0" width="444" height="20"/>
-                                <textFieldCell key="cell" lineBreakMode="clipping" title="Label" id="ZMt-8v-jpc">
-                                    <font key="font" metaFont="system" size="17"/>
-                                    <color key="textColor" name="systemRedColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
+                            <stackView distribution="fillProportionally" orientation="horizontal" alignment="firstBaseline" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="a31-LZ-Eef">
+                                <rect key="frame" x="70" y="28" width="300" height="34"/>
+                                <subviews>
+                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="F2O-Hb-2Db">
+                                        <rect key="frame" x="-2" y="18" width="157" height="16"/>
+                                        <textFieldCell key="cell" lineBreakMode="clipping" title="Create result cells using: " id="QkT-ND-sUY">
+                                            <font key="font" metaFont="system"/>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                    <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="2" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pn0-R0-h7P">
+                                        <rect key="frame" x="161" y="0.0" width="139" height="34"/>
+                                        <subviews>
+                                            <button verticalHuggingPriority="750" tag="1" translatesAutoresizingMaskIntoConstraints="NO" id="Xxf-Gi-w1I">
+                                                <rect key="frame" x="-2" y="17" width="112" height="18"/>
+                                                <buttonCell key="cell" type="radio" title="Load from XIB" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="Iuk-jA-yXk">
+                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                    <font key="font" metaFont="system"/>
+                                                </buttonCell>
+                                                <connections>
+                                                    <action selector="setLoadingType:" target="Voe-Tx-rLC" id="5hb-AB-qH0"/>
+                                                </connections>
+                                            </button>
+                                            <button verticalHuggingPriority="750" tag="2" translatesAutoresizingMaskIntoConstraints="NO" id="gfn-Cr-Lsg">
+                                                <rect key="frame" x="-2" y="-1" width="141" height="18"/>
+                                                <buttonCell key="cell" type="radio" title="Dynamically create" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="AZz-5a-1WR">
+                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                    <font key="font" metaFont="system"/>
+                                                </buttonCell>
+                                                <connections>
+                                                    <action selector="setLoadingType:" target="Voe-Tx-rLC" id="LjO-KK-ifQ"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <visibilityPriorities>
+                                            <integer value="1000"/>
+                                            <integer value="1000"/>
+                                        </visibilityPriorities>
+                                        <customSpacing>
+                                            <real value="3.4028234663852886e+38"/>
+                                            <real value="3.4028234663852886e+38"/>
+                                        </customSpacing>
+                                    </stackView>
+                                </subviews>
+                                <visibilityPriorities>
+                                    <integer value="1000"/>
+                                    <integer value="1000"/>
+                                </visibilityPriorities>
+                                <customSpacing>
+                                    <real value="3.4028234663852886e+38"/>
+                                    <real value="3.4028234663852886e+38"/>
+                                </customSpacing>
+                            </stackView>
+                            <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RT9-FB-PVI">
+                                <rect key="frame" x="0.0" y="0.0" width="440" height="20"/>
+                                <subviews>
+                                    <textField horizontalHuggingPriority="100" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="eSB-gj-LlT">
+                                        <rect key="frame" x="-2" y="0.0" width="444" height="20"/>
+                                        <textFieldCell key="cell" lineBreakMode="clipping" title="Label" id="ZMt-8v-jpc">
+                                            <font key="font" metaFont="system" size="17"/>
+                                            <color key="textColor" name="systemRedColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                </subviews>
+                                <visibilityPriorities>
+                                    <integer value="1000"/>
+                                </visibilityPriorities>
+                                <customSpacing>
+                                    <real value="3.4028234663852886e+38"/>
+                                </customSpacing>
+                            </stackView>
                         </subviews>
                         <visibilityPriorities>
                             <integer value="1000"/>
                             <integer value="1000"/>
+                            <integer value="1000"/>
                         </visibilityPriorities>
                         <customSpacing>
+                            <real value="3.4028234663852886e+38"/>
                             <real value="3.4028234663852886e+38"/>
                             <real value="3.4028234663852886e+38"/>
                         </customSpacing>

@@ -152,50 +152,54 @@ internal extension DSFQuickActionBar.Window {
 	func setup(parentWindow: NSWindow? = nil, initialSearchText: String?) {
 		self.autorecalculatesKeyViewLoop = true
 
-		primaryStack.translatesAutoresizingMaskIntoConstraints = false
-		primaryStack.setContentHuggingPriority(.required, for: .horizontal)
-		primaryStack.setContentHuggingPriority(.required, for: .vertical)
+		// Make sure we adopt the effective appearance
+		UsingEffectiveAppearance(ofWindow: parentWindow) {
 
-		self.contentView = primaryStack //   baseView
+			primaryStack.translatesAutoresizingMaskIntoConstraints = false
+			primaryStack.setContentHuggingPriority(.required, for: .horizontal)
+			primaryStack.setContentHuggingPriority(.required, for: .vertical)
 
-		self.backgroundColor = NSColor.clear
-		self.isOpaque = false
-		self.styleMask = [.borderless]
-		self.isMovableByWindowBackground = true
-		self.makeKeyAndOrderFront(self)
+			self.contentView = primaryStack
 
-		primaryStack.wantsLayer = true
-		let baseLayer = primaryStack.layer!
+			self.backgroundColor = NSColor.clear
+			self.isOpaque = false
+			self.styleMask = [.borderless]
+			self.isMovableByWindowBackground = false
+			self.makeKeyAndOrderFront(self)
 
-		baseLayer.cornerRadius = 10
-		baseLayer.backgroundColor = NSColor.controlBackgroundColor.cgColor
-		baseLayer.borderColor = NSColor.controlColor.cgColor
-		baseLayer.borderWidth = self.backingScaleFactor == 2 ? 0.5 : 1.0
+			primaryStack.wantsLayer = true
+			let baseLayer = primaryStack.layer!
 
-		primaryStack.needsLayout = true
+			baseLayer.cornerRadius = 10
+			baseLayer.backgroundColor = NSColor.controlBackgroundColor.cgColor
+			baseLayer.borderColor = NSColor.controlColor.cgColor
+			baseLayer.borderWidth = self.backingScaleFactor == 2 ? 0.5 : 1.0
 
-		primaryStack.addArrangedSubview(searchStack)
+			primaryStack.needsLayout = true
 
-		results.isHidden = true
-		primaryStack.addArrangedSubview(results)
+			primaryStack.addArrangedSubview(searchStack)
 
-		editLabel.delegate = self
+			results.isHidden = true
+			primaryStack.addArrangedSubview(results)
 
-		self.makeFirstResponder(editLabel)
-		self.invalidateShadow()
-		self.level = .floating
+			editLabel.delegate = self
 
-		if let parent = parentWindow {
-			self.order(.above, relativeTo: parent.windowNumber)
+			self.makeFirstResponder(editLabel)
+			self.invalidateShadow()
+			self.level = .floating
+
+			if let parent = parentWindow {
+				self.order(.above, relativeTo: parent.windowNumber)
+			}
+
+			self.primaryStack.layoutSubtreeIfNeeded()
+
+			if let initialText = initialSearchText {
+				self.editLabel.stringValue = initialText
+			}
+
+			self.textChanged()
 		}
-
-		self.primaryStack.layoutSubtreeIfNeeded()
-
-		if let initialText = initialSearchText {
-			self.editLabel.stringValue = initialText
-		}
-
-		self.textChanged()
 	}
 }
 

@@ -27,6 +27,7 @@
 
 import AppKit
 
+/// A spotlight inspired floating action bar
 public class DSFQuickActionBar {
 
 	/// A unique identifier for a actionable item.
