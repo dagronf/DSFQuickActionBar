@@ -25,7 +25,8 @@
 //  SOFTWARE.
 //
 
-import AppKit
+import AppKit.NSImage
+import AppKit.NSGraphicsContext
 
 extension DSFQuickActionBar {
 	// Generate a default image for the search field

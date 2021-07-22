@@ -5,7 +5,7 @@
 //  Created by Darren Ford on 21/7/21.
 //
 
-import Cocoa
+import AppKit
 
 class MountainCellQuickView: NSView {
 

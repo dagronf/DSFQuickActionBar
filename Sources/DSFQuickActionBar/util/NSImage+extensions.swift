@@ -24,7 +24,7 @@
 //  SOFTWARE.
 //
 
-import AppKit
+import AppKit.NSImage
 
 extension NSImage {
 	/// Create an image by drawing into it via a block

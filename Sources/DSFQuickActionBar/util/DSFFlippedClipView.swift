@@ -1,6 +1,5 @@
 //
 //  DSFFlippedClipView.swift
-//  DSFQuickActionBar
 //
 //  Created by Darren Ford on 22/7/21
 //
@@ -25,7 +24,7 @@
 //  SOFTWARE.
 //
 
-import AppKit
+import AppKit.NSClipView
 
 class DSFFlippedClipView: NSClipView {
 	override var isFlipped: Bool { return true }
