@@ -703,10 +703,10 @@
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <stackView distribution="fill" orientation="vertical" alignment="centerX" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cen-GY-ltQ">
-                        <rect key="frame" x="20" y="20" width="440" height="374"/>
+                        <rect key="frame" x="20" y="20" width="440" height="398"/>
                         <subviews>
                             <textField verticalHuggingPriority="100" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="ASO-EU-b27">
-                                <rect key="frame" x="-2" y="70" width="444" height="304"/>
+                                <rect key="frame" x="-2" y="94" width="444" height="304"/>
                                 <textFieldCell key="cell" selectable="YES" id="dEe-sg-TaH">
                                     <font key="font" usesAppearanceFont="YES"/>
                                     <string key="title">A simple demo for the DSFQuickActionBar
@@ -729,7 +729,7 @@ Keyboard commands :-
                                 </textFieldCell>
                             </textField>
                             <stackView distribution="fillProportionally" orientation="horizontal" alignment="firstBaseline" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="a31-LZ-Eef">
-                                <rect key="frame" x="70" y="28" width="300" height="34"/>
+                                <rect key="frame" x="70" y="52" width="300" height="34"/>
                                 <subviews>
                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="F2O-Hb-2Db">
                                         <rect key="frame" x="-2" y="18" width="157" height="16"/>
@@ -782,6 +782,16 @@ Keyboard commands :-
                                     <real value="3.4028234663852886e+38"/>
                                 </customSpacing>
                             </stackView>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="zHu-va-kgU">
+                                <rect key="frame" x="91" y="27" width="256" height="18"/>
+                                <buttonCell key="cell" type="check" title="Show all results when search is empty" bezelStyle="regularSquare" imagePosition="left" inset="2" id="c1j-C4-0rp">
+                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <binding destination="Voe-Tx-rLC" name="value" keyPath="self.showAllWhenEmpty" id="YvL-lA-8rM"/>
+                                </connections>
+                            </button>
                             <stackView distribution="fill" orientation="horizontal" alignment="top" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RT9-FB-PVI">
                                 <rect key="frame" x="0.0" y="0.0" width="440" height="20"/>
                                 <subviews>
@@ -806,8 +816,10 @@ Keyboard commands :-
                             <integer value="1000"/>
                             <integer value="1000"/>
                             <integer value="1000"/>
+                            <integer value="1000"/>
                         </visibilityPriorities>
                         <customSpacing>
+                            <real value="3.4028234663852886e+38"/>
                             <real value="3.4028234663852886e+38"/>
                             <real value="3.4028234663852886e+38"/>
                             <real value="3.4028234663852886e+38"/>

@@ -171,9 +171,9 @@ internal extension DSFQuickActionBar.Window {
 			let baseLayer = primaryStack.layer!
 
 			baseLayer.cornerRadius = 10
-			baseLayer.backgroundColor = NSColor.controlBackgroundColor.cgColor
+			baseLayer.backgroundColor = NSColor.underPageBackgroundColor.cgColor
 			baseLayer.borderColor = NSColor.controlColor.cgColor
-			baseLayer.borderWidth = self.backingScaleFactor == 2 ? 0.5 : 1.0
+			baseLayer.borderWidth = 1
 
 			primaryStack.needsLayout = true
 

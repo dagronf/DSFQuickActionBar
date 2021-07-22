@@ -61,6 +61,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	@IBAction func setLoadingType(_ sender: NSButton) {
 		self.loadingType = sender.tag
 	}
+
+	@objc dynamic var showAllWhenEmpty: Bool = false
+
 }
 
 class Mountain {
@@ -73,10 +76,13 @@ class Mountain {
 
 extension AppDelegate: DSFQuickActionBarDelegate {
 	func quickActionBar(_: DSFQuickActionBar, itemsForSearchTerm term: String) -> [DSFQuickActionBar.ItemIdentifier] {
-		//		// Display ALL items when there's no search term
-		//		if term.isEmpty {
-		//			return allMountains.map { $0.identifier }
-		//		}
+
+		// Display ALL items when there's no search term
+		if showAllWhenEmpty && term.isEmpty {
+			return allMountains
+				.sorted { a, b in a.name < b.name }
+				.map { $0.identifier }
+		}
 
 		self.currentSearch = term
 
@@ -127,6 +133,9 @@ extension AppDelegate {
 			attName.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: ran)
 			attName.addAttribute(.font, value: NSFont.systemFont(ofSize: item.actionName.font?.pointSize ?? 23,
 																				  weight: .bold), range: ran)
+			item.actionName.attributedStringValue = attName
+		}
+		else {
 			item.actionName.attributedStringValue = attName
 		}
 		item.actionDescription.stringValue = "\(mountain.name) description"
