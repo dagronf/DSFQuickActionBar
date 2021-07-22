@@ -692,16 +692,45 @@
             </items>
             <point key="canvasLocation" x="200" y="121"/>
         </menu>
-        <window title="Simple Demo" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g">
+        <window title="Simple DSFQuickActionBar Demo" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="335" y="390" width="480" height="360"/>
+            <rect key="contentRect" x="335" y="390" width="480" height="359"/>
             <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
             <view key="contentView" id="EiT-Mj-1SZ">
-                <rect key="frame" x="0.0" y="0.0" width="480" height="360"/>
+                <rect key="frame" x="0.0" y="0.0" width="480" height="359"/>
                 <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <textField verticalHuggingPriority="100" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="ASO-EU-b27">
+                        <rect key="frame" x="18" y="67" width="444" height="272"/>
+                        <textFieldCell key="cell" selectable="YES" id="dEe-sg-TaH">
+                            <font key="font" usesAppearanceFont="YES"/>
+                            <mutableString key="title">A simple demo for the DSFQuickActionBar
+
+Open a quick action bar :-
+
+Command-Shift-O: Open a quick action bar for the current window
+Command-Shift-G: Open a quick action bar for the current screen 
+
+Start typing in the quick action bar and the results will appear below. For example, type "mount" will present the mountains that contain 'mount' in their name.
+
+Keyboard commands :-
+
+Hitting the down arrow when focussed on the search field will move the focus to the results table
+Hitting the left arrow when the results table is focussed will move the focus back to the search text</mutableString>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="ASO-EU-b27" secondAttribute="trailing" constant="20" symbolic="YES" id="8ea-r9-BcU"/>
+                    <constraint firstItem="ASO-EU-b27" firstAttribute="top" secondItem="EiT-Mj-1SZ" secondAttribute="top" constant="20" symbolic="YES" id="ChT-Yq-uCP"/>
+                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="ASO-EU-b27" secondAttribute="bottom" constant="20" symbolic="YES" id="HjP-rk-VPY"/>
+                    <constraint firstItem="ASO-EU-b27" firstAttribute="leading" secondItem="EiT-Mj-1SZ" secondAttribute="leading" constant="20" symbolic="YES" id="uXT-eo-Jnr"/>
+                </constraints>
             </view>
-            <point key="canvasLocation" x="200" y="400"/>
+            <point key="canvasLocation" x="201" y="428"/>
         </window>
     </objects>
 </document>

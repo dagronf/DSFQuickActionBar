@@ -13,6 +13,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	@IBOutlet var window: NSWindow!
 
+	var currentSearch = ""
+
 	lazy var quickActionBar: DSFQuickActionBar = {
 		let b = DSFQuickActionBar()
 		b.delegate = self
@@ -64,6 +66,8 @@ extension AppDelegate: DSFQuickActionBarDelegate {
 //			return allMountains.map { $0.identifier }
 //		}
 
+		self.currentSearch = term
+
 		if term.isEmpty {
 			return []
 		}
@@ -84,8 +88,22 @@ extension AppDelegate: DSFQuickActionBarDelegate {
 
 		let item = MountainCellQuickView()
 
-		item.actionName.stringValue = mountain.name
+		let searchText = currentSearch.lowercased()
+		let attName = NSMutableAttributedString(string: mountain.name)
+
+		if currentSearch.count > 0,
+			let r = mountain.name.lowercased().range(of: searchText)
+		{
+			let ran = NSRange(r, in: mountain.name)
+			attName.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: ran)
+			attName.addAttribute(.font, value: NSFont.systemFont(ofSize: item.actionName.font?.pointSize ?? 23,
+																 weight: .bold), range: ran)
+			item.actionName.attributedStringValue = attName
+			
+		}
+
 		item.actionDescription.stringValue = "\(mountain.name) description"
+
 		return item
 	}
 	

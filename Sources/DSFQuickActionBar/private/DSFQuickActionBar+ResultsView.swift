@@ -143,14 +143,26 @@ extension DSFQuickActionBar.ResultsView {
 
 		self.window?.resignKey()
 	}
+
+	func backAction() {
+		self.quickActionBar.quickActionBarWindow?.pressedLeftArrowInResultsView()
+	}
 }
 
 extension DSFQuickActionBar {
 	class ResultsTableView: NSTableView {
 		weak var parent: DSFQuickActionBar.ResultsView?
 		override func keyDown(with event: NSEvent) {
-			if event.keyCode == 0x24 { // kVK_Return {
-				self.parent?.rowAction()
+			if let parent = self.parent {
+				if event.keyCode == 0x24 { // kVK_Return {
+					parent.rowAction()
+				}
+				else if event.keyCode == 0x7B { // kVK_LeftArrow
+					parent.backAction()
+				}
+				else {
+					super.keyDown(with: event)
+				}
 			}
 			else {
 				super.keyDown(with: event)

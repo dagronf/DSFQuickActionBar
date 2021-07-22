@@ -194,6 +194,11 @@ extension DSFQuickActionBar.Window {
 		self.quickActionBar.delegate?.quickActionBarDidCancel(self.quickActionBar)
 		self.resignKey()
 	}
+
+	func pressedLeftArrowInResultsView() {
+		self.makeFirstResponder(self.editLabel)
+	}
+
 }
 
 extension DSFQuickActionBar.Window: NSTextFieldDelegate {
@@ -219,7 +224,8 @@ extension DSFQuickActionBar.Window: NSTextFieldDelegate {
 	func control(_ control: NSControl, textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
 		if commandSelector == #selector(moveDown(_:)) {
 			self.makeFirstResponder(self.results.tableView)
-			self.results.tableView.selectRowIndexes(IndexSet(integer: 0), byExtendingSelection: false)
+			let selection: Int = (self.results.tableView.selectedRow == -1) ? 0 : self.results.tableView.selectedRow
+			self.results.tableView.selectRowIndexes(IndexSet(integer: selection), byExtendingSelection: false)
 			return true
 		}
 		return false
