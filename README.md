@@ -6,9 +6,10 @@ A spotlight-inspired quick action bar for macOS.
     <img src="https://img.shields.io/github/v/tag/dagronf/DSFQuickActionBar" />
     <img src="https://img.shields.io/badge/macOS-10.13+-red" />
     <img src="https://img.shields.io/badge/Swift-5.1-orange.svg" />
-    <img src="https://img.shields.io/badge/License-MIT-lightgrey" />
+    <img src="https://img.shields.io/badge/SwiftUI-2.0+-green" />
     <a href="https://swift.org/package-manager">
         <img src="https://img.shields.io/badge/spm-compatible-brightgreen.svg?style=flat" alt="Swift Package Manager" /></a>
+    <img src="https://img.shields.io/badge/License-MIT-lightgrey" />
 </p>
 
 <p align="center">
@@ -269,7 +270,18 @@ struct MountainViewCell: View {
 
 </details>
 
-# Releases
+## Screenshots
+
+<p align="center">
+   <a href="https://github.com/dagronf/dagronf.github.io/blob/master/art/projects/DSFQuickActionBar/filters-empty.png?raw=true">
+      <img src="https://github.com/dagronf/dagronf.github.io/blob/master/art/projects/DSFQuickActionBar/filters-empty.png?raw=true" width="400"/></a>
+   </a><br/>
+   <a href="https://github.com/dagronf/dagronf.github.io/blob/master/art/projects/DSFQuickActionBar/filter.png?raw=true">
+      <img src="https://github.com/dagronf/dagronf.github.io/blob/master/art/projects/DSFQuickActionBar/filter.png?raw=true" width="400"/></a>
+   </a>
+</p>
+
+## Releases
 
 ### 1.0.0
 

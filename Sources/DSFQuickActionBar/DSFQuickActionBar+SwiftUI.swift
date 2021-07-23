@@ -33,9 +33,13 @@ import SwiftUI
 public extension DSFQuickActionBar {
 	// SwiftUI definitions for the image that appears next to the quick action bar's edit field
 	struct SearchIcon {
-		let image: Image
-		let size: CGSize
-		let isTemplate: Bool
+
+		/// The default image for the search icon
+		public static let Default = SearchIcon()
+
+		internal let image: Image?
+		internal let size: CGSize
+		internal let isTemplate: Bool
 
 		/// Create a SearchIcon
 		/// - Parameters:
@@ -43,10 +47,10 @@ public extension DSFQuickActionBar {
 		///   - size: The size of the image
 		///   - isTemplate: If true, displays the image as a templated image
 		public init(
-			_ image: Image,
+			_ image: Image? = nil,
 			size: CGSize = CGSize(width: 64, height: 64),
-			isTemplate: Bool = false)
-		{
+			isTemplate: Bool = false
+		) {
 			self.image = image
 			self.size = size
 			self.isTemplate = isTemplate
@@ -55,7 +59,7 @@ public extension DSFQuickActionBar {
 }
 
 @available(macOS 10.15, *)
-/// The QuickActionBar content source protocol
+/// The QuickActionBar SwiftUI content source protocol
 public protocol DSFQuickActionBarSwiftUIContentSource {
 	/// Return an array of the identifiers to be displayed for the specified search term
 	func identifiersForSearch(_ term: String) -> [DSFQuickActionBar.ItemIdentifier]
@@ -81,21 +85,22 @@ public extension DSFQuickActionBar {
 
 		/// Presents a DSFQuickActionBar on the main screen
 		/// - Parameters:
-		///   - screenPosition: the position on the current screen to present the bar
-		///   - placeholderText: the placeholder text to display in the search field
-		///   - searchIcon: the image to use as the search image. If nil, no search field image is displayed
-		///   - initialSearchText: the text to initially populate the search field with
+		///   - screenPosition: the position on the current screen to present the bar, or nil for centering on screen
+		///   - placeholderText: (optional) the placeholder text to display in the search field
+		///   - searchIcon: (optional) the image to use as the search image. If nil, no search field image is displayed. If not specified, uses the default image
+		///   - initialSearchText: (optional) the text to initially populate the search field with
 		///   - width: the width of the quick action bar to display
 		///   - contentSource: The data source for the quick action bar content
 		public func present(
 			screenPosition: CGRect? = nil,
 			placeholderText: String? = DSFQuickActionBar.DefaultPlaceholderString,
-			searchIcon: DSFQuickActionBar.SearchIcon? = nil,
+			searchIcon: DSFQuickActionBar.SearchIcon? = DSFQuickActionBar.SearchIcon.Default,
 			initialSearchText: String? = nil,
-			width: CGFloat = DSFQuickActionBar.DefaultWidth,
-			contentSource: DSFQuickActionBarSwiftUIContentSource) {
+			width _: CGFloat = DSFQuickActionBar.DefaultWidth,
+			contentSource: DSFQuickActionBarSwiftUIContentSource
+		) {
 			self.contentSource = contentSource
-			quickActionBar.present(
+			self.quickActionBar.present(
 				screenPosition: screenPosition,
 				placeholderText: placeholderText,
 				searchIcon: searchIcon,
@@ -115,6 +120,7 @@ public extension DSFQuickActionBar {
 		}
 
 		// MARK: - Private
+
 		private let quickActionBar = DSFQuickActionBar.CoreSwiftUI<RowContent>()
 		private var contentSource: DSFQuickActionBarSwiftUIContentSource?
 	}

@@ -63,7 +63,14 @@ extension DSFQuickActionBar {
 
 			var searchFieldIcon: NSImage?
 			if let icon = searchIcon {
-				searchFieldIcon = icon.image.resizable().asNSImage(size: icon.size, isTemplate: icon.isTemplate)
+				if icon.image == nil {
+					// Default image
+					searchFieldIcon = DSFQuickActionBar.DefaultImage
+				}
+				else if let image = icon.image {
+					// Specified image
+					searchFieldIcon = image.resizable().asNSImage(size: icon.size, isTemplate: icon.isTemplate)
+				}
 			}
 
 			if let pos = screenPosition {
