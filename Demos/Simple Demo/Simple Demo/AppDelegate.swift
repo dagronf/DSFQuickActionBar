@@ -18,7 +18,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	lazy var quickActionBar: DSFQuickActionBar = {
 		let b = DSFQuickActionBar()
-		b.delegate = self
+		b.contentSource = self
 		return b
 	}()
 
@@ -61,7 +61,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 }
 
-extension AppDelegate: DSFQuickActionBarDelegate {
+extension AppDelegate: DSFQuickActionBarContentSource {
 	func quickActionBar(_: DSFQuickActionBar, identifiersForSearchTerm term: String) -> [DSFQuickActionBar.ItemIdentifier] {
 
 		// Display ALL items when there's no search term

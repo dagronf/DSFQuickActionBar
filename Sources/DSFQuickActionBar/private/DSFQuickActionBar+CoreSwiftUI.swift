@@ -33,10 +33,10 @@ import SwiftUI
 extension DSFQuickActionBar {
 
 	/// A SwiftUI wrapper for DSFQuickActionBar
-	internal class CoreSwiftUI<RowContent: View>: NSObject, DSFQuickActionBarDelegate {
+	internal class CoreSwiftUI<RowContent: View>: NSObject, DSFQuickActionBarContentSource {
 		private lazy var quickAction: DSFQuickActionBar = {
 			let qb = DSFQuickActionBar()
-			qb.delegate = self
+			qb.contentSource = self
 			return qb
 		}()
 
@@ -46,8 +46,11 @@ extension DSFQuickActionBar {
 		private var didCancel: (() -> Void)?
 
 		func present(
+			screenPosition: CGRect? = nil,
 			placeholderText: String? = nil,
 			searchIcon: DSFQuickActionBar.SearchIcon? = nil,
+			initialSearchText: String? = nil,
+			width: CGFloat = DSFQuickActionBar.DefaultWidth,
 			identify: @escaping (String) -> [DSFQuickActionBar.ItemIdentifier],
 			rowContent: @escaping (DSFQuickActionBar.ItemIdentifier) -> RowContent?,
 			action: @escaping (DSFQuickActionBar.ItemIdentifier) -> Void,
@@ -63,10 +66,23 @@ extension DSFQuickActionBar {
 				searchFieldIcon = icon.image.resizable().asNSImage(size: icon.size, isTemplate: icon.isTemplate)
 			}
 
-			self.quickAction.presentOnMainScreen(
-				placeholderText: placeholderText,
-				searchImage: searchFieldIcon
-			)
+			if let pos = screenPosition {
+				self.quickAction.present(
+					screenPosition: pos,
+					placeholderText: placeholderText,
+					searchImage: searchFieldIcon,
+					initialSearchText: initialSearchText,
+					width: width
+				)
+			}
+			else {
+				self.quickAction.presentOnMainScreen(
+					placeholderText: placeholderText,
+					searchImage: searchFieldIcon,
+					initialSearchText: initialSearchText,
+					width: width
+				)
+			}
 		}
 
 		func quickActionBar(_: DSFQuickActionBar, identifiersForSearchTerm term: String) -> [DSFQuickActionBar.ItemIdentifier] {

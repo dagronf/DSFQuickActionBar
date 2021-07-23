@@ -206,7 +206,7 @@ internal extension DSFQuickActionBar.Window {
 extension DSFQuickActionBar.Window {
 	// Called when the user presses 'escape' when the window is present
 	override func cancelOperation(_: Any?) {
-		self.quickActionBar.delegate?.quickActionBarDidCancel(self.quickActionBar)
+		self.quickActionBar.contentSource?.quickActionBarDidCancel(self.quickActionBar)
 		self.resignKey()
 	}
 
@@ -224,12 +224,12 @@ extension DSFQuickActionBar.Window: NSTextFieldDelegate {
 	}
 
 	func textChanged() {
-		guard let delegate = self.quickActionBar.delegate else { return }
+		guard let contentSource = self.quickActionBar.contentSource else { return }
 
 		let currentSearch = self.editLabel.stringValue
 
 		// Get a list of the identifiers than match
-		let identifiers = delegate.quickActionBar(self.quickActionBar, identifiersForSearchTerm: currentSearch)
+		let identifiers = contentSource.quickActionBar(self.quickActionBar, identifiersForSearchTerm: currentSearch)
 
 		// And update the display list
 		self.results.identifiers = identifiers

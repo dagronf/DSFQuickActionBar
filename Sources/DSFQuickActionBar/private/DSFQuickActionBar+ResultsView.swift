@@ -121,7 +121,7 @@ extension DSFQuickActionBar.ResultsView: NSTableViewDelegate, NSTableViewDataSou
 	func tableView(_: NSTableView, viewFor _: NSTableColumn?, row: Int) -> NSView? {
 		// Swift.print("view for \(row)")
 		let itemIdentifier = self.identifiers[row]
-		return self.quickActionBar.delegate?.quickActionBar(self.quickActionBar, viewForIdentifier: itemIdentifier)
+		return self.quickActionBar.contentSource?.quickActionBar(self.quickActionBar, viewForIdentifier: itemIdentifier)
 	}
 }
 
@@ -139,7 +139,7 @@ extension DSFQuickActionBar.ResultsView {
 		}
 
 		let itemIdentifier = self.identifiers[selectedRow]
-		self.quickActionBar.delegate?.quickActionBar(self.quickActionBar, didSelectIdentifier: itemIdentifier)
+		self.quickActionBar.contentSource?.quickActionBar(self.quickActionBar, didSelectIdentifier: itemIdentifier)
 
 		self.window?.resignKey()
 	}

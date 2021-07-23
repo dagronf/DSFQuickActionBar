@@ -19,7 +19,7 @@ struct ContentView: View {
 	@State var selectedMountain: Mountain?
 
 	var body: some View {
-		GeometryReader { gp in
+		GeometryReader { geom in
 			VStack {
 				Text("SwiftUI Demo for DSFQuickActionBar").font(.title2)
 				Text("SwiftUI currently only supports global positions for the")
@@ -29,7 +29,6 @@ struct ContentView: View {
 				Text("Press the button to display a quick action bar")
 				HStack {
 					Button("Show Quick Action Bar") {
-						let frame = gp.frame(in: .global)
 						self.quickActionBar.present(
 							placeholderText: "Search Mountains",
 							searchIcon: searchIcon,
@@ -43,8 +42,8 @@ struct ContentView: View {
 					Text(selectedMountain?.name ?? "<nothing>")
 				}
 			}
-			.padding()
 			.frame(width: 400)
+			.padding()
 		}
 	}
 }
@@ -58,7 +57,7 @@ struct ContentView_Previews: PreviewProvider {
 // MARK: - QuickBar content source
 
 /// A data source for the quick bar that allows searching mountains
-class MountainContentSource: DSFQuickActionBarContentSource {
+class MountainContentSource: DSFQuickActionBarSwiftUIContentSource {
 
 	@Binding var selectedMountain: Mountain?
 

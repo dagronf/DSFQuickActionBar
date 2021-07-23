@@ -48,8 +48,8 @@ public class DSFQuickActionBar {
 		return image
 	}()
 
-	/// The delegate for the bar
-	public weak var delegate: DSFQuickActionBarDelegate?
+	/// The contentSource for the bar
+	public weak var contentSource: DSFQuickActionBarContentSource?
 
 	/// Create a DSFQuickActionBar instance
 	public init() {}
@@ -63,6 +63,29 @@ public class DSFQuickActionBar {
 }
 
 public extension DSFQuickActionBar {
+	/// Present a DSFQuickActionBar located within the bounds of the provided parent window
+	/// - Parameters:
+	///   - screenPosition: the screen frame to center the bar in
+	///   - placeholderText: the placeholder text to display in the search field
+	///   - searchImage: the image to use as the search image. If nil, no search field image is displayed
+	///   - initialSearchText: the text to initially populate the search field with
+	///   - width: the width of the quick action bar to display
+	func present(
+		screenPosition: CGRect,
+		placeholderText: String? = DSFQuickActionBar.DefaultPlaceholderString,
+		searchImage: NSImage? = DSFQuickActionBar.DefaultImage,
+		initialSearchText: String? = nil,
+		width: CGFloat = DSFQuickActionBar.DefaultWidth
+	) {
+		self.present(
+			in: screenPosition,
+			parentWindow: nil,
+			placeholderText: placeholderText,
+			searchImage: searchImage,
+			initialSearchText: initialSearchText,
+			width: width)
+	}
+
 	/// Present a DSFQuickActionBar located within the bounds of the provided parent window
 	/// - Parameters:
 	///   - parent: the window to center the quick action bar in

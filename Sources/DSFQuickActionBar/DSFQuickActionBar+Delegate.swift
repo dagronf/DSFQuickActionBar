@@ -28,7 +28,7 @@
 import AppKit
 
 /// Delegate for a QSFQuickActionBar instance
-public protocol DSFQuickActionBarDelegate: NSObjectProtocol {
+public protocol DSFQuickActionBarContentSource: NSObjectProtocol {
 	/// Return an array of the identifiers to be displayed for the specified search term
 	func quickActionBar(_ quickActionBar: DSFQuickActionBar, identifiersForSearchTerm term: String) -> [DSFQuickActionBar.ItemIdentifier]
 
@@ -42,7 +42,7 @@ public protocol DSFQuickActionBarDelegate: NSObjectProtocol {
 	func quickActionBarDidCancel(_ quickActionBar: DSFQuickActionBar)
 }
 
-extension DSFQuickActionBarDelegate {
+extension DSFQuickActionBarContentSource {
 	/// Default implementation for cancel
 	public func quickActionBarDidCancel(_ quickActionBar: DSFQuickActionBar) {
 		// Do nothing
