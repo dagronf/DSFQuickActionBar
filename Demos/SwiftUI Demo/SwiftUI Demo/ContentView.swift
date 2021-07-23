@@ -8,50 +8,66 @@
 import SwiftUI
 import DSFQuickActionBar
 
+
 struct ContentView: View {
 
-	let qab = DSFQuickActionBar.SwiftUI<MountainViewCell>()
+	let quickActionBar = DSFQuickActionBar.SwiftUI<MountainViewCell>()
 	let searchIcon = DSFQuickActionBar.SearchIcon(
 		Image("mountain-template"),
 		isTemplate: true)
 
-	@State var selectedMountainName: String = ""
+	@State var selectedMountain: Mountain?
 
 	var body: some View {
-		VStack {
-			Text("SwiftUI Demo for DSFQuickActionBar").font(.title2)
-			Text("Press the button to display a quick action bar")
-			HStack {
-				Button("Show Quick Action Bar") {
-					qab.present(
-						placeholderText: "Search Mountains",
-						searchIcon: searchIcon) { term in
-						identifiersForSearch(term)
-					}
-					rowContent: { identifier in
-						viewForIdentifier(identifier)
-					}
-					action: { identifier in
-						didSelectIdentifier(identifier)
+		GeometryReader { gp in
+			VStack {
+				Text("SwiftUI Demo for DSFQuickActionBar").font(.title2)
+				Text("SwiftUI currently only supports global positions for the")
+				Text("quick action bar due to limitations in the framework")
+				Spacer().frame(height: 8)
+				Divider()
+				Text("Press the button to display a quick action bar")
+				HStack {
+					Button("Show Quick Action Bar") {
+						let frame = gp.frame(in: .global)
+						self.quickActionBar.present(
+							placeholderText: "Search Mountains",
+							searchIcon: searchIcon,
+							contentSource: MountainContentSource(
+								selectedMountain: $selectedMountain)
+						)
 					}
 				}
+				HStack {
+					Text("User selected: ")
+					Text(selectedMountain?.name ?? "<nothing>")
+				}
 			}
-			HStack {
-				Text("User selected: ")
-				Text("\(selectedMountainName)")
-			}
+			.padding()
+			.frame(width: 400)
 		}
-		.padding()
-		.frame(width: 400)
 	}
 }
 
-extension ContentView {
+struct ContentView_Previews: PreviewProvider {
+	static var previews: some View {
+		ContentView()
+	}
+}
+
+// MARK: - QuickBar content source
+
+/// A data source for the quick bar that allows searching mountains
+class MountainContentSource: DSFQuickActionBarContentSource {
+
+	@Binding var selectedMountain: Mountain?
+
+	init(selectedMountain: Binding<Mountain?>) {
+		self._selectedMountain = selectedMountain
+	}
 
 	func identifiersForSearch(_ term: String) -> [DSFQuickActionBar.ItemIdentifier] {
 		if term.isEmpty { return [] }
-
-		/// Return the item identifiers for the matching mountains
 		return AllMountains
 			.filter { $0.name.localizedCaseInsensitiveContains(term) }
 			.sorted(by: { a, b in a.name < b.name })
@@ -59,25 +75,23 @@ extension ContentView {
 			.map { $0.identifier }
 	}
 
-	func viewForIdentifier(_ identifier: DSFQuickActionBar.ItemIdentifier) -> MountainViewCell? {
+	func viewForIdentifier<RowContent>(_ identifier: DSFQuickActionBar.ItemIdentifier) -> RowContent? where RowContent: View {
 		guard let mountain = AllMountains.filter({ $0.identifier == identifier }).first else {
 			return nil
 		}
-		return MountainViewCell(name: mountain.name, height: mountain.height)
+		return MountainViewCell(name: mountain.name, height: mountain.height) as? RowContent
 	}
+
 
 	func didSelectIdentifier(_ identifier: DSFQuickActionBar.ItemIdentifier) {
 		guard let mountain = AllMountains.filter({ $0.identifier == identifier }).first else {
 			return
 		}
-		selectedMountainName = mountain.name
+		selectedMountain = mountain
 	}
-}
 
-
-struct ContentView_Previews: PreviewProvider {
-	static var previews: some View {
-		ContentView()
+	func didCancel() {
+		selectedMountain = nil
 	}
 }
 

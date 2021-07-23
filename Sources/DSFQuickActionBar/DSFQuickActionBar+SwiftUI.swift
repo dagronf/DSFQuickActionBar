@@ -51,64 +51,54 @@ public extension DSFQuickActionBar {
 }
 
 @available(macOS 10.15, *)
-public extension DSFQuickActionBar {
-
-	/// A SwiftUI implementation for DSFQuickActionBar
-	class SwiftUI<RowContent: View>: NSObject, DSFQuickActionBarDelegate {
-		private lazy var quickAction: DSFQuickActionBar = {
-			let qb = DSFQuickActionBar()
-			qb.delegate = self
-			return qb
-		}()
-
-		private var identify: (String) -> [DSFQuickActionBar.ItemIdentifier] = { _ in [] }
-		private var rowContent: (DSFQuickActionBar.ItemIdentifier) -> RowContent? = { _ in nil }
-		private var action: (DSFQuickActionBar.ItemIdentifier) -> Void = { _ in }
-		private var didCancel: (() -> Void)?
-
-		public func present(
-			placeholderText: String? = nil,
-			searchIcon: DSFQuickActionBar.SearchIcon? = nil,
-			identify: @escaping (String) -> [DSFQuickActionBar.ItemIdentifier],
-			rowContent: @escaping (DSFQuickActionBar.ItemIdentifier) -> RowContent?,
-			action: @escaping (DSFQuickActionBar.ItemIdentifier) -> Void,
-			didCancel: (() -> Void)? = nil
-		) {
-			self.identify = identify
-			self.rowContent = rowContent
-			self.action = action
-			self.didCancel = didCancel
-
-			var searchFieldIcon: NSImage?
-			if let icon = searchIcon {
-				searchFieldIcon = icon.image.resizable().asNSImage(size: icon.size, isTemplate: icon.isTemplate)
-			}
-
-			self.quickAction.presentOnMainScreen(
-				placeholderText: placeholderText,
-				searchImage: searchFieldIcon
-			)
-		}
-
-		public func quickActionBar(_: DSFQuickActionBar, identifiersForSearchTerm term: String) -> [DSFQuickActionBar.ItemIdentifier] {
-			return self.identify(term)
-		}
-
-		public func quickActionBar(_: DSFQuickActionBar, viewForIdentifier identifier: DSFQuickActionBar.ItemIdentifier) -> NSView? {
-			if let view = self.rowContent(identifier) {
-				return NSHostingView(rootView: view)
-			}
-			return nil
-		}
-
-		public func quickActionBar(_: DSFQuickActionBar, didSelectIdentifier identifier: DSFQuickActionBar.ItemIdentifier) {
-			self.action(identifier)
-		}
-
-		public func quickActionBarDidCancel(_: DSFQuickActionBar) {
-			self.didCancel?()
-		}
-	}
+/// The QuickActionBar content source protocol
+public protocol DSFQuickActionBarContentSource {
+	/// Return an array of the identifiers to be displayed for the specified search term
+	func identifiersForSearch(_ term: String) -> [DSFQuickActionBar.ItemIdentifier]
+	/// Return the view to be displayed for the specified identifier
+	func viewForIdentifier<RowContent: View>(_ identifier: DSFQuickActionBar.ItemIdentifier) -> RowContent?
+	/// Called when the specified identifier is 'activated' (double clicked, return key pressed etc)
+	func didSelectIdentifier(_ identifier: DSFQuickActionBar.ItemIdentifier)
+	/// Called when the quick action bar was dismissed without selecting an item (optional)
+	func didCancel()
 }
 
+@available(macOS 10.15, *)
+public extension DSFQuickActionBarContentSource {
+	/// Default implementation for cancel
+	func didCancel() {}
+}
+
+@available(macOS 10.15, *)
+public extension DSFQuickActionBar {
+	/// A SwiftUI implementaion of DSFQuickActionBar
+	class SwiftUI<RowContent: View> {
+		public init() {}
+		public func present(
+			placeholderText: String? = DSFQuickActionBar.DefaultPlaceholderString,
+			searchIcon: DSFQuickActionBar.SearchIcon? = nil,
+			contentSource: DSFQuickActionBarContentSource) {
+			self.contentSource = contentSource
+			quickActionBar.present(
+				placeholderText: placeholderText,
+				searchIcon: searchIcon
+			) { term in
+				self.contentSource?.identifiersForSearch(term) ?? []
+			}
+			rowContent: { identifier in
+				self.contentSource?.viewForIdentifier(identifier)
+			}
+			action: { identifier in
+				self.contentSource?.didSelectIdentifier(identifier)
+			}
+			didCancel: {
+				self.contentSource?.didCancel()
+			}
+		}
+
+		// MARK: - Private
+		private let quickActionBar = DSFQuickActionBar.CoreSwiftUI<RowContent>()
+		private var contentSource: DSFQuickActionBarContentSource?
+	}
+}
 #endif

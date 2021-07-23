@@ -143,6 +143,39 @@ extension DSFQuickActionBar {
 			self?.quickBarController = nil
 		}
 	}
+
+	private func present(
+		at screenPosition: CGRect,
+		placeholderText: String? = DSFQuickActionBar.DefaultPlaceholderString,
+		searchImage: NSImage? = DefaultImage,
+		initialSearchText: String? = nil,
+		width: CGFloat = DSFQuickActionBar.DefaultWidth
+	) {
+		self.width = width
+		self.searchImage = searchImage
+
+		let w2: CGFloat = width // the width of the action bar
+		let h2: CGFloat = 100 // just a default height
+
+		let x2 = screenPosition.origin.x + ((screenPosition.width - w2) / 2.0)
+		let y2 = screenPosition.origin.y + ((screenPosition.height - h2) / 1.3)
+		let posRect = CGRect(x: x2, y: y2, width: w2, height: h2)
+
+		let quickBarWindow = DSFQuickActionBar.Window()
+		self.quickActionBarWindow = quickBarWindow
+
+		quickBarWindow.quickActionBar = self
+		quickBarWindow.setFrame(posRect, display: true)
+		quickBarWindow.setup(parentWindow: nil, initialSearchText: initialSearchText)
+		quickBarWindow.makeKey()
+
+		quickBarWindow.placeholderText = placeholderText ?? ""
+
+		self.quickBarController = WindowController(window: quickBarWindow)
+		self.quickBarController?.setupWindowListener { [weak self] in
+			self?.quickBarController = nil
+		}
+	}
 }
 
 public extension DSFQuickActionBar {
