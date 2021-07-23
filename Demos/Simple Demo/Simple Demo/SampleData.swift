@@ -6,7 +6,24 @@
 //
 
 import Foundation
+import DSFQuickActionBar
 
+class Mountain {
+	let identifier = DSFQuickActionBar.ItemIdentifier()
+	let name: String
+	let height: Int
+	public init(name: String, height: Int) {
+		self.name = name
+		self.height = height
+	}
+}
+
+let AllMountains: [Mountain] = mountainsRawData.components(separatedBy: .newlines).map { line in
+	let components = line.components(separatedBy: ",")
+	let name = components[0]
+	let height = Int(components[1]) ?? -1
+	return Mountain(name: name, height: height)
+}
 
 
 let mountainsRawData = """

@@ -22,11 +22,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		return b
 	}()
 
-	private let allMountains: [Mountain] = mountainsRawData.components(separatedBy: .newlines).map { line in
-		let name = line.components(separatedBy: ",")[0]
-		return Mountain(name: name)
-	}
-
 	func applicationDidFinishLaunching(_: Notification) {
 		// Insert code here to initialize your application
 		self.resultLabel.stringValue = ""
@@ -66,20 +61,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 }
 
-class Mountain {
-	let identifier = DSFQuickActionBar.ItemIdentifier()
-	let name: String
-	public init(name: String) {
-		self.name = name
-	}
-}
-
 extension AppDelegate: DSFQuickActionBarDelegate {
 	func quickActionBar(_: DSFQuickActionBar, identifiersForSearchTerm term: String) -> [DSFQuickActionBar.ItemIdentifier] {
 
 		// Display ALL items when there's no search term
 		if showAllWhenEmpty && term.isEmpty {
-			return allMountains
+			return AllMountains
 				.sorted { a, b in a.name < b.name }
 				.map { $0.identifier }
 		}
@@ -91,7 +78,7 @@ extension AppDelegate: DSFQuickActionBarDelegate {
 		}
 
 		/// Return the item identifiers for the matching mountains
-		let matches = self.allMountains
+		let matches = AllMountains
 			.filter { $0.name.localizedCaseInsensitiveContains(term) }
 			.sorted(by: { a, b in a.name < b.name })
 			.prefix(100)
@@ -102,7 +89,7 @@ extension AppDelegate: DSFQuickActionBarDelegate {
 
 	func quickActionBar(_: DSFQuickActionBar, viewForIdentifier identifier: DSFQuickActionBar.ItemIdentifier) -> NSView? {
 		// Find the item with the specified item identifier
-		guard let mountain = allMountains.filter({ $0.identifier == identifier }).first else {
+		guard let mountain = AllMountains.filter({ $0.identifier == identifier }).first else {
 			return nil
 		}
 
@@ -117,7 +104,7 @@ extension AppDelegate: DSFQuickActionBarDelegate {
 	}
 
 	func quickActionBar(_: DSFQuickActionBar, didSelectIdentifier identifier: DSFQuickActionBar.ItemIdentifier) {
-		guard let mountain = allMountains.filter({ $0.identifier == identifier }).first else {
+		guard let mountain = AllMountains.filter({ $0.identifier == identifier }).first else {
 			fatalError()
 		}
 		self.resultLabel.stringValue = "Quick Action Bar selected '\(mountain.name)'"
