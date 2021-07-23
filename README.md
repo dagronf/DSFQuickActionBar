@@ -28,7 +28,7 @@ I've seen this in other mac applications (particularly spotlight) and it's very 
 
 ### Swift package manager
 
-Add `https://github.com/dagronf/DSFDockTile` to your project.
+Add `https://github.com/dagronf/DSFQuickActionBar` to your project.
 
 ## Features
 
@@ -55,14 +55,21 @@ You can present a quick action bar in the context of a window (where it will be 
 	3. The user double-clicks an item in the result table
 	4. The user selects a row and presses 'return'
 
-### Delegate
+## Implementing
 
-The delegate provides the content and feedback for the quick action bar.
+The delegate (`DSFQuickActionBarDelegate`) provides the content and feedback for the quick action bar. The basic mechanism is similar to `NSTableViewDataSource`/`NSTableViewDelegate` in that the control will :-
 
-#### itemsForSearchTerm
+1. query the delegate for items matching a search term (itemsForSearchTerm)
+2. ask the delegate for for a view to display each item (viewForIdentifier)
+3. indicate that the user has pressed/clicked a selection in the results.
+
+#### identifiersForSearchTerm
 
 ```swift
-func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTerm term: String) -> [DSFQuickActionBar.ItemIdentifier]
+func quickActionBar(
+   _ quickActionBar: DSFQuickActionBar,
+   identifiersForSearchTerm term: String
+) -> [DSFQuickActionBar.ItemIdentifier]
 ```
 
 Returns an array of the unique identifiers for items that match the search term. The definition of 'match' is entirely up to you - you can perform any check you want
@@ -70,7 +77,10 @@ Returns an array of the unique identifiers for items that match the search term.
 #### viewForIdentifier
 
 ```swift
-func quickActionBar(_ quickActionBar: DSFQuickActionBar, viewForIdentifier identifier: DSFQuickActionBar.ItemIdentifier) -> NSView? {
+func quickActionBar(
+   _ quickActionBar: DSFQuickActionBar,
+   viewForIdentifier identifier: DSFQuickActionBar.ItemIdentifier
+) -> NSView?
 ```
 
 Return the view to be displayed in the row for the item that matches the identifier.
@@ -78,62 +88,69 @@ Return the view to be displayed in the row for the item that matches the identif
 #### didSelectIdentifier
 
 ```swift
-func quickActionBar(_ quickActionBar: DSFQuickActionBar, didSelectIdentifier identifier: DSFQuickActionBar.ItemIdentifier)
+func quickActionBar(
+   _ quickActionBar: DSFQuickActionBar, 
+   didSelectIdentifier identifier: DSFQuickActionBar.ItemIdentifier
+)
 ```
 
 Notifies the delegate that the user activated an item in the result list. 
 
-
 ## Example
 
 ```swift
-let quickActionBar = DSFQuickActionBar()
+class QuickActions: DSFQuickActionBarDelegate {
 
-func doSomething() {
-   quickActionBar.delegate = self
-   quickActionBar.presentOnMainScreen(
-      placeholderText: "Quick Actions",
-      width: 600
-   )
-}
-
-struct Action {
-   let identifier = UUID()
-   let name: String
-}
-
-let actions = [
-   Action(name: "Format JSON"),
-   Action(name: "Format XML"),
-   Action(name: "Format Swift"),
-   Action(name: "Prettify JSON"),
-   Action(name: "Prettify XML"),
-   Action(name: "Prettify Swift"),
-]
-
-// Get all the identifiers for the actions that 'match' the term
-func quickActionBar(_ quickActionBar: DSFQuickActionBar, identifiersForSearchTerm term: String) -> [DSFQuickActionBar.ItemIdentifier] {
-   return self.actions
-      .filter { $0.name.localizedCaseInsensitiveContains(term) }
-      .sorted(by: { a, b in a.name < b.name })
-      .map { $0.identifier }
-}
-
-// Get the row's view for the action with the specified identifier
-func quickActionBar(_ quickActionBar: DSFQuickActionBar, viewForIdentifier identifier: DSFQuickActionBar.ItemIdentifier) -> NSView? {
-   // Find the item with the specified item identifier
-   guard let action = self.actions.filter({ $0.identifier == identifier }).first else {
-      fatalError()
+   struct Action {
+      // Unique identifier for each action
+      let identifier = DSFQuickActionBar.ItemIdentifier()
+      // The name of the action
+      let name: String
    }
-   return ActionView(action)
-}
 
-// Perform a task with the selected action
-func quickActionBar(_ quickActionBar: DSFQuickActionBar, didSelectIdentifier identifier: DSFQuickActionBar.ItemIdentifier) {
-   guard let action = self.actions.filter({ $0.identifier == identifier }).first else {
-      fatalError()
+   let actions = [
+      Action(name: "Format JSON"),
+      Action(name: "Format XML"),
+      Action(name: "Format Swift"),
+      Action(name: "Prettify JSON"),
+      Action(name: "Prettify XML"),
+      Action(name: "Prettify Swift"),
+   ]
+
+   let quickActionBar = DSFQuickActionBar()
+
+   func displayQuickActionBar() {
+      self.quickActionBar.delegate = self
+      self.quickActionBar.presentOnMainScreen(
+         placeholderText: "Quick Actions",
+         width: 600
+      )
    }
-   self.performAction(action)  // Do something with the selected item
+
+   // Get all the identifiers for the actions that 'match' the term
+   func quickActionBar(_: DSFQuickActionBar, identifiersForSearchTerm term: String) -> [DSFQuickActionBar.ItemIdentifier] {
+      return self.actions
+         .filter { $0.name.localizedCaseInsensitiveContains(term) }
+         .sorted(by: { a, b in a.name < b.name })
+         .map { $0.identifier }
+   }
+
+   // Get the row's view for the action with the specified identifier
+   func quickActionBar(_: DSFQuickActionBar, viewForIdentifier identifier: DSFQuickActionBar.ItemIdentifier) -> NSView? {
+      // Find the item with the specified item identifier
+      guard let action = self.actions.filter({ $0.identifier == identifier }).first else {
+         fatalError()
+      }
+      return ActionView(action)  // ActionView() is a NSView-derived class
+   }
+
+   // Perform a task with the selected action
+   func quickActionBar(_: DSFQuickActionBar, didSelectIdentifier identifier: DSFQuickActionBar.ItemIdentifier) {
+      guard let action = self.actions.filter({ $0.identifier == identifier }).first else {
+         fatalError()
+      }
+      self.performAction(action) // Do something with the selected item
+   }
 }
 
 ```
