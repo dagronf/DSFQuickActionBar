@@ -1,5 +1,5 @@
 //
-//  MountainCellQuickView.swift
+//  FilterCellQuickView.swift
 //  DSFQuickBar
 //
 //  Created by Darren Ford on 21/7/21.
@@ -7,7 +7,7 @@
 
 import AppKit
 
-class MountainCellQuickView: NSView {
+class FilterCellQuickView: NSView {
 
 	@IBOutlet var contentView: NSView!
 	@IBOutlet weak var actionName: NSTextField!

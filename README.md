@@ -120,24 +120,26 @@ func didSelectIdentifier(_ identifier: DSFQuickActionBar.ItemIdentifier)
 
 ### Swift Example
 
+A simple AppKit example using Core Image Filters as the contentSource.
+
 ```swift
 class QuickActions: DSFQuickActionBarContentSource {
 
-   struct Action {
-      // Unique identifier for each action
+   /// DATA
+
+   struct Filter {
       let identifier = DSFQuickActionBar.ItemIdentifier()
-      // The name of the action
       let name: String
+      var userPresenting: String { return CIFilter.localizedName(forFilterName: self.name) ?? self.name }
+      var description: String { return CIFilter.localizedDescription(forFilterName: self.name) ?? "" }
    }
 
-   let actions = [
-      Action(name: "Format JSON"),
-      Action(name: "Format XML"),
-      Action(name: "Format Swift"),
-      Action(name: "Prettify JSON"),
-      Action(name: "Prettify XML"),
-      Action(name: "Prettify Swift"),
-   ]
+   let AllFilters: [Filter] = {
+      let filterNames = CIFilter.filterNames(inCategory: nil).sorted()
+      return filterNames.map { name in Filter(name: name) }
+   }()
+
+   /// ACTIONS
 
    let quickActionBar = DSFQuickActionBar()
 
@@ -148,30 +150,32 @@ class QuickActions: DSFQuickActionBarContentSource {
          width: 600
       )
    }
+   
+   /// CALLBACKS
 
    // Get all the identifiers for the actions that 'match' the term
    func quickActionBar(_: DSFQuickActionBar, identifiersForSearchTerm term: String) -> [DSFQuickActionBar.ItemIdentifier] {
       return self.actions
-         .filter { $0.name.localizedCaseInsensitiveContains(term) }
-         .sorted(by: { a, b in a.name < b.name })
+         .filter { $0.userPresenting.localizedCaseInsensitiveContains(term) }
+         .sorted(by: { a, b in a.userPresenting < b.userPresenting })
          .map { $0.identifier }
    }
 
    // Get the row's view for the action with the specified identifier
    func quickActionBar(_: DSFQuickActionBar, viewForIdentifier identifier: DSFQuickActionBar.ItemIdentifier) -> NSView? {
       // Find the item with the specified item identifier
-      guard let action = self.actions.filter({ $0.identifier == identifier }).first else {
+      guard let filter = self.actions.filter({ $0.identifier == identifier }).first else {
          fatalError()
       }
-      return ActionView(action)  // ActionView() is a NSView-derived class
+      return FilterRowView(filter)  // FilterRowView() is a NSView-derived class
    }
 
    // Perform a task with the selected action
    func quickActionBar(_: DSFQuickActionBar, didSelectIdentifier identifier: DSFQuickActionBar.ItemIdentifier) {
-      guard let action = self.actions.filter({ $0.identifier == identifier }).first else {
+      guard let filter = self.actions.filter({ $0.identifier == identifier }).first else {
          fatalError()
       }
-      self.performAction(action) // Do something with the selected item
+      self.performAction(filter) // Do something with the selected filter
    }
 }
 ```
@@ -182,87 +186,99 @@ class QuickActions: DSFQuickActionBarContentSource {
 
 ### SwiftUI Example
 
-```swift
-/// SwiftUI view
+A simple macOS SwiftUI example using Core Image Filters as the contentSource.
 
+#### Data
+
+```swift
+struct Filter {
+   let identifier = DSFQuickActionBar.ItemIdentifier()
+   let name: String
+   var userPresenting: String { return CIFilter.localizedName(forFilterName: self.name) ?? self.name }
+   var description: String { return CIFilter.localizedDescription(forFilterName: self.name) ?? "" }
+}
+
+let AllFilters: [Filter] = {
+   let filterNames = CIFilter.filterNames(inCategory: nil).sorted()
+   return filterNames.map { name in Filter(name: name) }
+}()
+```
+
+#### SwiftUI View
+
+```swift
 struct ContentView: View {
 
-   // A quick action bar that uses MountainViewCell to display each row in the results
-   let quickActionBar = DSFQuickActionBar.SwiftUI<MountainViewCell>()
+   // Binding to update when the user selects a filter
+   @State var selectedFilter: Filter?
+
+   // A quick action bar that uses FilterViewCell to display each row in the results
+   let quickActionBar = DSFQuickActionBar.SwiftUI<FilterRowCell>()
 
    var body: some View {
       Button("Show Quick Action Bar") {
          self.quickActionBar.present(
-            placeholderText: "Search Mountains",
-            contentSource: MountainContentSource(selectedMountain: $selectedMountain)
+            placeholderText: "Search Core Image Filters",
+            contentSource: CoreImageFiltersContentSource(selectedFilter: $selectedFilter)
          )
       }
    }
 }
+```
 
-/// CONTENT SOURCE DEFINITION
+#### Content Source Definition
 
-let AllMountains: [Mountain] = [<mountain data>]
+```swift
+class CoreImageFiltersContentSource: DSFQuickActionBarSwiftUIContentSource {
 
-class MountainContentSource: DSFQuickActionBarSwiftUIContentSource {
+   @Binding var selectedFilter: Filter?
 
-   // Binding so we can pass the selected mountain back out
-   @Binding var selectedMountain: Mountain?
-
-   init(selectedMountain: Binding<Mountain?>) {
-      self._selectedMountain = selectedMountain
+   init(selectedFilter: Binding<Filter?>) {
+      self._selectedFilter = selectedFilter
    }
 
    func identifiersForSearch(_ term: String) -> [DSFQuickActionBar.ItemIdentifier] {
       if term.isEmpty { return [] }
-      return AllMountains
-         .filter { $0.name.localizedCaseInsensitiveContains(term) }
-         .sorted(by: { a, b in a.name < b.name })
+      return AllFilters
+         .filter { $0.userPresenting.localizedCaseInsensitiveContains(term) }
+         .sorted(by: { a, b in a.userPresenting < b.userPresenting } )
          .prefix(100)
-         .map { $0.identifier }
+         .map { $0.id }
    }
 
    func viewForIdentifier<RowContent>(_ identifier: DSFQuickActionBar.ItemIdentifier) -> RowContent? where RowContent: View {
-      guard let mountain = AllMountains.filter({ $0.identifier == identifier }).first else {
+      guard let filter = AllFilters.filter({ $0.id == identifier }).first else {
          return nil
       }
-      // Return a SwiftUI View that defines the row that will be displayed for the identifier
-      return MountainViewCell(name: mountain.name, height: mountain.height) as? RowContent
+      return FilterViewCell(filter: filter) as? RowContent
    }
 
-
    func didSelectIdentifier(_ identifier: DSFQuickActionBar.ItemIdentifier) {
-      guard let mountain = AllMountains.filter({ $0.identifier == identifier }).first else {
+      guard let filter = AllFilters.filter({ $0.id == identifier }).first else {
          return
       }
-      selectedMountain = mountain
+      selectedFilter = filter
    }
 
    func didCancel() {
-      selectedMountain = nil
+      selectedFilter = nil
    }
 }
+```
 
-/// CONTENT ROW SWIFTUI VIEW DEFINITION
+#### Filter Row View
 
-struct MountainViewCell: View {
-   let name: String
-   let height: Int
-   var description: String {
-      return "\(name) description"
-   }
-
+```swift
+struct FilterViewCell: View {
+   let filter: Filter
    var body: some View {
       HStack {
-         Image("mountain").resizable()
+         Image("filter-color").resizable()
             .frame(width: 42, height: 42)
          VStack(alignment: .leading) {
-            Text(name).font(.title)
-            Text(description).font(.callout).foregroundColor(.gray)
+            Text(filter.userPresenting).font(.title)
+            Text(filter.description).font(.callout).foregroundColor(.gray).italic()
          }
-         Spacer()
-         Text("\(height)").font(.callout).foregroundColor(.gray)
-            .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 8))
       }
    }
 }
@@ -282,6 +298,10 @@ struct MountainViewCell: View {
 </p>
 
 ## Releases
+
+### 1.1.0
+
+* Changed the demo apps data from using 'Mountains' to using Core Image Filter definitions.
 
 ### 1.0.0
 

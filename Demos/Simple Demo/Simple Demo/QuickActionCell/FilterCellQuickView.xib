@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19115.3" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19142.2" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19115.3"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19142.2"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="MountainCellQuickView" customModule="DSFQuickBar" customModuleProvider="target">
+        <customObject id="-2" userLabel="File's Owner" customClass="FilterCellQuickView" customModule="Simple_Demo" customModuleProvider="target">
             <connections>
                 <outlet property="actionDescription" destination="T7f-68-Zyq" id="5F4-ED-cru"/>
                 <outlet property="actionName" destination="r38-8w-Up5" id="qSZ-Zb-agk"/>
@@ -27,7 +27,7 @@
                                 <constraint firstAttribute="height" constant="48" id="KWF-Aj-cDh"/>
                                 <constraint firstAttribute="width" constant="48" id="mkQ-Em-a0M"/>
                             </constraints>
-                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyUpOrDown" image="mountain" id="7Ph-EX-E2C"/>
+                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyUpOrDown" image="filter-color" id="7Ph-EX-E2C"/>
                         </imageView>
                         <stackView distribution="fillProportionally" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Tiu-ZM-TFO">
                             <rect key="frame" x="56" y="3" width="418" height="45"/>
@@ -85,6 +85,6 @@
         </customView>
     </objects>
     <resources>
-        <image name="mountain" width="800" height="800"/>
+        <image name="filter-color" width="1321" height="1500"/>
     </resources>
 </document>

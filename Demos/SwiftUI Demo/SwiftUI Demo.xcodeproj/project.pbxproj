@@ -13,7 +13,7 @@
 		23139F4626AA8F0D00432D9E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 23139F4526AA8F0D00432D9E /* Preview Assets.xcassets */; };
 		23139F4F26AA8F2D00432D9E /* DSFQuickActionBar in Frameworks */ = {isa = PBXBuildFile; productRef = 23139F4E26AA8F2D00432D9E /* DSFQuickActionBar */; };
 		23139F5326AA980700432D9E /* SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23139F5226AA980700432D9E /* SampleData.swift */; };
-		23139F5526AAB5CA00432D9E /* MountainViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23139F5426AAB5CA00432D9E /* MountainViewCell.swift */; };
+		23139F5526AAB5CA00432D9E /* FilterViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23139F5426AAB5CA00432D9E /* FilterViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,7 +24,7 @@
 		23139F4526AA8F0D00432D9E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		23139F4C26AA8F1A00432D9E /* DSFQuickActionBar */ = {isa = PBXFileReference; lastKnownFileType = folder; name = DSFQuickActionBar; path = ../..; sourceTree = "<group>"; };
 		23139F5226AA980700432D9E /* SampleData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SampleData.swift; path = "../../Simple Demo/Simple Demo/SampleData.swift"; sourceTree = "<group>"; };
-		23139F5426AAB5CA00432D9E /* MountainViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MountainViewCell.swift; sourceTree = "<group>"; };
+		23139F5426AAB5CA00432D9E /* FilterViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,10 +62,10 @@
 			children = (
 				23139F3E26AA8F0C00432D9E /* SwiftUI_DemoApp.swift */,
 				23139F4026AA8F0C00432D9E /* ContentView.swift */,
+				23139F5426AAB5CA00432D9E /* FilterViewCell.swift */,
 				23139F5226AA980700432D9E /* SampleData.swift */,
 				23139F4226AA8F0D00432D9E /* Assets.xcassets */,
 				23139F4426AA8F0D00432D9E /* Preview Content */,
-				23139F5426AAB5CA00432D9E /* MountainViewCell.swift */,
 			);
 			path = "SwiftUI Demo";
 			sourceTree = "<group>";
@@ -161,7 +161,7 @@
 				23139F4126AA8F0C00432D9E /* ContentView.swift in Sources */,
 				23139F3F26AA8F0C00432D9E /* SwiftUI_DemoApp.swift in Sources */,
 				23139F5326AA980700432D9E /* SampleData.swift in Sources */,
-				23139F5526AAB5CA00432D9E /* MountainViewCell.swift in Sources */,
+				23139F5526AAB5CA00432D9E /* FilterViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

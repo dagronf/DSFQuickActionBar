@@ -39,15 +39,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		self.resultLabel.stringValue = ""
 		self.quickActionBar.present(
 			in: self.window,
-			placeholderText: "Search Mountains",
-			searchImage: NSImage(named: "mountain-template")!
+			placeholderText: "Search Filters",
+			searchImage: NSImage(named: "filter-icon")!
 		)
 	}
 
 	@IBAction func showGlobalQuickActions(_: Any) {
 		self.resultLabel.stringValue = ""
 		self.quickActionBar.presentOnMainScreen(
-			placeholderText: "Search Mountains Globally",
+			placeholderText: "Search Filters Globally",
 			width: 800
 		)
 	}
@@ -66,9 +66,9 @@ extension AppDelegate: DSFQuickActionBarContentSource {
 
 		// Display ALL items when there's no search term
 		if showAllWhenEmpty && term.isEmpty {
-			return AllMountains
-				.sorted { a, b in a.name < b.name }
-				.map { $0.identifier }
+			return AllFilters
+				.sorted { a, b in a.userPresenting < b.userPresenting }
+				.map { $0.id }
 		}
 
 		self.currentSearch = term
@@ -78,33 +78,32 @@ extension AppDelegate: DSFQuickActionBarContentSource {
 		}
 
 		/// Return the item identifiers for the matching mountains
-		let matches = AllMountains
-			.filter { $0.name.localizedCaseInsensitiveContains(term) }
-			.sorted(by: { a, b in a.name < b.name })
-			.prefix(100)
-			.map { $0.identifier }
+		let matches = AllFilters
+			.filter { $0.userPresenting.localizedCaseInsensitiveContains(term) }
+			.sorted(by: { a, b in a.userPresenting < b.userPresenting })
+			.map { $0.id }
 
 		return matches
 	}
 
 	func quickActionBar(_: DSFQuickActionBar, viewForIdentifier identifier: DSFQuickActionBar.ItemIdentifier) -> NSView? {
 		// Find the item with the specified item identifier
-		guard let mountain = AllMountains.filter({ $0.identifier == identifier }).first else {
+		guard let filter = AllFilters.filter({ $0.id == identifier }).first else {
 			return nil
 		}
 
 		if self.loadingType == 2 {
-			return DynamicResultCell(mountain: mountain)
+			return DynamicResultCell(filter: filter)
 		}
 		else if self.loadingType == 1 {
-			return self.XIBResultCell(mountain: mountain)
+			return self.XIBResultCell(filter: filter)
 		}
 
 		fatalError()
 	}
 
 	func quickActionBar(_: DSFQuickActionBar, didSelectIdentifier identifier: DSFQuickActionBar.ItemIdentifier) {
-		guard let mountain = AllMountains.filter({ $0.identifier == identifier }).first else {
+		guard let mountain = AllFilters.filter({ $0.id == identifier }).first else {
 			fatalError()
 		}
 		self.resultLabel.stringValue = "Quick Action Bar selected '\(mountain.name)'"
@@ -118,16 +117,16 @@ extension AppDelegate: DSFQuickActionBarContentSource {
 // MARK: - Load result cell from XIB
 
 extension AppDelegate {
-	func XIBResultCell(mountain: Mountain) -> NSView {
-		let item = MountainCellQuickView()
+	func XIBResultCell(filter: Filter) -> NSView {
+		let item = FilterCellQuickView()
 
 		let searchText = self.currentSearch.lowercased()
-		let attName = NSMutableAttributedString(string: mountain.name)
+		let attName = NSMutableAttributedString(string: filter.userPresenting)
 
 		if self.currentSearch.count > 0,
-			let r = mountain.name.lowercased().range(of: searchText)
+			let r = filter.userPresenting.lowercased().range(of: searchText)
 		{
-			let ran = NSRange(r, in: mountain.name)
+			let ran = NSRange(r, in: filter.userPresenting)
 			attName.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: ran)
 			attName.addAttribute(.font, value: NSFont.systemFont(ofSize: item.actionName.font?.pointSize ?? 23,
 																				  weight: .bold), range: ran)
@@ -136,7 +135,7 @@ extension AppDelegate {
 		else {
 			item.actionName.attributedStringValue = attName
 		}
-		item.actionDescription.stringValue = "\(mountain.name) description"
+		item.actionDescription.stringValue = filter.description
 		return item
 	}
 }
@@ -144,7 +143,7 @@ extension AppDelegate {
 // MARK: - Create result cell
 
 extension AppDelegate {
-	func DynamicResultCell(mountain: Mountain) -> NSView {
+	func DynamicResultCell(filter: Filter) -> NSView {
 		let stack = NSStackView()
 		stack.translatesAutoresizingMaskIntoConstraints = false
 		stack.orientation = .horizontal
@@ -158,12 +157,12 @@ extension AppDelegate {
 		textstack.translatesAutoresizingMaskIntoConstraints = false
 		textstack.orientation = .vertical
 
-		let t1 = NSTextField(labelWithString: mountain.name)
+		let t1 = NSTextField(labelWithString: filter.userPresenting)
 		t1.translatesAutoresizingMaskIntoConstraints = false
 		t1.font = NSFont.systemFont(ofSize: 24)
 		textstack.addArrangedSubview(t1)
 
-		let t2 = NSTextField(labelWithString: "description of \(mountain.name)")
+		let t2 = NSTextField(labelWithString: filter.description)
 		t2.translatesAutoresizingMaskIntoConstraints = false
 		t2.font = NSFont.systemFont(ofSize: 12)
 		t2.textColor = NSColor.placeholderTextColor
@@ -183,7 +182,7 @@ extension AppDelegate {
 		imageView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 48))
 		imageView.imageScaling = .scaleProportionallyUpOrDown
 
-		let image = NSImage(named: "mountain-colorful")!
+		let image = NSImage(named: "filter-colorful")!
 		imageView.image = image
 
 		return imageView

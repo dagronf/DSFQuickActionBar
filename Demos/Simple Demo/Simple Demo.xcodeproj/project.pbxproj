@@ -12,8 +12,8 @@
 		2322B90A26A8D92C0034EB75 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2322B90826A8D92C0034EB75 /* MainMenu.xib */; };
 		2322B91326A8D9450034EB75 /* DSFQuickActionBar in Frameworks */ = {isa = PBXBuildFile; productRef = 2322B91226A8D9450034EB75 /* DSFQuickActionBar */; };
 		2322B91526A8D9F80034EB75 /* SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2322B91426A8D9F80034EB75 /* SampleData.swift */; };
-		2322B91926A8DAAF0034EB75 /* MountainCellQuickView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2322B91726A8DAAF0034EB75 /* MountainCellQuickView.swift */; };
-		2322B91A26A8DAAF0034EB75 /* MountainCellQuickView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2322B91826A8DAAF0034EB75 /* MountainCellQuickView.xib */; };
+		2322B91926A8DAAF0034EB75 /* FilterCellQuickView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2322B91726A8DAAF0034EB75 /* FilterCellQuickView.swift */; };
+		2322B91A26A8DAAF0034EB75 /* FilterCellQuickView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2322B91826A8DAAF0034EB75 /* FilterCellQuickView.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,8 +23,8 @@
 		2322B90926A8D92C0034EB75 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		2322B91026A8D93B0034EB75 /* DSFQuickActionBar */ = {isa = PBXFileReference; lastKnownFileType = folder; name = DSFQuickActionBar; path = ../..; sourceTree = "<group>"; };
 		2322B91426A8D9F80034EB75 /* SampleData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleData.swift; sourceTree = "<group>"; };
-		2322B91726A8DAAF0034EB75 /* MountainCellQuickView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MountainCellQuickView.swift; sourceTree = "<group>"; };
-		2322B91826A8DAAF0034EB75 /* MountainCellQuickView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MountainCellQuickView.xib; sourceTree = "<group>"; };
+		2322B91726A8DAAF0034EB75 /* FilterCellQuickView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterCellQuickView.swift; sourceTree = "<group>"; };
+		2322B91826A8DAAF0034EB75 /* FilterCellQuickView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FilterCellQuickView.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,8 +79,8 @@
 		2322B91626A8DA7D0034EB75 /* QuickActionCell */ = {
 			isa = PBXGroup;
 			children = (
-				2322B91726A8DAAF0034EB75 /* MountainCellQuickView.swift */,
-				2322B91826A8DAAF0034EB75 /* MountainCellQuickView.xib */,
+				2322B91726A8DAAF0034EB75 /* FilterCellQuickView.swift */,
+				2322B91826A8DAAF0034EB75 /* FilterCellQuickView.xib */,
 			);
 			path = QuickActionCell;
 			sourceTree = "<group>";
@@ -148,7 +148,7 @@
 			files = (
 				2322B90726A8D92C0034EB75 /* Assets.xcassets in Resources */,
 				2322B90A26A8D92C0034EB75 /* MainMenu.xib in Resources */,
-				2322B91A26A8DAAF0034EB75 /* MountainCellQuickView.xib in Resources */,
+				2322B91A26A8DAAF0034EB75 /* FilterCellQuickView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -159,7 +159,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2322B91926A8DAAF0034EB75 /* MountainCellQuickView.swift in Sources */,
+				2322B91926A8DAAF0034EB75 /* FilterCellQuickView.swift in Sources */,
 				2322B90526A8D92B0034EB75 /* AppDelegate.swift in Sources */,
 				2322B91526A8D9F80034EB75 /* SampleData.swift in Sources */,
 			);

@@ -11,12 +11,13 @@ import DSFQuickActionBar
 
 struct ContentView: View {
 
-	let quickActionBar = DSFQuickActionBar.SwiftUI<MountainViewCell>()
+	let quickActionBar = DSFQuickActionBar.SwiftUI<FilterViewCell>()
 	let searchIcon = DSFQuickActionBar.SearchIcon(
-		Image("mountain-template"),
+		Image("filter-icon"),
 		isTemplate: true)
 
-	@State var selectedMountain: Mountain?
+	@State var selectedFilter: Filter?
+	@State var showAllIfNoSearchTerm: Bool = true
 
 	var body: some View {
 		GeometryReader { geom in
@@ -27,19 +28,26 @@ struct ContentView: View {
 				Spacer().frame(height: 8)
 				Divider()
 				Text("Press the button to display a quick action bar")
-				HStack {
+				VStack {
+					Toggle(isOn: $showAllIfNoSearchTerm, label: {
+						Text("Show all items if search term is empty")
+					})
+
 					Button("Show Quick Action Bar") {
 						self.quickActionBar.present(
-							placeholderText: "Search Mountains",
+							placeholderText: "Search Core Image Filters",
 							searchIcon: searchIcon,
-							contentSource: MountainContentSource(
-								selectedMountain: $selectedMountain)
+							contentSource: CoreImageFiltersContentSource(
+								selectedFilter: $selectedFilter,
+								showAllIfNoSearchTerm: showAllIfNoSearchTerm
+							)
 						)
 					}
 				}
+				Divider()
 				HStack {
 					Text("User selected: ")
-					Text(selectedMountain?.name ?? "<nothing>")
+					Text(selectedFilter?.name ?? "<nothing>")
 				}
 			}
 			.frame(width: 400)
@@ -56,41 +64,48 @@ struct ContentView_Previews: PreviewProvider {
 
 // MARK: - QuickBar content source
 
-/// A data source for the quick bar that allows searching mountains
-class MountainContentSource: DSFQuickActionBarSwiftUIContentSource {
+/// A data source for the quick bar that allows searching core image filters
+class CoreImageFiltersContentSource: DSFQuickActionBarSwiftUIContentSource {
 
-	@Binding var selectedMountain: Mountain?
+	@Binding var selectedFilter: Filter?
+	let showAllIfNoSearchTerm: Bool
 
-	init(selectedMountain: Binding<Mountain?>) {
-		self._selectedMountain = selectedMountain
+	init(selectedFilter: Binding<Filter?>, showAllIfNoSearchTerm: Bool) {
+		self._selectedFilter = selectedFilter
+		self.showAllIfNoSearchTerm = showAllIfNoSearchTerm
 	}
 
 	func identifiersForSearch(_ term: String) -> [DSFQuickActionBar.ItemIdentifier] {
-		if term.isEmpty { return [] }
-		return AllMountains
-			.filter { $0.name.localizedCaseInsensitiveContains(term) }
-			.sorted(by: { a, b in a.name < b.name })
-			.prefix(100)
-			.map { $0.identifier }
+		if term.isEmpty {
+			if showAllIfNoSearchTerm {
+				return AllFilters.map { $0.id }
+			}
+			else {
+				return []
+			}
+		}
+
+		return AllFilters
+			.filter { $0.userPresenting.localizedCaseInsensitiveContains(term) }
+			.sorted(by: { a, b in a.userPresenting < b.userPresenting } )
+			.map { $0.id }
 	}
 
 	func viewForIdentifier<RowContent>(_ identifier: DSFQuickActionBar.ItemIdentifier) -> RowContent? where RowContent: View {
-		guard let mountain = AllMountains.filter({ $0.identifier == identifier }).first else {
+		guard let filter = AllFilters.filter({ $0.id == identifier }).first else {
 			return nil
 		}
-		return MountainViewCell(name: mountain.name, height: mountain.height) as? RowContent
+		return FilterViewCell(filter: filter) as? RowContent
 	}
 
-
 	func didSelectIdentifier(_ identifier: DSFQuickActionBar.ItemIdentifier) {
-		guard let mountain = AllMountains.filter({ $0.identifier == identifier }).first else {
+		guard let filter = AllFilters.filter({ $0.id == identifier }).first else {
 			return
 		}
-		selectedMountain = mountain
+		selectedFilter = filter
 	}
 
 	func didCancel() {
-		selectedMountain = nil
+		selectedFilter = nil
 	}
 }
-
