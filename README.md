@@ -45,6 +45,8 @@ You can present a quick action bar in the context of a window (where it will be 
 | initialSearchText | `String`  (optional) | Provide an initial search string to appear when the bar displays |
 | width             | `CGFloat` (optional) | Force the width of the action bar |
 
+**NOTE:** Due to limitations of my understanding of integrating SwiftUI into macOS, the SwiftUI implementation doesn't support placing a quick action bar in front of a specific window. It (currently) only supports a global quick action bar (like Spotlight).
+
 ## Process
 
 1. Present the quick action bar, automatically focussing on the edit field so your hands can stay on the keyboard
