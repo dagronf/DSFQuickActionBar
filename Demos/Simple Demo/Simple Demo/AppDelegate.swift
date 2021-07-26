@@ -182,7 +182,7 @@ extension AppDelegate {
 		imageView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 48))
 		imageView.imageScaling = .scaleProportionallyUpOrDown
 
-		let image = NSImage(named: "filter-colorful")!
+		let image = NSImage(named: "filter-color")!
 		imageView.image = image
 
 		return imageView

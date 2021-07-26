@@ -301,6 +301,10 @@ struct FilterViewCell: View {
 
 ## Releases
 
+### 1.1.1
+
+* Fixed silly runtime error for dynamic rows
+
 ### 1.1.0
 
 * Changed the demo apps data from using 'Mountains' to using Core Image Filter definitions.
