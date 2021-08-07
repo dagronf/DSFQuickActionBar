@@ -14,6 +14,9 @@
 		2322B91526A8D9F80034EB75 /* SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2322B91426A8D9F80034EB75 /* SampleData.swift */; };
 		2322B91926A8DAAF0034EB75 /* FilterCellQuickView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2322B91726A8DAAF0034EB75 /* FilterCellQuickView.swift */; };
 		2322B91A26A8DAAF0034EB75 /* FilterCellQuickView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2322B91826A8DAAF0034EB75 /* FilterCellQuickView.xib */; };
+		233CC5D226BE2E36001027E6 /* DSFAppKitBuilderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233CC5D126BE2E36001027E6 /* DSFAppKitBuilderCell.swift */; };
+		236A05D026B23A7900AD160C /* DSFAppKitBuilder in Frameworks */ = {isa = PBXBuildFile; productRef = 236A05CF26B23A7900AD160C /* DSFAppKitBuilder */; };
+		23C6E93126AFAF3E00FBF106 /* FilterCellQuickViewSwiftUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23C6E93026AFAF3E00FBF106 /* FilterCellQuickViewSwiftUI.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +28,8 @@
 		2322B91426A8D9F80034EB75 /* SampleData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleData.swift; sourceTree = "<group>"; };
 		2322B91726A8DAAF0034EB75 /* FilterCellQuickView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterCellQuickView.swift; sourceTree = "<group>"; };
 		2322B91826A8DAAF0034EB75 /* FilterCellQuickView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FilterCellQuickView.xib; sourceTree = "<group>"; };
+		233CC5D126BE2E36001027E6 /* DSFAppKitBuilderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSFAppKitBuilderCell.swift; sourceTree = "<group>"; };
+		23C6E93026AFAF3E00FBF106 /* FilterCellQuickViewSwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterCellQuickViewSwiftUI.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,6 +38,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2322B91326A8D9450034EB75 /* DSFQuickActionBar in Frameworks */,
+				236A05D026B23A7900AD160C /* DSFAppKitBuilder in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -79,10 +85,36 @@
 		2322B91626A8DA7D0034EB75 /* QuickActionCell */ = {
 			isa = PBXGroup;
 			children = (
+				233CC5D026BE2E21001027E6 /* dsfappkitbuilder */,
+				233CC5CF26BE2DEC001027E6 /* swiftui */,
+				233CC5CE26BE2DE0001027E6 /* xib */,
+			);
+			path = QuickActionCell;
+			sourceTree = "<group>";
+		};
+		233CC5CE26BE2DE0001027E6 /* xib */ = {
+			isa = PBXGroup;
+			children = (
 				2322B91726A8DAAF0034EB75 /* FilterCellQuickView.swift */,
 				2322B91826A8DAAF0034EB75 /* FilterCellQuickView.xib */,
 			);
-			path = QuickActionCell;
+			path = xib;
+			sourceTree = "<group>";
+		};
+		233CC5CF26BE2DEC001027E6 /* swiftui */ = {
+			isa = PBXGroup;
+			children = (
+				23C6E93026AFAF3E00FBF106 /* FilterCellQuickViewSwiftUI.swift */,
+			);
+			path = swiftui;
+			sourceTree = "<group>";
+		};
+		233CC5D026BE2E21001027E6 /* dsfappkitbuilder */ = {
+			isa = PBXGroup;
+			children = (
+				233CC5D126BE2E36001027E6 /* DSFAppKitBuilderCell.swift */,
+			);
+			path = dsfappkitbuilder;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -103,6 +135,7 @@
 			name = "Simple Demo";
 			packageProductDependencies = (
 				2322B91226A8D9450034EB75 /* DSFQuickActionBar */,
+				236A05CF26B23A7900AD160C /* DSFAppKitBuilder */,
 			);
 			productName = "Simple Demo";
 			productReference = 2322B90126A8D92B0034EB75 /* Simple Demo.app */;
@@ -132,6 +165,9 @@
 				Base,
 			);
 			mainGroup = 2322B8F826A8D92B0034EB75;
+			packageReferences = (
+				236A05CE26B23A7900AD160C /* XCRemoteSwiftPackageReference "DSFAppKitBuilder" */,
+			);
 			productRefGroup = 2322B90226A8D92B0034EB75 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -159,6 +195,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				23C6E93126AFAF3E00FBF106 /* FilterCellQuickViewSwiftUI.swift in Sources */,
+				233CC5D226BE2E36001027E6 /* DSFAppKitBuilderCell.swift in Sources */,
 				2322B91926A8DAAF0034EB75 /* FilterCellQuickView.swift in Sources */,
 				2322B90526A8D92B0034EB75 /* AppDelegate.swift in Sources */,
 				2322B91526A8D9F80034EB75 /* SampleData.swift in Sources */,
@@ -312,6 +350,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.dagronf.dsfquickbar.simpledemo.Simple-Demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -338,6 +377,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.dagronf.dsfquickbar.simpledemo.Simple-Demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -369,10 +409,26 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		236A05CE26B23A7900AD160C /* XCRemoteSwiftPackageReference "DSFAppKitBuilder" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/dagronf/DSFAppKitBuilder";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		2322B91226A8D9450034EB75 /* DSFQuickActionBar */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = DSFQuickActionBar;
+		};
+		236A05CF26B23A7900AD160C /* DSFAppKitBuilder */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 236A05CE26B23A7900AD160C /* XCRemoteSwiftPackageReference "DSFAppKitBuilder" */;
+			productName = DSFAppKitBuilder;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

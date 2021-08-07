@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19115.3" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19142.2" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19115.3"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19142.2"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -703,10 +703,10 @@
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <stackView distribution="fill" orientation="vertical" alignment="centerX" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cen-GY-ltQ">
-                        <rect key="frame" x="20" y="20" width="440" height="398"/>
+                        <rect key="frame" x="20" y="20" width="440" height="416"/>
                         <subviews>
                             <textField verticalHuggingPriority="100" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="ASO-EU-b27">
-                                <rect key="frame" x="-2" y="94" width="444" height="304"/>
+                                <rect key="frame" x="-2" y="112" width="444" height="304"/>
                                 <textFieldCell key="cell" selectable="YES" id="dEe-sg-TaH">
                                     <font key="font" usesAppearanceFont="YES"/>
                                     <string key="title">A simple demo for the DSFQuickActionBar
@@ -729,10 +729,10 @@ Keyboard commands :-
                                 </textFieldCell>
                             </textField>
                             <stackView distribution="fillProportionally" orientation="horizontal" alignment="firstBaseline" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="a31-LZ-Eef">
-                                <rect key="frame" x="70" y="52" width="300" height="34"/>
+                                <rect key="frame" x="70" y="52" width="300" height="52"/>
                                 <subviews>
                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="F2O-Hb-2Db">
-                                        <rect key="frame" x="-2" y="18" width="157" height="16"/>
+                                        <rect key="frame" x="-2" y="36" width="157" height="16"/>
                                         <textFieldCell key="cell" lineBreakMode="clipping" title="Create result cells using: " id="QkT-ND-sUY">
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -740,10 +740,10 @@ Keyboard commands :-
                                         </textFieldCell>
                                     </textField>
                                     <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="2" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pn0-R0-h7P">
-                                        <rect key="frame" x="161" y="0.0" width="139" height="34"/>
+                                        <rect key="frame" x="161" y="0.0" width="139" height="52"/>
                                         <subviews>
                                             <button verticalHuggingPriority="750" tag="1" translatesAutoresizingMaskIntoConstraints="NO" id="Xxf-Gi-w1I">
-                                                <rect key="frame" x="-2" y="17" width="112" height="18"/>
+                                                <rect key="frame" x="-2" y="35" width="112" height="18"/>
                                                 <buttonCell key="cell" type="radio" title="Load from XIB" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="Iuk-jA-yXk">
                                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                     <font key="font" metaFont="system"/>
@@ -753,7 +753,7 @@ Keyboard commands :-
                                                 </connections>
                                             </button>
                                             <button verticalHuggingPriority="750" tag="2" translatesAutoresizingMaskIntoConstraints="NO" id="gfn-Cr-Lsg">
-                                                <rect key="frame" x="-2" y="-1" width="141" height="18"/>
+                                                <rect key="frame" x="-2" y="17" width="141" height="18"/>
                                                 <buttonCell key="cell" type="radio" title="Dynamically create" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="AZz-5a-1WR">
                                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                     <font key="font" metaFont="system"/>
@@ -762,12 +762,24 @@ Keyboard commands :-
                                                     <action selector="setLoadingType:" target="Voe-Tx-rLC" id="LjO-KK-ifQ"/>
                                                 </connections>
                                             </button>
+                                            <button verticalHuggingPriority="750" tag="3" translatesAutoresizingMaskIntoConstraints="NO" id="5ib-xX-VtX">
+                                                <rect key="frame" x="-2" y="-1" width="70" height="18"/>
+                                                <buttonCell key="cell" type="radio" title="SwiftUI" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="Vi5-dg-vBe">
+                                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                    <font key="font" metaFont="system"/>
+                                                </buttonCell>
+                                                <connections>
+                                                    <action selector="setLoadingType:" target="Voe-Tx-rLC" id="Sw2-Sr-EDh"/>
+                                                </connections>
+                                            </button>
                                         </subviews>
                                         <visibilityPriorities>
                                             <integer value="1000"/>
                                             <integer value="1000"/>
+                                            <integer value="1000"/>
                                         </visibilityPriorities>
                                         <customSpacing>
+                                            <real value="3.4028234663852886e+38"/>
                                             <real value="3.4028234663852886e+38"/>
                                             <real value="3.4028234663852886e+38"/>
                                         </customSpacing>

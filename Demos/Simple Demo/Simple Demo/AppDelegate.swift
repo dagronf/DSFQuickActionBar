@@ -91,15 +91,7 @@ extension AppDelegate: DSFQuickActionBarContentSource {
 		guard let filter = AllFilters.filter({ $0.id == identifier }).first else {
 			return nil
 		}
-
-		if self.loadingType == 2 {
-			return DynamicResultCell(filter: filter)
-		}
-		else if self.loadingType == 1 {
-			return self.XIBResultCell(filter: filter)
-		}
-
-		fatalError()
+		return cellForFilter(filter: filter)
 	}
 
 	func quickActionBar(_: DSFQuickActionBar, didSelectIdentifier identifier: DSFQuickActionBar.ItemIdentifier) {
@@ -114,77 +106,20 @@ extension AppDelegate: DSFQuickActionBarContentSource {
 	}
 }
 
-// MARK: - Load result cell from XIB
-
 extension AppDelegate {
-	func XIBResultCell(filter: Filter) -> NSView {
-		let item = FilterCellQuickView()
-
-		let searchText = self.currentSearch.lowercased()
-		let attName = NSMutableAttributedString(string: filter.userPresenting)
-
-		if self.currentSearch.count > 0,
-			let r = filter.userPresenting.lowercased().range(of: searchText)
-		{
-			let ran = NSRange(r, in: filter.userPresenting)
-			attName.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: ran)
-			attName.addAttribute(.font, value: NSFont.systemFont(ofSize: item.actionName.font?.pointSize ?? 23,
-																				  weight: .bold), range: ran)
-			item.actionName.attributedStringValue = attName
+	private func cellForFilter(filter: Filter) -> NSView {
+		if self.loadingType == 2 {
+			// Load raw Appkit
+			return DSFAppKitBuilderView(filter: filter, currentSearch: currentSearch)
 		}
-		else {
-			item.actionName.attributedStringValue = attName
+		else if self.loadingType == 1 {
+			// Load from a XIB
+			return XIBResultCell(filter: filter, currentSearch: currentSearch)
 		}
-		item.actionDescription.stringValue = filter.description
-		return item
-	}
-}
-
-// MARK: - Create result cell
-
-extension AppDelegate {
-	func DynamicResultCell(filter: Filter) -> NSView {
-		let stack = NSStackView()
-		stack.translatesAutoresizingMaskIntoConstraints = false
-		stack.orientation = .horizontal
-
-		let im = self.makeImage()
-		stack.addArrangedSubview(im)
-
-		let textstack = NSStackView()
-		textstack.spacing = 2
-		textstack.alignment = .leading
-		textstack.translatesAutoresizingMaskIntoConstraints = false
-		textstack.orientation = .vertical
-
-		let t1 = NSTextField(labelWithString: filter.userPresenting)
-		t1.translatesAutoresizingMaskIntoConstraints = false
-		t1.font = NSFont.systemFont(ofSize: 24)
-		textstack.addArrangedSubview(t1)
-
-		let t2 = NSTextField(labelWithString: filter.description)
-		t2.translatesAutoresizingMaskIntoConstraints = false
-		t2.font = NSFont.systemFont(ofSize: 12)
-		t2.textColor = NSColor.placeholderTextColor
-		textstack.addArrangedSubview(t2)
-
-		stack.addArrangedSubview(textstack)
-
-		return stack
-	}
-
-	private func makeImage() -> NSImageView {
-		let imageView = NSImageView()
-		imageView.translatesAutoresizingMaskIntoConstraints = false
-		imageView.setContentHuggingPriority(.defaultLow, for: .horizontal)
-		imageView.setContentHuggingPriority(.defaultLow, for: .vertical)
-		imageView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: 48))
-		imageView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 48))
-		imageView.imageScaling = .scaleProportionallyUpOrDown
-
-		let image = NSImage(named: "filter-color")!
-		imageView.image = image
-
-		return imageView
+		else if self.loadingType == 3 {
+			// Load hosted SwiftUI
+			return SwiftUIResultCell(filter: filter, currentSearch: currentSearch)
+		}
+		fatalError()
 	}
 }

@@ -7,6 +7,28 @@
 
 import AppKit
 
+func XIBResultCell(filter: Filter, currentSearch: String) -> NSView {
+	let item = FilterCellQuickView()
+
+	let searchText = currentSearch.lowercased()
+	let attName = NSMutableAttributedString(string: filter.userPresenting)
+
+	if currentSearch.count > 0,
+		let r = filter.userPresenting.lowercased().range(of: searchText)
+	{
+		let ran = NSRange(r, in: filter.userPresenting)
+		attName.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: ran)
+		attName.addAttribute(.font, value: NSFont.systemFont(ofSize: item.actionName.font?.pointSize ?? 23,
+																			  weight: .bold), range: ran)
+		item.actionName.attributedStringValue = attName
+	}
+	else {
+		item.actionName.attributedStringValue = attName
+	}
+	item.actionDescription.stringValue = filter.description
+	return item
+}
+
 class FilterCellQuickView: NSView {
 
 	@IBOutlet var contentView: NSView!
