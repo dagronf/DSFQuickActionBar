@@ -62,31 +62,31 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 }
 
 extension AppDelegate: DSFQuickActionBarContentSource {
-	func quickActionBar(_: DSFQuickActionBar, identifiersForSearchTerm term: String) -> [DSFQuickActionBar.ItemIdentifier] {
+	func quickActionBar(_: DSFQuickActionBar, identifiersForSearchTerm searchTerm: String) -> [DSFQuickActionBar.ItemIdentifier] {
 
 		// Display ALL items when there's no search term
-		if showAllWhenEmpty && term.isEmpty {
+		if showAllWhenEmpty && searchTerm.isEmpty {
 			return AllFilters
 				.sorted { a, b in a.userPresenting < b.userPresenting }
 				.map { $0.id }
 		}
 
-		self.currentSearch = term
+		self.currentSearch = searchTerm
 
-		if term.isEmpty {
+		if searchTerm.isEmpty {
 			return []
 		}
 
 		/// Return the item identifiers for the matching mountains
 		let matches = AllFilters
-			.filter { $0.userPresenting.localizedCaseInsensitiveContains(term) }
+			.filter { $0.userPresenting.localizedCaseInsensitiveContains(searchTerm) }
 			.sorted(by: { a, b in a.userPresenting < b.userPresenting })
 			.map { $0.id }
 
 		return matches
 	}
 
-	func quickActionBar(_: DSFQuickActionBar, viewForIdentifier identifier: DSFQuickActionBar.ItemIdentifier) -> NSView? {
+	func quickActionBar(_: DSFQuickActionBar, viewForIdentifier identifier: DSFQuickActionBar.ItemIdentifier, searchTerm: String) -> NSView? {
 		// Find the item with the specified item identifier
 		guard let filter = AllFilters.filter({ $0.id == identifier }).first else {
 			return nil

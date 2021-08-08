@@ -75,8 +75,8 @@ class CoreImageFiltersContentSource: DSFQuickActionBarSwiftUIContentSource {
 		self.showAllIfNoSearchTerm = showAllIfNoSearchTerm
 	}
 
-	func identifiersForSearch(_ term: String) -> [DSFQuickActionBar.ItemIdentifier] {
-		if term.isEmpty {
+	func identifiersForSearch(_ searchTerm: String) -> [DSFQuickActionBar.ItemIdentifier] {
+		if searchTerm.isEmpty {
 			if showAllIfNoSearchTerm {
 				return AllFilters.map { $0.id }
 			}
@@ -86,12 +86,12 @@ class CoreImageFiltersContentSource: DSFQuickActionBarSwiftUIContentSource {
 		}
 
 		return AllFilters
-			.filter { $0.userPresenting.localizedCaseInsensitiveContains(term) }
+			.filter { $0.userPresenting.localizedCaseInsensitiveContains(searchTerm) }
 			.sorted(by: { a, b in a.userPresenting < b.userPresenting } )
 			.map { $0.id }
 	}
 
-	func viewForIdentifier<RowContent>(_ identifier: DSFQuickActionBar.ItemIdentifier) -> RowContent? where RowContent: View {
+	func viewForIdentifier<RowContent>(_ identifier: DSFQuickActionBar.ItemIdentifier, searchTerm: String) -> RowContent? where RowContent: View {
 		guard let filter = AllFilters.filter({ $0.id == identifier }).first else {
 			return nil
 		}

@@ -62,9 +62,9 @@ public extension DSFQuickActionBar {
 /// The QuickActionBar SwiftUI content source protocol
 public protocol DSFQuickActionBarSwiftUIContentSource {
 	/// Return an array of the identifiers to be displayed for the specified search term
-	func identifiersForSearch(_ term: String) -> [DSFQuickActionBar.ItemIdentifier]
-	/// Return the view to be displayed for the specified identifier
-	func viewForIdentifier<RowContent: View>(_ identifier: DSFQuickActionBar.ItemIdentifier) -> RowContent?
+	func identifiersForSearch(_ searchTerm: String) -> [DSFQuickActionBar.ItemIdentifier]
+	/// Return the view to be displayed for the specified identifier and search term
+	func viewForIdentifier<RowContent: View>(_ identifier: DSFQuickActionBar.ItemIdentifier, searchTerm: String) -> RowContent?
 	/// Called when the specified identifier is 'activated' (double clicked, return key pressed etc)
 	func didSelectIdentifier(_ identifier: DSFQuickActionBar.ItemIdentifier)
 	/// Called when the quick action bar was dismissed without selecting an item (optional)
@@ -108,8 +108,8 @@ public extension DSFQuickActionBar {
 			) { term in
 				self.contentSource?.identifiersForSearch(term) ?? []
 			}
-			rowContent: { identifier in
-				self.contentSource?.viewForIdentifier(identifier)
+			rowContent: { identifier, searchTerm in
+				self.contentSource?.viewForIdentifier(identifier, searchTerm: searchTerm)
 			}
 			action: { identifier in
 				self.contentSource?.didSelectIdentifier(identifier)

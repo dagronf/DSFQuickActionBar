@@ -30,10 +30,10 @@ import AppKit
 /// Delegate for a QSFQuickActionBar instance
 public protocol DSFQuickActionBarContentSource: NSObjectProtocol {
 	/// Return an array of the identifiers to be displayed for the specified search term
-	func quickActionBar(_ quickActionBar: DSFQuickActionBar, identifiersForSearchTerm term: String) -> [DSFQuickActionBar.ItemIdentifier]
+	func quickActionBar(_ quickActionBar: DSFQuickActionBar, identifiersForSearchTerm searchTerm: String) -> [DSFQuickActionBar.ItemIdentifier]
 
-	/// Return the view to be displayed for the specified identifier
-	func quickActionBar(_ quickActionBar: DSFQuickActionBar, viewForIdentifier identifier: DSFQuickActionBar.ItemIdentifier) -> NSView?
+	/// Return a configured view to display for the specified identifier and search term
+	func quickActionBar(_ quickActionBar: DSFQuickActionBar, viewForIdentifier identifier: DSFQuickActionBar.ItemIdentifier, searchTerm: String) -> NSView?
 
 	/// Called when the specified identifier is 'activated' (double clicked, return key pressed etc)
 	func quickActionBar(_ quickActionBar: DSFQuickActionBar, didSelectIdentifier identifier: DSFQuickActionBar.ItemIdentifier)

@@ -35,6 +35,7 @@ extension DSFQuickActionBar {
 
 		var quickActionBar: DSFQuickActionBar!
 
+		var currentSearchTerm: String = ""
 		var identifiers: [DSFQuickActionBar.ItemIdentifier] = [] {
 			didSet {
 				self.isHidden = identifiers.count == 0
@@ -121,7 +122,10 @@ extension DSFQuickActionBar.ResultsView: NSTableViewDelegate, NSTableViewDataSou
 	func tableView(_: NSTableView, viewFor _: NSTableColumn?, row: Int) -> NSView? {
 		// Swift.print("view for \(row)")
 		let itemIdentifier = self.identifiers[row]
-		return self.quickActionBar.contentSource?.quickActionBar(self.quickActionBar, viewForIdentifier: itemIdentifier)
+		return self.quickActionBar.contentSource?.quickActionBar(
+			self.quickActionBar,
+			viewForIdentifier: itemIdentifier,
+			searchTerm: currentSearchTerm)
 	}
 }
 

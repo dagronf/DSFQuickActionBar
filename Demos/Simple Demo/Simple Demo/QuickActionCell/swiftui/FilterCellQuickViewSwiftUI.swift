@@ -23,7 +23,7 @@ struct FilterCellQuickViewSwiftUI: View {
 		HStack {
 			Image("filter-color").resizable()
 				.frame(width: 32, height: 32)
-			VStack {
+			VStack(alignment: .leading) {
 				Text(title)
 					.font(.title)
 					.multilineTextAlignment(.leading)
@@ -31,7 +31,6 @@ struct FilterCellQuickViewSwiftUI: View {
 					.multilineTextAlignment(.leading)
 					.foregroundColor(.gray)
 			}
-			.frame(alignment: .leading)
 		}
 	}
 }
@@ -39,6 +38,7 @@ struct FilterCellQuickViewSwiftUI: View {
 struct FilterCellQuickViewSwiftUI_Previews: PreviewProvider {
 	static var previews: some View {
 		FilterCellQuickViewSwiftUI(
-			title: "Box Blur", description: "Do a box blur")
+			title: "Accordion Fold Transition",
+			description: "Transitions from one image to another of a differing dimensions by unfolding.")
 	}
 }
