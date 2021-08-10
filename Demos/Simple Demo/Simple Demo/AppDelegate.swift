@@ -7,6 +7,7 @@
 
 import Cocoa
 import DSFQuickActionBar
+//import DSFAppKitBuilder
 
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
@@ -24,6 +25,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	func applicationDidFinishLaunching(_: Notification) {
 		// Insert code here to initialize your application
+
+		//DSFAppKitBuilder.ShowDebuggingOutput = true
+
 		self.resultLabel.stringValue = ""
 	}
 
@@ -110,7 +114,7 @@ extension AppDelegate {
 	private func cellForFilter(filter: Filter) -> NSView {
 		if self.loadingType == 2 {
 			// Load raw Appkit
-			return DSFAppKitBuilderView(filter: filter, currentSearch: currentSearch)
+			return DSFAppKitBuilderCell(filter: filter, currentSearch: currentSearch)
 		}
 		else if self.loadingType == 1 {
 			// Load from a XIB

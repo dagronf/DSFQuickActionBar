@@ -292,6 +292,10 @@ struct FilterViewCell: View {
 
 ## Releases
 
+### 2.0.1
+
+* Updated demo for updated DSFAppKitBuilder
+
 ### 2.0.0
 
 **Note** the delegate API has changed for this version, hence moving to 2.0.0 to avoid automatic breakages
