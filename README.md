@@ -292,6 +292,10 @@ struct FilterViewCell: View {
 
 ## Releases
 
+### 2.0.2
+
+* Updated demo for updated DSFAppKitBuilder
+
 ### 2.0.1
 
 * Updated demo for updated DSFAppKitBuilder
