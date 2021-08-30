@@ -50,7 +50,6 @@ struct ContentView: View {
 					Text(selectedFilter?.name ?? "<nothing>")
 				}
 			}
-			.frame(width: 400)
 			.padding()
 		}
 	}

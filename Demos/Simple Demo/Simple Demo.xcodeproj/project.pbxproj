@@ -30,6 +30,7 @@
 		2322B91826A8DAAF0034EB75 /* FilterCellQuickView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FilterCellQuickView.xib; sourceTree = "<group>"; };
 		233CC5D126BE2E36001027E6 /* DSFAppKitBuilderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSFAppKitBuilderCell.swift; sourceTree = "<group>"; };
 		23C6E93026AFAF3E00FBF106 /* FilterCellQuickViewSwiftUI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterCellQuickViewSwiftUI.swift; sourceTree = "<group>"; };
+		23F68D1C26DC763900DA6097 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +67,7 @@
 		2322B90326A8D92B0034EB75 /* Simple Demo */ = {
 			isa = PBXGroup;
 			children = (
+				23F68D1C26DC763900DA6097 /* Info.plist */,
 				2322B91626A8DA7D0034EB75 /* QuickActionCell */,
 				2322B90426A8D92B0034EB75 /* AppDelegate.swift */,
 				2322B90626A8D92C0034EB75 /* Assets.xcassets */,
@@ -343,6 +345,7 @@
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainNibFile = MainMenu;
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
@@ -370,6 +373,7 @@
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainNibFile = MainMenu;
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
