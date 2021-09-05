@@ -51,6 +51,9 @@ public class DSFQuickActionBar {
 	/// The contentSource for the bar
 	public weak var contentSource: DSFQuickActionBarContentSource?
 
+	/// If targeting 10.12 or 10.11 then you'll need to specify a row height (they don't support automaticTableRowHeights)
+	public var rowHeight: CGFloat = 36
+
 	/// Create a DSFQuickActionBar instance
 	public init() {}
 

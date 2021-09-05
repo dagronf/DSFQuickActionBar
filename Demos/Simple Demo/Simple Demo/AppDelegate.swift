@@ -20,6 +20,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	lazy var quickActionBar: DSFQuickActionBar = {
 		let b = DSFQuickActionBar()
 		b.contentSource = self
+		b.rowHeight = 48
 		return b
 	}()
 
@@ -122,7 +123,11 @@ extension AppDelegate {
 		}
 		else if self.loadingType == 3 {
 			// Load hosted SwiftUI
-			return SwiftUIResultCell(filter: filter, currentSearch: currentSearch)
+			if #available(macOS 10.15, *) {
+				return SwiftUIResultCell(filter: filter, currentSearch: currentSearch)
+			} else {
+				// Fallback on earlier versions
+			}
 		}
 		fatalError()
 	}

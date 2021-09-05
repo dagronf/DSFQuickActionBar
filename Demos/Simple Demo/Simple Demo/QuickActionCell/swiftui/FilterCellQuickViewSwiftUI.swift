@@ -5,14 +5,18 @@
 //  Created by Darren Ford on 27/7/21.
 //
 
+#if canImport(SwiftUI)
+
 import SwiftUI
 
+@available(macOS 10.15, *)
 func SwiftUIResultCell(filter: Filter, currentSearch: String) -> NSView {
 	let uiView = FilterCellQuickViewSwiftUI(title: filter.userPresenting, description: filter.description)
 	let hosting = NSHostingView(rootView: uiView)
 	return hosting
 }
 
+@available(macOS 10.15.0, *)
 struct FilterCellQuickViewSwiftUI: View {
 
 	let title: String
@@ -35,6 +39,7 @@ struct FilterCellQuickViewSwiftUI: View {
 	}
 }
 
+@available(macOS 10.15.0, *)
 struct FilterCellQuickViewSwiftUI_Previews: PreviewProvider {
 	static var previews: some View {
 		FilterCellQuickViewSwiftUI(
@@ -42,3 +47,5 @@ struct FilterCellQuickViewSwiftUI_Previews: PreviewProvider {
 			description: "Transitions from one image to another of a differing dimensions by unfolding.")
 	}
 }
+
+#endif

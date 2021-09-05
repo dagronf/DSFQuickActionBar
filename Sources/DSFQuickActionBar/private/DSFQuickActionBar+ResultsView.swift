@@ -100,7 +100,13 @@ extension DSFQuickActionBar.ResultsView {
 		tableView.headerView = nil
 
 		tableView.backgroundColor = NSColor.clear
-		tableView.usesAutomaticRowHeights = true
+		if #available(macOS 10.13, *) {
+			tableView.usesAutomaticRowHeights = true
+		} else {
+			// For macOS 10.11 and 10.12, it doesn't support usesAutomaticRowHeights.
+			// User has to specify rowHeight in the parent class
+			tableView.rowHeight = self.quickActionBar.rowHeight
+		}
 		tableView.intercellSpacing = NSSize(width: 0, height: 5)
 
 		// Handle double-click on the row
