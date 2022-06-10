@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "DSFAppearanceManager",
+        "repositoryURL": "https://github.com/dagronf/DSFAppearanceManager",
+        "state": {
+          "branch": null,
+          "revision": "628176ce8f4bf8165d97e440b5fb59eb676b1779",
+          "version": "2.1.1"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

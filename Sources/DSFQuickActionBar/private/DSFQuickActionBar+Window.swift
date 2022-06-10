@@ -26,6 +26,7 @@
 //
 
 import AppKit
+import DSFAppearanceManager
 
 extension DSFQuickActionBar {
 	class Window: NSWindow {
@@ -153,7 +154,7 @@ internal extension DSFQuickActionBar.Window {
 		self.autorecalculatesKeyViewLoop = true
 
 		// Make sure we adopt the effective appearance
-		UsingEffectiveAppearance(ofWindow: parentWindow) {
+		UsingEffectiveAppearance(ofWindow: parentWindow) { appearance in
 
 			primaryStack.translatesAutoresizingMaskIntoConstraints = false
 			primaryStack.setContentHuggingPriority(.required, for: .horizontal)
