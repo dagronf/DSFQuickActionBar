@@ -154,7 +154,7 @@ internal extension DSFQuickActionBar.Window {
 		self.autorecalculatesKeyViewLoop = true
 
 		// Make sure we adopt the effective appearance
-		UsingEffectiveAppearance(ofWindow: parentWindow) { appearance in
+		UsingEffectiveAppearance(ofWindow: parentWindow) {
 
 			primaryStack.translatesAutoresizingMaskIntoConstraints = false
 			primaryStack.setContentHuggingPriority(.required, for: .horizontal)
