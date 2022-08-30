@@ -29,7 +29,7 @@ import AppKit
 import DSFAppearanceManager
 
 extension DSFQuickActionBar {
-	class Window: NSWindow {
+	@objc(DSFQuickActionBarWindow) class Window: EphemeralWindow {
 		// The actionbar instance
 		var quickActionBar: DSFQuickActionBar!
 
@@ -39,6 +39,10 @@ extension DSFQuickActionBar {
 		// Allow the window to become key
 		override var canBecomeKey: Bool { return true }
 		override var canBecomeMain: Bool { return true }
+
+		override func resignFirstResponder() -> Bool {
+			return true
+		}
 
 		// The placeholder text for the edit field
 		var placeholderText: String = "" {
@@ -166,7 +170,6 @@ internal extension DSFQuickActionBar.Window {
 			self.isOpaque = true
 			self.styleMask = [.borderless]
 			self.isMovableByWindowBackground = false
-			self.makeKeyAndOrderFront(self)
 
 			primaryStack.wantsLayer = true
 			let baseLayer = primaryStack.layer!
@@ -252,22 +255,26 @@ extension DSFQuickActionBar.Window: NSTextFieldDelegate {
 
 extension DSFQuickActionBar {
 	class WindowController: NSWindowController {
-		func setupWindowListener(_ completion: @escaping () -> Void) {
-			NotificationCenter.default.addObserver(
-				forName: NSWindow.didResignKeyNotification,
-				object: self.window,
-				queue: .main
-			) { [weak self] _ in
-				self?.close()
-			}
-
-			NotificationCenter.default.addObserver(
-				forName: NSWindow.willCloseNotification,
-				object: self.window,
-				queue: .main
-			) { _ in
-				completion()
-			}
-		}
+//		func setupWindowListener(_ completion: @escaping () -> Void) {
+//			NotificationCenter.default.addObserver(
+//				forName: NSWindow.willCloseNotification,
+//				object: self.window,
+//				queue: .main
+//			) { _ in
+//				completion()
+//			}
+//
+////			NotificationCenter.default.addObserver(
+////				forName: NSWindow.didResignKeyNotification,
+////				object: self.window,
+////				queue: .main
+////			) { [weak self] notification in
+////				Swift.print("got here!!!")
+////				let obj = notification.object as? NSWindow
+////				if obj === self?.window {
+////					self?.close()
+////				}
+////			}
+//		}
 	}
 }

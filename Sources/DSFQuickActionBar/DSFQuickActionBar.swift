@@ -61,8 +61,14 @@ public class DSFQuickActionBar {
 	internal weak var quickActionBarWindow: DSFQuickActionBar.Window?
 	internal var quickBarController: DSFQuickActionBar.WindowController?
 
+	internal var _onClose: (() -> Void)?
+
 	internal var width: CGFloat = 100
 	internal var searchImage: NSImage?
+
+	public var isPresenting: Bool {
+		return self.quickBarController != nil
+	}
 }
 
 public extension DSFQuickActionBar {
@@ -78,7 +84,8 @@ public extension DSFQuickActionBar {
 		placeholderText: String? = DSFQuickActionBar.DefaultPlaceholderString,
 		searchImage: NSImage? = DSFQuickActionBar.DefaultImage,
 		initialSearchText: String? = nil,
-		width: CGFloat = DSFQuickActionBar.DefaultWidth
+		width: CGFloat = DSFQuickActionBar.DefaultWidth,
+		didClose: (() -> Void)? = nil
 	) {
 		self.present(
 			in: screenPosition,
@@ -86,7 +93,9 @@ public extension DSFQuickActionBar {
 			placeholderText: placeholderText,
 			searchImage: searchImage,
 			initialSearchText: initialSearchText,
-			width: width)
+			width: width,
+			didClose: didClose
+		)
 	}
 
 	/// Present a DSFQuickActionBar located within the bounds of the provided parent window
@@ -101,7 +110,8 @@ public extension DSFQuickActionBar {
 		placeholderText: String? = DSFQuickActionBar.DefaultPlaceholderString,
 		searchImage: NSImage? = DSFQuickActionBar.DefaultImage,
 		initialSearchText: String? = nil,
-		width: CGFloat = DSFQuickActionBar.DefaultWidth
+		width: CGFloat = DSFQuickActionBar.DefaultWidth,
+		didClose: (() -> Void)? = nil
 	) {
 		self.present(
 			in: parent.frame,
@@ -109,7 +119,9 @@ public extension DSFQuickActionBar {
 			placeholderText: placeholderText,
 			searchImage: searchImage,
 			initialSearchText: initialSearchText,
-			width: width)
+			width: width,
+			didClose: didClose
+		)
 	}
 	
 	/// Presents a DSFQuickActionBar on the main screen
@@ -122,7 +134,8 @@ public extension DSFQuickActionBar {
 		placeholderText: String? = DSFQuickActionBar.DefaultPlaceholderString,
 		searchImage: NSImage? = DefaultImage,
 		initialSearchText: String? = nil,
-		width: CGFloat = DSFQuickActionBar.DefaultWidth
+		width: CGFloat = DSFQuickActionBar.DefaultWidth,
+		didClose: (() -> Void)? = nil
 	) {
 		guard let rect = NSScreen.main?.frame else { return }
 		self.present(
@@ -131,7 +144,9 @@ public extension DSFQuickActionBar {
 			placeholderText: placeholderText,
 			searchImage: searchImage,
 			initialSearchText: initialSearchText,
-			width: width)
+			width: width,
+			didClose: didClose
+		)
 	}
 }
 
@@ -142,10 +157,12 @@ extension DSFQuickActionBar {
 		placeholderText: String? = DSFQuickActionBar.DefaultPlaceholderString,
 		searchImage: NSImage? = DefaultImage,
 		initialSearchText: String? = nil,
-		width: CGFloat = DSFQuickActionBar.DefaultWidth
+		width: CGFloat = DSFQuickActionBar.DefaultWidth,
+		didClose: (() -> Void)? = nil
 	) {
 		self.width = width
 		self.searchImage = searchImage
+		self._onClose = didClose
 
 		let w2: CGFloat = width // the width of the action bar
 		let h2: CGFloat = 100 // just a default height
@@ -155,19 +172,23 @@ extension DSFQuickActionBar {
 		let posRect = CGRect(x: x2, y: y2, width: w2, height: h2)
 
 		let quickBarWindow = DSFQuickActionBar.Window()
+		self.quickBarController = WindowController(window: quickBarWindow)
 		self.quickActionBarWindow = quickBarWindow
 
 		quickBarWindow.quickActionBar = self
 		quickBarWindow.setFrame(posRect, display: true)
 		quickBarWindow.setup(parentWindow: parentWindow, initialSearchText: initialSearchText)
-		quickBarWindow.makeKey()
 
 		quickBarWindow.placeholderText = placeholderText ?? ""
 
 		self.quickBarController = WindowController(window: quickBarWindow)
-		self.quickBarController?.setupWindowListener { [weak self] in
+
+		quickBarWindow.startDetectLostFocus { [weak self] in
 			self?.quickBarController = nil
+			self?._onClose?()
 		}
+
+		quickBarWindow.makeKeyAndOrderFront(self)
 	}
 
 	private func present(
@@ -175,10 +196,12 @@ extension DSFQuickActionBar {
 		placeholderText: String? = DSFQuickActionBar.DefaultPlaceholderString,
 		searchImage: NSImage? = DefaultImage,
 		initialSearchText: String? = nil,
-		width: CGFloat = DSFQuickActionBar.DefaultWidth
+		width: CGFloat = DSFQuickActionBar.DefaultWidth,
+		didClose: (() -> Void)? = nil
 	) {
 		self.width = width
 		self.searchImage = searchImage
+		self._onClose = didClose
 
 		let w2: CGFloat = width // the width of the action bar
 		let h2: CGFloat = 100 // just a default height
@@ -188,18 +211,20 @@ extension DSFQuickActionBar {
 		let posRect = CGRect(x: x2, y: y2, width: w2, height: h2)
 
 		let quickBarWindow = DSFQuickActionBar.Window()
+		self.quickBarController = WindowController(window: quickBarWindow)
 		self.quickActionBarWindow = quickBarWindow
 
 		quickBarWindow.quickActionBar = self
 		quickBarWindow.setFrame(posRect, display: true)
 		quickBarWindow.setup(parentWindow: nil, initialSearchText: initialSearchText)
-		quickBarWindow.makeKey()
+		//quickBarWindow.makeKey()
 
 		quickBarWindow.placeholderText = placeholderText ?? ""
 
-		self.quickBarController = WindowController(window: quickBarWindow)
-		self.quickBarController?.setupWindowListener { [weak self] in
+		quickBarWindow.makeKeyAndOrderFront(self)
+		quickBarWindow.startDetectLostFocus { [weak self] in
 			self?.quickBarController = nil
+			self?._onClose?()
 		}
 	}
 }

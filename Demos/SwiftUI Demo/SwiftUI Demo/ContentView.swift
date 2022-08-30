@@ -11,47 +11,63 @@ import DSFQuickActionBar
 
 struct ContentView: View {
 
-	let quickActionBar = DSFQuickActionBar.SwiftUI<FilterViewCell>()
+	//let quickActionBar = DSFQuickActionBar.SwiftUI<FilterViewCell>()
 	let searchIcon = DSFQuickActionBar.SearchIcon(
 		Image("filter-icon"),
 		isTemplate: true)
 
+	@State var searchTerm = ""
+	@State var visible = false
 	@State var selectedFilter: Filter?
+	@State var localToWindow = true
 	@State var showAllIfNoSearchTerm: Bool = true
+	@State var selectedItem: DSFQuickActionBar.ItemIdentifier?
 
 	var body: some View {
-		GeometryReader { geom in
+		Self._printChanges()
+		return VStack {
+			Text("SwiftUI Demo for DSFQuickActionBar").font(.title2)
+			Text("SwiftUI currently only supports global positions for the")
+			Text("quick action bar due to limitations in the framework")
+			Spacer().frame(height: 8)
+			Divider()
+			Text("Press the button to display a quick action bar")
 			VStack {
-				Text("SwiftUI Demo for DSFQuickActionBar").font(.title2)
-				Text("SwiftUI currently only supports global positions for the")
-				Text("quick action bar due to limitations in the framework")
-				Spacer().frame(height: 8)
-				Divider()
-				Text("Press the button to display a quick action bar")
-				VStack {
-					Toggle(isOn: $showAllIfNoSearchTerm, label: {
-						Text("Show all items if search term is empty")
-					})
+				Toggle(isOn: $showAllIfNoSearchTerm, label: {
+					Text("Show all items if search term is empty")
+				})
+				Toggle(isOn: $localToWindow, label: {
+					Text("Local to window")
+				})
 
-					Button("Show Quick Action Bar") {
-						self.quickActionBar.present(
-							placeholderText: "Search Core Image Filters",
-							searchIcon: searchIcon,
-							contentSource: CoreImageFiltersContentSource(
-								selectedFilter: $selectedFilter,
-								showAllIfNoSearchTerm: showAllIfNoSearchTerm
-							)
-						)
-					}
-				}
-				Divider()
-				HStack {
-					Text("User selected: ")
-					Text(selectedFilter?.name ?? "<nothing>")
+				Button("Show Quick Action Bar") {
+					visible = true
 				}
 			}
-			.padding()
+			Divider()
+			HStack {
+				Text("User selected: ")
+				Text(selectedItem?.description ?? "")
+			}
+			QuickActionBar<FilterViewCell>(
+				localToWindow: localToWindow,
+				visible: $visible,
+				searchTerm: $searchTerm,
+				selectedItem: $selectedItem,
+				placeholderText: "Type something",
+				identifiersForSearchTerm: { searchTerm in
+					filterContent.identifiersForSearch(searchTerm, showAllIfEmpty: showAllIfNoSearchTerm)
+				},
+				onSelectItem: { selectedIdentifier in
+
+				},
+				rowContent: { identifier, searchTerm in
+					filterContent.viewForIdentifier(identifier, searchTerm: searchTerm)
+				}
+			)
+
 		}
+		.padding()
 	}
 }
 
@@ -63,20 +79,14 @@ struct ContentView_Previews: PreviewProvider {
 
 // MARK: - QuickBar content source
 
+let filterContent = CoreImageFiltersContentSource()
+
 /// A data source for the quick bar that allows searching core image filters
-class CoreImageFiltersContentSource: DSFQuickActionBarSwiftUIContentSource {
+class CoreImageFiltersContentSource {
 
-	@Binding var selectedFilter: Filter?
-	let showAllIfNoSearchTerm: Bool
-
-	init(selectedFilter: Binding<Filter?>, showAllIfNoSearchTerm: Bool) {
-		self._selectedFilter = selectedFilter
-		self.showAllIfNoSearchTerm = showAllIfNoSearchTerm
-	}
-
-	func identifiersForSearch(_ searchTerm: String) -> [DSFQuickActionBar.ItemIdentifier] {
+	func identifiersForSearch(_ searchTerm: String, showAllIfEmpty: Bool) -> [DSFQuickActionBar.ItemIdentifier] {
 		if searchTerm.isEmpty {
-			if showAllIfNoSearchTerm {
+			if showAllIfEmpty {
 				return AllFilters.map { $0.id }
 			}
 			else {
@@ -97,14 +107,14 @@ class CoreImageFiltersContentSource: DSFQuickActionBarSwiftUIContentSource {
 		return FilterViewCell(filter: filter) as? RowContent
 	}
 
-	func didSelectIdentifier(_ identifier: DSFQuickActionBar.ItemIdentifier) {
-		guard let filter = AllFilters.filter({ $0.id == identifier }).first else {
-			return
-		}
-		selectedFilter = filter
-	}
+//	func didSelectIdentifier(_ identifier: DSFQuickActionBar.ItemIdentifier) {
+//		guard let filter = AllFilters.filter({ $0.id == identifier }).first else {
+//			return EmptyView()
+//		}
+//		return filter
+//	}
 
 	func didCancel() {
-		selectedFilter = nil
+		//selectedFilter = nil
 	}
 }
