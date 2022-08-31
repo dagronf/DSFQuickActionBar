@@ -130,7 +130,7 @@ public extension QuickActionBar {
 				placeholderText: self.placeholderText,
 				searchImage: self.searchImage ?? DSFQuickActionBar.DefaultImage,
 				initialSearchText: self.currentSearchText,
-				width: self.barWidth ?? DSFQuickActionBar.WindowedDefaultWidth,
+				width: self.barWidth ?? DSFQuickActionBar.DefaultWidth,
 				didClose: {
 					Swift.print(":: quick action bar closed")
 				}

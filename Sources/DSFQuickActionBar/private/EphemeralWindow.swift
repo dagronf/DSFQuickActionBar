@@ -24,30 +24,33 @@
 //  IN THE SOFTWARE.
 //
 
-import Foundation
 import AppKit
+import Foundation
 
 /// A window class that closes when the window resigns its focus (eg clicking outside it)
 class EphemeralWindow: NSPanel {
 	override init(contentRect: NSRect, styleMask style: NSWindow.StyleMask, backing backingStoreType: NSWindow.BackingStoreType, defer flag: Bool) {
 		super.init(
 			contentRect: contentRect,
-			styleMask: [.nonactivatingPanel, .titled, .resizable, .closable, .fullSizeContentView],
+			styleMask: [.nonactivatingPanel, .titled, .borderless, .resizable, .closable, .fullSizeContentView],
 			backing: backingStoreType,
 			defer: flag
 		)
 
-		isFloatingPanel = true
-		level = .floating
+		self.isFloatingPanel = true
+		self.level = .floating
 
 		/// Don't show a window title, even if it's set
-		titleVisibility = .hidden
-		titlebarAppearsTransparent = true
+		self.titleVisibility = .hidden
+		self.titlebarAppearsTransparent = true
 
-		hidesOnDeactivate = true
+		self.hasShadow = true
+		self.invalidateShadow()
+
+		self.hidesOnDeactivate = true
 
 		/// Sets animations accordingly
-		animationBehavior = .utilityWindow
+		self.animationBehavior = .utilityWindow
 
 		Swift.print("EphemeralWindow: init")
 	}
@@ -55,7 +58,7 @@ class EphemeralWindow: NSPanel {
 	/// Close automatically when out of focus, e.g. outside click
 	override func resignMain() {
 		super.resignMain()
-		close()
+		self.close()
 	}
 
 	/// Close and toggle presentation, so that it matches the current state of the panel

@@ -45,8 +45,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		self.quickActionBar.present(
 			parentWindow: self.window,
 			placeholderText: "Search Filters",
-			searchImage: NSImage(named: "filter-icon")!)
-		{
+			searchImage: NSImage(named: "filter-icon")!,
+			width: min(800, max(500, self.window.frame.width + 50))
+		) {
 			Swift.print("Quick action bar closed")
 		}
 	}
@@ -55,8 +56,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		self.resultLabel.stringValue = ""
 		self.quickActionBar.present(
 			placeholderText: "Search Filters Globally",
-			searchImage: NSImage(named: "NSColorPanel")!,
-			width: 800
+			searchImage: NSImage(named: "NSColorPanel")!
 		) {
 			Swift.print("Quick action bar closed")
 		}
