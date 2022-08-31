@@ -43,18 +43,23 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	@IBAction func showQuickActions(_: Any) {
 		self.resultLabel.stringValue = ""
 		self.quickActionBar.present(
-			in: self.window,
+			parentWindow: self.window,
 			placeholderText: "Search Filters",
-			searchImage: NSImage(named: "filter-icon")!
-		)
+			searchImage: NSImage(named: "filter-icon")!)
+		{
+			Swift.print("Quick action bar closed")
+		}
 	}
 
 	@IBAction func showGlobalQuickActions(_: Any) {
 		self.resultLabel.stringValue = ""
-		self.quickActionBar.presentOnMainScreen(
+		self.quickActionBar.present(
 			placeholderText: "Search Filters Globally",
+			searchImage: NSImage(named: "NSColorPanel")!,
 			width: 800
-		)
+		) {
+			Swift.print("Quick action bar closed")
+		}
 	}
 
 	var loadingType = 1

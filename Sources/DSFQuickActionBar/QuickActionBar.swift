@@ -1,8 +1,27 @@
 //
-//  File.swift
-//  
+//  QuickActionBar.swift
 //
-//  Created by Darren Ford on 30/8/2022.
+//  Copyright © 2022 Darren Ford. All rights reserved.
+//
+//  MIT license
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to
+//  deal in the Software without restriction, including without limitation the
+//  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+//  sell copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+//  IN THE SOFTWARE.
 //
 
 import Foundation
@@ -10,58 +29,77 @@ import SwiftUI
 
 #if os(macOS) && canImport(SwiftUI)
 
-/// Delegate for a QSFQuickActionBar instance
-public protocol QuickActionBarContentSource: NSObjectProtocol {
-
-	/// Called when the specified identifier is 'activated' (double clicked, return key pressed etc)
-	func quickActionBar(didSelectIdentifier identifier: DSFQuickActionBar.ItemIdentifier)
-
-	/// Called when the quick action bar was dismissed without selecting an item (optional)
-	func quickActionBarDidCancel()
+/// The location indicating the presentation location for the quick access bar
+public enum QuickActionBarLocation {
+	/// Locate the quick access bar centered within the parent window
+	case window
+	/// Locate the quick access bar centered on the screen (ala Spotlight)
+	case screen
 }
-
-
 
 @available(macOS 10.15, *)
 public final class QuickActionBar<RowContent: View>: NSObject, NSViewRepresentable {
-
-	private let localToWindow: Bool
-	private let placeholderText: String?
-	private let rowContent: (DSFQuickActionBar.ItemIdentifier, String) -> RowContent?
-
-	private var _identifiersForSearchTerm: (String) -> [DSFQuickActionBar.ItemIdentifier]
-	private var _didSelectItem: (DSFQuickActionBar.ItemIdentifier) -> Void
-
-	@Binding var visible: Bool
-	@Binding var selectedItem: DSFQuickActionBar.ItemIdentifier?
-	@Binding var searchText: String
-
+	/// A view that can display a quick action bar (spotlight-style bar)
+	/// - Parameters:
+	///   - location: Where to locate the quick action bar
+	///   - visible: If true, presents the quick action bar on the screen
+	///   - barWidth: The width of the presented bar
+	///   - searchTerm: The search term to use, updated when the quick action bar is closed
+	///   - selectedItem: The item selected by the user
+	///   - placeholderText: The text to display in the quick action bar when the search term is empty
+	///   - identifiersForSearchTerm: A block which returns the identifiers for the specified search term.
+	///   - rowContent: A block which returns the View content to display for the specified identifier
 	public init(
-		localToWindow: Bool = false,
+		location: QuickActionBarLocation = .screen,
 		visible: Binding<Bool>,
+		barWidth: Double? = nil,
 		searchTerm: Binding<String> = .constant(""),
 		selectedItem: Binding<DSFQuickActionBar.ItemIdentifier?>,
 		placeholderText: String? = DSFQuickActionBar.DefaultPlaceholderString,
+		searchImage: NSImage? = nil,
 		identifiersForSearchTerm: @escaping (String) -> [DSFQuickActionBar.ItemIdentifier],
-		onSelectItem: @escaping (DSFQuickActionBar.ItemIdentifier) -> Void,
-		rowContent: @escaping (DSFQuickActionBar.ItemIdentifier, String) -> RowContent?
+		rowContent: @escaping (_ identifier: DSFQuickActionBar.ItemIdentifier, _ searchTerm: String) -> RowContent?
 	) {
 		self._visible = visible
-		self.rowContent = rowContent
-		self.localToWindow = localToWindow
+		self.searchImage = searchImage
+		self.barWidth = barWidth
+		self.location = location
 		self.placeholderText = placeholderText
-		self._searchText = searchTerm
+		self._currentSearchText = searchTerm
 		self._selectedItem = selectedItem
 		self._identifiersForSearchTerm = identifiersForSearchTerm
-		self._didSelectItem = onSelectItem
+		self._rowContent = rowContent
 		super.init()
 	}
 
-	public func makeCoordinator() -> Coordinator {
-		Coordinator()
+	// private
+
+	private let location: QuickActionBarLocation
+	private let placeholderText: String?
+	private let _rowContent: (DSFQuickActionBar.ItemIdentifier, String) -> RowContent?
+
+	private var _identifiersForSearchTerm: (String) -> [DSFQuickActionBar.ItemIdentifier]
+	private let searchImage: NSImage?
+	@Binding var visible: Bool
+	@Binding var selectedItem: DSFQuickActionBar.ItemIdentifier?
+	@Binding var currentSearchText: String
+
+	private let barWidth: Double?
+}
+
+@available(macOS 10.15, *)
+public extension QuickActionBar {
+	func makeCoordinator() -> Coordinator {
+		Coordinator(
+			isVisible: self.$visible,
+			selectedItem: self.$selectedItem,
+			currentSearchText: self.$currentSearchText,
+			identifiersForSearchTerm: self._identifiersForSearchTerm,
+			rowContent: self._rowContent
+		)
 	}
 
-	public func makeNSView(context: Context) -> NSView {
+	func makeNSView(context: Context) -> NSView {
 		let c = NSView()
 		c.translatesAutoresizingMaskIntoConstraints = false
 		c.widthAnchor.constraint(equalToConstant: 0).isActive = true
@@ -69,14 +107,15 @@ public final class QuickActionBar<RowContent: View>: NSObject, NSViewRepresentab
 		return c
 	}
 
-	public func updateNSView(_ nsView: NSView, context: Context) {
-		let window = nsView.window
-
+	func updateNSView(_ nsView: NSView, context: Context) {
 		// Grab the nsview object
 		let quickAction = context.coordinator.quickActionBar
-		quickAction.contentSource = self
 
-		Swift.print(":: update view -> \(visible) : \(quickAction.isPresenting)")
+		Swift.print(":: update view -> \(self.visible) : \(quickAction.isPresenting)")
+
+		if self.visible == false, quickAction.isPresenting == false {
+			return
+		}
 
 		if self.visible {
 			if quickAction.isPresenting {
@@ -86,77 +125,95 @@ public final class QuickActionBar<RowContent: View>: NSObject, NSViewRepresentab
 			}
 
 			// We need to present the quick action bar
-
-			if let window, localToWindow {
-				quickAction.present(
-					in: window,
-					placeholderText: self.placeholderText,
-					initialSearchText: searchText
-				) { [weak self] in
+			quickAction.present(
+				parentWindow: (self.location == .window) ? nsView.window : nil,
+				placeholderText: self.placeholderText,
+				searchImage: self.searchImage ?? DSFQuickActionBar.DefaultImage,
+				initialSearchText: self.currentSearchText,
+				width: self.barWidth ?? DSFQuickActionBar.WindowedDefaultWidth,
+				didClose: {
 					Swift.print(":: quick action bar closed")
-					self?.visible = false
 				}
-			}
-			else {
-				quickAction.presentOnMainScreen(
-					placeholderText: self.placeholderText,
-					initialSearchText: searchText,
-					width: 800
-				) { [weak self] in
-					Swift.print(":: quick action bar closed")
-					self?.visible = false
-				}
-			}
+			)
 		}
 		else {
 			// We _were_ visible, but we now want to close it
 			Swift.print(":: close the quick action bar")
-			quickAction.cancel()
+
+			DispatchQueue.main.async {
+				quickAction.cancel()
+			}
 		}
 	}
 
-	public typealias NSViewType = NSView
-}
-
-@available(macOS 10.15, *)
-extension QuickActionBar: DSFQuickActionBarContentSource {
-	public func quickActionBar(
-		_ quickActionBar: DSFQuickActionBar,
-		identifiersForSearchTerm searchTerm: String
-	) -> [DSFQuickActionBar.ItemIdentifier] {
-		DispatchQueue.main.async { [weak self] in self?.searchText = searchTerm }
-		return self._identifiersForSearchTerm(searchTerm)
-	}
-
-	public func quickActionBar(
-		_ quickActionBar: DSFQuickActionBar,
-		didSelectIdentifier identifier: DSFQuickActionBar.ItemIdentifier
-	) {
-		self.selectedItem = identifier
-		self._didSelectItem(identifier)
-	}
-
-	public func quickActionBar(
-		_ quickActionBar: DSFQuickActionBar,
-		viewForIdentifier identifier: DSFQuickActionBar.ItemIdentifier,
-		searchTerm: String
-	) -> NSView? {
-		if let view = self.rowContent(identifier, searchTerm) {
-			return NSHostingView<RowContent>(rootView: view)
-		}
-		return nil
-	}
-
-	public func quickActionBarDidCancel(_ quickActionBar: DSFQuickActionBar) {
-		self.visible = false
-	}
+	typealias NSViewType = NSView
 }
 
 @available(macOS 10.15, *)
 public extension QuickActionBar {
-	class Coordinator: NSObject {
+	class Coordinator: NSObject, DSFQuickActionBarContentSource {
 		// Use the coordinator to hold on to the AppKit ui object
 		let quickActionBar = DSFQuickActionBar()
+
+		private var identifiersForSearchTerm: (String) -> [DSFQuickActionBar.ItemIdentifier]
+		private let rowContent: (DSFQuickActionBar.ItemIdentifier, String) -> RowContent?
+
+		@Binding var isVisible: Bool
+		@Binding var selectedItem: DSFQuickActionBar.ItemIdentifier?
+		@Binding var currentSearchText: String
+
+		init(
+			isVisible: Binding<Bool>,
+			selectedItem: Binding<DSFQuickActionBar.ItemIdentifier?>,
+			currentSearchText: Binding<String>,
+			identifiersForSearchTerm: @escaping (String) -> [DSFQuickActionBar.ItemIdentifier],
+			rowContent: @escaping (DSFQuickActionBar.ItemIdentifier, String) -> RowContent?
+		) {
+			self._isVisible = isVisible
+			self._selectedItem = selectedItem
+			self._currentSearchText = currentSearchText
+			self.identifiersForSearchTerm = identifiersForSearchTerm
+			self.rowContent = rowContent
+			super.init()
+
+			self.quickActionBar.contentSource = self
+		}
+
+		public func quickActionBar(
+			_ quickActionBar: DSFQuickActionBar,
+			identifiersForSearchTerm searchTerm: String
+		) -> [DSFQuickActionBar.ItemIdentifier] {
+			return self.identifiersForSearchTerm(searchTerm)
+		}
+
+		public func quickActionBar(
+			_ quickActionBar: DSFQuickActionBar,
+			didSelectIdentifier identifier: DSFQuickActionBar.ItemIdentifier
+		) {
+			// Update the selection
+			self.selectedItem = identifier
+
+			// Reflect the term that was searched for
+			self.currentSearchText = quickActionBar.currentSearchText ?? ""
+
+			// Tell the window to go away
+			self.isVisible = false
+		}
+
+		public func quickActionBar(
+			_ quickActionBar: DSFQuickActionBar,
+			viewForIdentifier identifier: DSFQuickActionBar.ItemIdentifier,
+			searchTerm: String
+		) -> NSView? {
+			if let view = self.rowContent(identifier, searchTerm) {
+				return NSHostingView<RowContent>(rootView: view)
+			}
+			return nil
+		}
+
+		public func quickActionBarDidCancel(_ quickActionBar: DSFQuickActionBar) {
+			self.isVisible = false
+		}
 	}
 }
 

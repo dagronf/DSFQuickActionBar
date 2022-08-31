@@ -151,7 +151,8 @@ extension DSFQuickActionBar.ResultsView {
 		let itemIdentifier = self.identifiers[selectedRow]
 		self.quickActionBar.contentSource?.quickActionBar(self.quickActionBar, didSelectIdentifier: itemIdentifier)
 
-		self.window?.resignKey()
+		// If the row is double-clicked, close the bar
+		self.window?.resignMain()
 	}
 
 	func backAction() {
