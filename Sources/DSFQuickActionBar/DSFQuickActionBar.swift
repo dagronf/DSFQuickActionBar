@@ -29,11 +29,6 @@ import AppKit
 /// A spotlight inspired floating action bar
 public class DSFQuickActionBar {
 
-	/// A unique identifier for a actionable item.
-	///
-	/// Each available item to be presented in the results must be able to be identified using an ItemIdentifier
-	public typealias ItemIdentifier = UUID
-
 	public static let FloatingDefaultWidth: Double = 800
 
 	/// The default width for a quick action bar attached to a window

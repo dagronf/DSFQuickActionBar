@@ -72,13 +72,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 }
 
 extension AppDelegate: DSFQuickActionBarContentSource {
-	func quickActionBar(_: DSFQuickActionBar, identifiersForSearchTerm searchTerm: String) -> [DSFQuickActionBar.ItemIdentifier] {
+	func quickActionBar(_: DSFQuickActionBar, identifiersForSearchTerm searchTerm: String) -> [AnyHashable] {
 
 		// Display ALL items when there's no search term
 		if showAllWhenEmpty && searchTerm.isEmpty {
 			return AllFilters
 				.sorted { a, b in a.userPresenting < b.userPresenting }
-				.map { $0.id }
 		}
 
 		self.currentSearch = searchTerm
@@ -91,21 +90,20 @@ extension AppDelegate: DSFQuickActionBarContentSource {
 		let matches = AllFilters
 			.filter { $0.userPresenting.localizedCaseInsensitiveContains(searchTerm) }
 			.sorted(by: { a, b in a.userPresenting < b.userPresenting })
-			.map { $0.id }
 
 		return matches
 	}
 
-	func quickActionBar(_: DSFQuickActionBar, viewForIdentifier identifier: DSFQuickActionBar.ItemIdentifier, searchTerm: String) -> NSView? {
+	func quickActionBar(_: DSFQuickActionBar, viewForIdentifier identifier: AnyHashable, searchTerm: String) -> NSView? {
 		// Find the item with the specified item identifier
-		guard let filter = AllFilters.filter({ $0.id == identifier }).first else {
+		guard let filter = AllFilters.filter({ $0 as AnyHashable == identifier }).first else {
 			return nil
 		}
 		return cellForFilter(filter: filter)
 	}
 
-	func quickActionBar(_: DSFQuickActionBar, didSelectIdentifier identifier: DSFQuickActionBar.ItemIdentifier) {
-		guard let mountain = AllFilters.filter({ $0.id == identifier }).first else {
+	func quickActionBar(_: DSFQuickActionBar, didSelectIdentifier identifier: AnyHashable) {
+		guard let mountain = AllFilters.filter({ $0 as AnyHashable == identifier }).first else {
 			fatalError()
 		}
 		self.resultLabel.stringValue = "Quick Action Bar selected '\(mountain.name)'"

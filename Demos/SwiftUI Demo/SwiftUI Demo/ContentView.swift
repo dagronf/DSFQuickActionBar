@@ -15,7 +15,6 @@ struct ContentView: View {
 	@State var selectedFilter: Filter?
 	@State var location: QuickActionBarLocation = .screen
 	@State var showAllIfNoSearchTerm = true
-	@State var selectedItem: DSFQuickActionBar.ItemIdentifier?
 
 	var body: some View {
 		Self._printChanges()
@@ -46,13 +45,13 @@ struct ContentView: View {
 					TextField("The search term", text: $searchTerm)
 				}
 				Text("User selected: '\(selectedFilter?.userPresenting ?? "<none>")'")
-				Text(selectedItem?.description ?? "")
+				Text(selectedFilter?.description ?? "")
 			}
-			QuickActionBar<FilterViewCell>(
+			QuickActionBar<Filter, FilterViewCell>(
 				location: location,
 				visible: $visible,
 				searchTerm: $searchTerm,
-				selectedItem: $selectedItem,
+				selectedItem: $selectedFilter,
 				placeholderText: "Type something (eg. blur)",
 				identifiersForSearchTerm: { searchTerm in
 					filterContent.identifiersForSearch(searchTerm)
@@ -64,9 +63,6 @@ struct ContentView: View {
 			Spacer()
 			.onChange(of: showAllIfNoSearchTerm, perform: { newValue in
 				filterContent.showAllIfEmpty = newValue
-			})
-			.onChange(of: selectedItem, perform: { newValue in
-				selectedFilter = filterContent.filter(for: newValue)
 			})
 		}
 		.padding()
@@ -88,10 +84,10 @@ class CoreImageFiltersContentSource {
 
 	var showAllIfEmpty: Bool = true
 
-	func identifiersForSearch(_ searchTerm: String) -> [DSFQuickActionBar.ItemIdentifier] {
+	func identifiersForSearch(_ searchTerm: String) -> [Filter] {
 		if searchTerm.isEmpty {
 			if showAllIfEmpty {
-				return AllFilters.map { $0.id }
+				return AllFilters
 			}
 			else {
 				return []
@@ -101,20 +97,19 @@ class CoreImageFiltersContentSource {
 		return AllFilters
 			.filter { $0.userPresenting.localizedCaseInsensitiveContains(searchTerm) }
 			.sorted(by: { a, b in a.userPresenting < b.userPresenting } )
-			.map { $0.id }
 	}
 
 	// Return a filter cell
-	func viewForIdentifier<RowContent>(_ identifier: DSFQuickActionBar.ItemIdentifier, searchTerm: String) -> RowContent? where RowContent: View {
-		guard let filter = AllFilters.filter({ $0.id == identifier }).first else {
+	func viewForIdentifier<RowContent>(_ identifier: AnyHashable, searchTerm: String) -> RowContent? where RowContent: View {
+		guard let filter = AllFilters.filter({ $0 as AnyHashable == identifier }).first else {
 			return nil
 		}
 		return FilterViewCell(filter: filter) as? RowContent
 	}
 
-	func filter(for identifier: DSFQuickActionBar.ItemIdentifier?) -> Filter? {
+	func filter(for identifier: AnyHashable?) -> Filter? {
 		if let identifier {
-			return AllFilters.filter({ $0.id == identifier }).first
+			return AllFilters.filter({ $0 as AnyHashable == identifier }).first
 		}
 		return nil
 	}

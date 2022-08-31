@@ -30,13 +30,13 @@ import AppKit
 /// Delegate for a QSFQuickActionBar instance
 public protocol DSFQuickActionBarContentSource: NSObjectProtocol {
 	/// Return an array of the identifiers to be displayed for the specified search term
-	func quickActionBar(_ quickActionBar: DSFQuickActionBar, identifiersForSearchTerm searchTerm: String) -> [DSFQuickActionBar.ItemIdentifier]
+	func quickActionBar(_ quickActionBar: DSFQuickActionBar, identifiersForSearchTerm searchTerm: String) -> [AnyHashable]
 
 	/// Return a configured view to display for the specified identifier and search term
-	func quickActionBar(_ quickActionBar: DSFQuickActionBar, viewForIdentifier identifier: DSFQuickActionBar.ItemIdentifier, searchTerm: String) -> NSView?
+	func quickActionBar(_ quickActionBar: DSFQuickActionBar, viewForIdentifier identifier: AnyHashable, searchTerm: String) -> NSView?
 
 	/// Called when the specified identifier is 'activated' (double clicked, return key pressed etc)
-	func quickActionBar(_ quickActionBar: DSFQuickActionBar, didSelectIdentifier identifier: DSFQuickActionBar.ItemIdentifier)
+	func quickActionBar(_ quickActionBar: DSFQuickActionBar, didSelectIdentifier identifier: AnyHashable)
 
 	/// Called when the quick action bar was dismissed without selecting an item (optional)
 	func quickActionBarDidCancel(_ quickActionBar: DSFQuickActionBar)

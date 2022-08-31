@@ -37,8 +37,9 @@ public enum QuickActionBarLocation {
 	case screen
 }
 
+/// A SwiftUI Quick Action Bar
 @available(macOS 10.15, *)
-public final class QuickActionBar<RowContent: View>: NSObject, NSViewRepresentable {
+public final class QuickActionBar<IdentifierType: Hashable, RowContent: View>: NSObject, NSViewRepresentable {
 	/// A view that can display a quick action bar (spotlight-style bar)
 	/// - Parameters:
 	///   - location: Where to locate the quick action bar
@@ -54,11 +55,11 @@ public final class QuickActionBar<RowContent: View>: NSObject, NSViewRepresentab
 		visible: Binding<Bool>,
 		barWidth: Double? = nil,
 		searchTerm: Binding<String> = .constant(""),
-		selectedItem: Binding<DSFQuickActionBar.ItemIdentifier?>,
+		selectedItem: Binding<IdentifierType?>,
 		placeholderText: String? = DSFQuickActionBar.DefaultPlaceholderString,
 		searchImage: NSImage? = nil,
-		identifiersForSearchTerm: @escaping (String) -> [DSFQuickActionBar.ItemIdentifier],
-		rowContent: @escaping (_ identifier: DSFQuickActionBar.ItemIdentifier, _ searchTerm: String) -> RowContent?
+		identifiersForSearchTerm: @escaping (String) -> [IdentifierType],
+		rowContent: @escaping (_ identifier: IdentifierType, _ searchTerm: String) -> RowContent?
 	) {
 		self._visible = visible
 		self.searchImage = searchImage
@@ -76,12 +77,11 @@ public final class QuickActionBar<RowContent: View>: NSObject, NSViewRepresentab
 
 	private let location: QuickActionBarLocation
 	private let placeholderText: String?
-	private let _rowContent: (DSFQuickActionBar.ItemIdentifier, String) -> RowContent?
-
-	private var _identifiersForSearchTerm: (String) -> [DSFQuickActionBar.ItemIdentifier]
+	private let _rowContent: (IdentifierType, String) -> RowContent?
+	private let _identifiersForSearchTerm: (String) -> [IdentifierType]
 	private let searchImage: NSImage?
 	@Binding var visible: Bool
-	@Binding var selectedItem: DSFQuickActionBar.ItemIdentifier?
+	@Binding var selectedItem: IdentifierType?
 	@Binding var currentSearchText: String
 
 	private let barWidth: Double?
@@ -155,19 +155,19 @@ public extension QuickActionBar {
 		// Use the coordinator to hold on to the AppKit ui object
 		let quickActionBar = DSFQuickActionBar()
 
-		private var identifiersForSearchTerm: (String) -> [DSFQuickActionBar.ItemIdentifier]
-		private let rowContent: (DSFQuickActionBar.ItemIdentifier, String) -> RowContent?
+		private var identifiersForSearchTerm: (String) -> [IdentifierType]
+		private let rowContent: (IdentifierType, String) -> RowContent?
 
 		@Binding var isVisible: Bool
-		@Binding var selectedItem: DSFQuickActionBar.ItemIdentifier?
+		@Binding var selectedItem: IdentifierType?
 		@Binding var currentSearchText: String
 
 		init(
 			isVisible: Binding<Bool>,
-			selectedItem: Binding<DSFQuickActionBar.ItemIdentifier?>,
+			selectedItem: Binding<IdentifierType?>,
 			currentSearchText: Binding<String>,
-			identifiersForSearchTerm: @escaping (String) -> [DSFQuickActionBar.ItemIdentifier],
-			rowContent: @escaping (DSFQuickActionBar.ItemIdentifier, String) -> RowContent?
+			identifiersForSearchTerm: @escaping (String) -> [IdentifierType],
+			rowContent: @escaping (IdentifierType, String) -> RowContent?
 		) {
 			self._isVisible = isVisible
 			self._selectedItem = selectedItem
@@ -182,16 +182,16 @@ public extension QuickActionBar {
 		public func quickActionBar(
 			_ quickActionBar: DSFQuickActionBar,
 			identifiersForSearchTerm searchTerm: String
-		) -> [DSFQuickActionBar.ItemIdentifier] {
+		) -> [AnyHashable] {
 			return self.identifiersForSearchTerm(searchTerm)
 		}
 
 		public func quickActionBar(
 			_ quickActionBar: DSFQuickActionBar,
-			didSelectIdentifier identifier: DSFQuickActionBar.ItemIdentifier
+			didSelectIdentifier identifier: AnyHashable
 		) {
 			// Update the selection
-			self.selectedItem = identifier
+			self.selectedItem = identifier as? IdentifierType
 
 			// Reflect the term that was searched for
 			self.currentSearchText = quickActionBar.currentSearchText ?? ""
@@ -202,10 +202,13 @@ public extension QuickActionBar {
 
 		public func quickActionBar(
 			_ quickActionBar: DSFQuickActionBar,
-			viewForIdentifier identifier: DSFQuickActionBar.ItemIdentifier,
+			viewForIdentifier identifier: AnyHashable,
 			searchTerm: String
 		) -> NSView? {
-			if let view = self.rowContent(identifier, searchTerm) {
+			guard let item = identifier as? IdentifierType else {
+				fatalError()
+			}
+			if let view = self.rowContent(item, searchTerm) {
 				return NSHostingView<RowContent>(rootView: view)
 			}
 			return nil

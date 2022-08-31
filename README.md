@@ -76,10 +76,10 @@ Returns an array of the unique identifiers for items that match the search term.
 
 ```swift
 // Swift
-func quickActionBar(_ quickActionBar: DSFQuickActionBar, identifiersForSearchTerm searchTerm: String) -> [DSFQuickActionBar.ItemIdentifier]
+func quickActionBar(_ quickActionBar: DSFQuickActionBar, identifiersForSearchTerm searchTerm: String) -> [AnyHashable]
 
 // SwiftUI
-func identifiersForSearch(_ term: String) -> [DSFQuickActionBar.ItemIdentifier]
+func identifiersForSearch(_ term: String) -> [AnyHashable]
 ```
 
 #### viewForIdentifier
@@ -88,10 +88,10 @@ Return the view to be displayed in the row for the item that matches the identif
 
 ```swift
 // Swift
-func quickActionBar(_ quickActionBar: DSFQuickActionBar, viewForIdentifier identifier: DSFQuickActionBar.ItemIdentifier, searchTerm: String) -> NSView?
+func quickActionBar(_ quickActionBar: DSFQuickActionBar, viewForIdentifier identifier: AnyHashable, searchTerm: String) -> NSView?
 
 // SwiftUI
-func viewForIdentifier<RowContent: View>(_ identifier: DSFQuickActionBar.ItemIdentifier, searchTerm: String) -> RowContent?
+func viewForIdentifier<RowContent: View>(_ identifier: AnyHashable, searchTerm: String) -> RowContent?
 ```
 
 #### didSelectIdentifier
@@ -100,10 +100,10 @@ Indicates the user activated an item in the result list.
 
 ```swift
 // Swift
-func quickActionBar(_ quickActionBar: DSFQuickActionBar, didSelectIdentifier identifier: DSFQuickActionBar.ItemIdentifier)
+func quickActionBar(_ quickActionBar: DSFQuickActionBar, didSelectIdentifier identifier: AnyHashable)
 
 // SwiftUI
-func didSelectIdentifier(_ identifier: DSFQuickActionBar.ItemIdentifier)
+func didSelectIdentifier(_ identifier: AnyHashable)
 ```
 
 ## Examples
@@ -121,7 +121,7 @@ class QuickActions: DSFQuickActionBarContentSource {
    /// DATA
 
    struct Filter {
-      let identifier = DSFQuickActionBar.ItemIdentifier()
+      let identifier = AnyHashable()
       let name: String
       var userPresenting: String { return CIFilter.localizedName(forFilterName: self.name) ?? self.name }
       var description: String { return CIFilter.localizedDescription(forFilterName: self.name) ?? "" }
@@ -147,7 +147,7 @@ class QuickActions: DSFQuickActionBarContentSource {
    /// CALLBACKS
 
    // Get all the identifiers for the actions that 'match' the term
-   func quickActionBar(_: DSFQuickActionBar, identifiersForSearchTerm searchTerm: String) -> [DSFQuickActionBar.ItemIdentifier] {
+   func quickActionBar(_: DSFQuickActionBar, identifiersForSearchTerm searchTerm: String) -> [AnyHashable] {
       return self.actions
          .filter { $0.userPresenting.localizedCaseInsensitiveContains(term) }
          .sorted(by: { a, b in a.userPresenting < b.userPresenting })
@@ -155,7 +155,7 @@ class QuickActions: DSFQuickActionBarContentSource {
    }
 
    // Get the row's view for the action with the specified identifier
-   func quickActionBar(_: DSFQuickActionBar, viewForIdentifier identifier: DSFQuickActionBar.ItemIdentifier, searchTerm: String) -> NSView? {
+   func quickActionBar(_: DSFQuickActionBar, viewForIdentifier identifier: AnyHashable, searchTerm: String) -> NSView? {
       // Find the item with the specified item identifier
       guard let filter = self.actions.filter({ $0.identifier == identifier }).first else {
          fatalError()
@@ -164,7 +164,7 @@ class QuickActions: DSFQuickActionBarContentSource {
    }
 
    // Perform a task with the selected action
-   func quickActionBar(_: DSFQuickActionBar, didSelectIdentifier identifier: DSFQuickActionBar.ItemIdentifier) {
+   func quickActionBar(_: DSFQuickActionBar, didSelectIdentifier identifier: AnyHashable) {
       guard let filter = self.actions.filter({ $0.identifier == identifier }).first else {
          fatalError()
       }
@@ -185,7 +185,7 @@ A simple macOS SwiftUI example using Core Image Filters as the contentSource.
 
 ```swift
 struct Filter {
-   let identifier = DSFQuickActionBar.ItemIdentifier()
+   let identifier = AnyHashable()
    let name: String
    var userPresenting: String { return CIFilter.localizedName(forFilterName: self.name) ?? self.name }
    var description: String { return CIFilter.localizedDescription(forFilterName: self.name) ?? "" }
@@ -230,7 +230,7 @@ class CoreImageFiltersContentSource: DSFQuickActionBarSwiftUIContentSource {
       self._selectedFilter = selectedFilter
    }
 
-   func identifiersForSearch(_ searchTerm: String) -> [DSFQuickActionBar.ItemIdentifier] {
+   func identifiersForSearch(_ searchTerm: String) -> [AnyHashable] {
       if term.isEmpty { return [] }
       return AllFilters
          .filter { $0.userPresenting.localizedCaseInsensitiveContains(term) }
@@ -239,14 +239,14 @@ class CoreImageFiltersContentSource: DSFQuickActionBarSwiftUIContentSource {
          .map { $0.id }
    }
 
-   func viewForIdentifier<RowContent>(_ identifier: DSFQuickActionBar.ItemIdentifier, searchTerm: String) -> RowContent? where RowContent: View {
+   func viewForIdentifier<RowContent>(_ identifier: AnyHashable, searchTerm: String) -> RowContent? where RowContent: View {
       guard let filter = AllFilters.filter({ $0.id == identifier }).first else {
          return nil
       }
       return FilterViewCell(filter: filter) as? RowContent
    }
 
-   func didSelectIdentifier(_ identifier: DSFQuickActionBar.ItemIdentifier) {
+   func didSelectIdentifier(_ identifier: AnyHashable) {
       guard let filter = AllFilters.filter({ $0.id == identifier }).first else {
          return
       }

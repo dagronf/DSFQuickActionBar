@@ -36,7 +36,7 @@ extension DSFQuickActionBar {
 		var quickActionBar: DSFQuickActionBar!
 
 		var currentSearchTerm: String = ""
-		var identifiers: [DSFQuickActionBar.ItemIdentifier] = [] {
+		var identifiers: [AnyHashable] = [] {
 			didSet {
 				self.isHidden = identifiers.count == 0
 				self.tableView.reloadData()

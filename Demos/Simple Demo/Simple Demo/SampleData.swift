@@ -9,9 +9,12 @@ import Foundation
 import CoreImage
 import DSFQuickActionBar
 
-struct Filter {
-	let id = DSFQuickActionBar.ItemIdentifier()
+class Filter {
+	// Filter name is unique for filters
 	let name: String
+	init(name: String) {
+		self.name = name
+	}
 
 	var userPresenting: String {
 		return CIFilter.localizedName(forFilterName: self.name) ?? self.name
@@ -19,6 +22,15 @@ struct Filter {
 
 	var description: String {
 		return CIFilter.localizedDescription(forFilterName: self.name) ?? ""
+	}
+}
+
+extension Filter: Hashable {
+	static func == (lhs: Filter, rhs: Filter) -> Bool {
+		lhs.name == rhs.name
+	}
+	func hash(into hasher: inout Hasher) {
+		 hasher.combine(name)
 	}
 }
 
