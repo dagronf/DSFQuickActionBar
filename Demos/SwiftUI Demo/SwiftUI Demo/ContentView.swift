@@ -10,12 +10,6 @@ import DSFQuickActionBar
 
 struct ContentView: View {
 
-	//let quickActionBar = DSFQuickActionBar.SwiftUI<FilterViewCell>()
-//	let searchIcon = DSFQuickActionBar.SearchIcon(
-//		Image("filter-icon"),
-//		isTemplate: true
-//	)
-
 	@State var searchTerm = ""
 	@State var visible = false
 	@State var selectedFilter: Filter?
