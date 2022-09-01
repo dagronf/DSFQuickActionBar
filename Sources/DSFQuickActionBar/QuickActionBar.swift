@@ -117,8 +117,6 @@ public extension QuickActionBar {
 		// Grab the nsview object
 		let quickAction = context.coordinator.quickActionBar
 
-		Swift.print(":: update view -> \(self.visible) : \(quickAction.isPresenting)")
-
 		if self.visible == false, quickAction.isPresenting == false {
 			return
 		}
@@ -126,7 +124,6 @@ public extension QuickActionBar {
 		if self.visible {
 			if quickAction.isPresenting {
 				// We are already visible
-				Swift.print(":: Already visible, ignoring")
 				return
 			}
 
@@ -140,14 +137,11 @@ public extension QuickActionBar {
 				didClose: {
 					// Make sure we close the quick action var
 					self.visible = false
-					Swift.print(":: quick action bar closed")
 				}
 			)
 		}
 		else {
 			// We _were_ visible, but we now want to close it
-			Swift.print(":: close the quick action bar")
-
 			DispatchQueue.main.async {
 				quickAction.cancel()
 			}

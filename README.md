@@ -23,11 +23,14 @@ A spotlight-inspired quick action bar for macOS.
 
 ## Why?
 
-I've seen this in other mac applications (particularly spotlight) and it's very useful. I have a project where it needs to allow the user to quickly access a large set of actions and hey presto!
+I've seen this in other mac applications (particularly Spotlight and [Boop](https://apps.apple.com/us/app/boop/id1518425043?mt=12)) and it's very useful and convenient.
 
-## NOTE: Breaking changes v3.0.0
+## NOTE: Breaking changes for v2 -> v3
 
-* The UUID identifier has been replaced with a `Hashable` type. This allows other types to be used as an identifier (eg. `URL` or even objects). 
+There have been some breaking changes for those moving up from v2 or earlier to v3. This changes were to make the codebase more generic and to improve the SwiftUI support.
+Please be aware your existing code *will* need changes to support the new v3 codebase.
+
+* The UUID identifier has been replaced with a `Hashable` type. This allows other types to be used as an identifier (eg. `URL` or even structs/classes). 
 * 'Identifier' used within the API has been changed to `Item` (eg. `viewForIdentifier` -> `viewForItem`)
 * The SwiftUI implementation has been changed to be much more SwiftUI-y. Please see the [Implementing for SwiftUI](#implementing-for-swiftui) section for details.
 
@@ -35,6 +38,7 @@ I've seen this in other mac applications (particularly spotlight) and it's very 
 
 * macOS AppKit Swift Support
 * macOS AppKit SwiftUI Support
+* Completely keyboard navigable
 
 You can present a quick action bar in the context of a window (where it will be centered above and within the bounds of the window as is shown in the image above) or centered in the current screen (like Spotlight currently does).
 
@@ -77,7 +81,7 @@ Call the `present` method on the quick action bar instance.
 The contentSource (`DSFQuickActionBarContentSource`) provides the content and feedback for the quick action bar. The basic mechanism is similar to `NSTableViewDataSource`/`NSTableViewDelegate` in that the control will :-
 
 1. query the contentSource for items matching a search term (itemsForSearchTerm)
-2. ask the contentSource for a view to display each item (viewForItem)
+2. ask the contentSource for a view for each displayed item (viewForItem)
 3. indicate that the user has pressed/clicked a selection in the results.
 4. (optional) indicate to the contentSource that the quick action bar has been dismissed.
 
@@ -190,16 +194,44 @@ struct Filter: Hashable, CustomStringConvertible {
 
 ## Implementing for SwiftUI
 
-The SwiftUI implementation is a View. 
+The SwiftUI implementation is a View. You 'install' the quick action bar just like you would any other SwiftUI view.
+The `QuickActionBar` view is zero-sized, and does not display content within the view its installed on.
 
 ```swift
 QuickActionBar<IdentifyingObject, IdentifyingObjectView>
 ```
 
-Where :-
+The QuickActionBar template parameters represent 
 
-* `IdentifyingObject` is the unique item object
-* `IdentifyingObjectView` is the type of View used to represent `IdentifyingObject` in the results list
+* `IdentifyingObject` is the type of the object (eg. `URL`)
+* `IdentifyingObjectView` is the type of View used to represent `IdentifyingObject` in the results list (eg. `Text`)
+
+You present the quick action bar by setting the `visible` parameter to true.
+
+For example :-
+
+```swift
+@State var quickActionBarVisible = false
+...
+VStack {
+   Button("Show Quick Action Bar") {
+      quickActionBarVisible = true
+   }
+   QuickActionBar<URL, Text>(
+      location: .window,
+      visible: $quickActionBarVisible,
+      selectedItem: $selectedItem,
+      placeholderText: "Open Quickly",
+      itemsForSearchTerm: { searchTerm in
+         /* return URL(s) that match the search term */
+      },
+      viewForItem: { url, searchTerm in
+         Text(url.path)
+      }
+   )
+}
+...
+```
 
 | Parameter     | Description     |
 |:-----|:-----|
@@ -212,25 +244,7 @@ Where :-
 | itemsForSearchTerm | A block which returns the item(s) for the specified search term |
 | viewForItem | A block which returns the View to display for the specified item |
 
-```swift
-...
-   Button("Show Quick Action Bar") {
-      quickActionBarVisible = true
-   }
-   QuickActionBar<Filter, Text>(
-      location: .screen,
-      visible: $quickActionBarVisible,
-      selectedItem: $selectedFilter,
-      placeholderText: "Open Quickly",
-      itemsForSearchTerm: { searchTerm in
-         /* return item(s) 
-      },
-      viewForItem: { filter, searchTerm in
-         Text(filter.userPresenting)
-      }
-   )
-...
-```
+
 
 <details>
 <summary>SwiftUI Example</summary>
