@@ -62,7 +62,7 @@ public class DSFQuickActionBar {
 
 	// MARK: - Private
 	internal weak var quickActionBarWindow: DSFQuickActionBar.Window?
-	internal var quickBarController: DSFQuickActionBar.WindowController?
+	internal var quickBarController: NSWindowController?
 	internal var onCloseCallback: (() -> Void)?
 	internal var width: CGFloat = DSFQuickActionBar.DefaultWidth
 	internal var searchImage: NSImage?
@@ -118,7 +118,7 @@ public extension DSFQuickActionBar {
 		let posRect = CGRect(x: x2, y: y2, width: w2, height: h2)
 
 		let quickBarWindow = DSFQuickActionBar.Window()
-		self.quickBarController = WindowController(window: quickBarWindow)
+		self.quickBarController = NSWindowController(window: quickBarWindow)
 		self.quickActionBarWindow = quickBarWindow
 
 		quickBarWindow.quickActionBar = self
@@ -126,8 +126,6 @@ public extension DSFQuickActionBar {
 		quickBarWindow.setup(parentWindow: parentWindow, initialSearchText: initialSearchText)
 
 		quickBarWindow.placeholderText = placeholderText ?? ""
-
-		self.quickBarController = WindowController(window: quickBarWindow)
 
 		quickBarWindow.didDetectClose = { [weak self] in
 			self?.quickBarController = nil

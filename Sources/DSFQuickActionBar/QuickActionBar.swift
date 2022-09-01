@@ -42,7 +42,7 @@ public enum QuickActionBarLocation {
 public final class QuickActionBar<IdentifierType: Hashable, RowContent: View>: NSObject, NSViewRepresentable {
 	/// A view that can display a quick action bar (spotlight-style bar)
 	/// - Parameters:
-	///   - location: Where to locate the quick action bar
+	///   - location: Where to locate the quick action bar. If window, locates the bar over the window containing parent view. If screen, centers on the screen ala Spotlight
 	///   - visible: If true, presents the quick action bar on the screen
 	///   - barWidth: The width of the presented bar
 	///   - searchTerm: The search term to use, updated when the quick action bar is closed
@@ -132,6 +132,8 @@ public extension QuickActionBar {
 				initialSearchText: self.currentSearchText,
 				width: self.barWidth ?? DSFQuickActionBar.DefaultWidth,
 				didClose: {
+					// Make sure we close the quick action var
+					self.visible = false
 					Swift.print(":: quick action bar closed")
 				}
 			)

@@ -11,7 +11,7 @@ import DSFQuickActionBar
 struct DocoContentView: View {
 
 	// Binding to update when the user selects a filter
-	@State var selectedItem: Filter?
+	@State var selectedFilter: Filter?
 	@State var quickActionBarVisible = false
 
 	var body: some View {
@@ -19,16 +19,16 @@ struct DocoContentView: View {
 			Button("Show Quick Action Bar") {
 				quickActionBarVisible = true
 			}
-			QuickActionBar<Filter, FilterViewCell>(
+			QuickActionBar<Filter, Text>(
 				location: .screen,
 				visible: $quickActionBarVisible,
-				selectedItem: $selectedItem,
+				selectedItem: $selectedFilter,
 				placeholderText: "Open Quickly...",
 				identifiersForSearchTerm: { searchTerm in
-					filterContent.identifiersForSearch(searchTerm)
+					filters__.search(searchTerm)
 				},
-				rowContent: { identifier, searchTerm in
-					filterContent.viewForIdentifier(identifier, searchTerm: searchTerm)
+				rowContent: { filter, searchTerm in
+					Text(filter.userPresenting)
 				}
 			)
 		}

@@ -7,34 +7,30 @@
 
 import Foundation
 import CoreImage
-import DSFQuickActionBar
 
-class Filter {
-	// Filter name is unique for filters
-	let name: String
-	init(name: String) {
-		self.name = name
-	}
+let filters__ = Filters()
 
-	var userPresenting: String {
-		return CIFilter.localizedName(forFilterName: self.name) ?? self.name
-	}
-
-	var description: String {
-		return CIFilter.localizedDescription(forFilterName: self.name) ?? ""
-	}
+struct Filter: Hashable, CustomStringConvertible {
+	let name: String // The name is unique within our dataset, therefore it will be our identifier
+	var userPresenting: String { return CIFilter.localizedName(forFilterName: self.name) ?? self.name }
+	var description: String { name }
 }
 
-extension Filter: Hashable {
-	static func == (lhs: Filter, rhs: Filter) -> Bool {
-		lhs.name == rhs.name
-	}
-	func hash(into hasher: inout Hasher) {
-		 hasher.combine(name)
+class Filters {
+	// If true, displays all of the filters if the search term is empty
+	var showAllIfEmpty = true
+
+	// All the filters
+	var all: [Filter] = {
+		let filterNames = CIFilter.filterNames(inCategory: nil).sorted()
+		return filterNames.map { name in Filter(name: name) }
+	}()
+
+	// Return filters matching the search term
+	func search(_ searchTerm: String) -> [Filter] {
+		if searchTerm.isEmpty && showAllIfEmpty { return all }
+		return all
+			.filter { $0.userPresenting.localizedCaseInsensitiveContains(searchTerm) }
+			.sorted(by: { a, b in a.userPresenting < b.userPresenting })
 	}
 }
-
-let AllFilters: [Filter] = {
-	let filterNames = CIFilter.filterNames(inCategory: nil).sorted()
-	return filterNames.map { name in Filter(name: name) }
-}()

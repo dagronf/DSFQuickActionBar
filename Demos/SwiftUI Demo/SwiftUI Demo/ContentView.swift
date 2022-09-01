@@ -54,15 +54,15 @@ struct ContentView: View {
 				selectedItem: $selectedFilter,
 				placeholderText: "Type something (eg. blur)",
 				identifiersForSearchTerm: { searchTerm in
-					filterContent.identifiersForSearch(searchTerm)
+					filters__.search(searchTerm)
 				},
-				rowContent: { identifier, searchTerm in
-					filterContent.viewForIdentifier(identifier, searchTerm: searchTerm)
+				rowContent: { filter, searchTerm in
+					FilterViewCell(filter: filter)
 				}
 			)
 			Spacer()
 			.onChange(of: showAllIfNoSearchTerm, perform: { newValue in
-				filterContent.showAllIfEmpty = newValue
+				filters__.showAllIfEmpty = newValue
 			})
 		}
 		.padding()
@@ -72,45 +72,5 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
 	static var previews: some View {
 		ContentView()
-	}
-}
-
-// MARK: - QuickBar content source
-
-let filterContent = CoreImageFiltersContentSource()
-
-/// A data source for the quick bar that allows searching core image filters
-class CoreImageFiltersContentSource {
-
-	var showAllIfEmpty: Bool = true
-
-	func identifiersForSearch(_ searchTerm: String) -> [Filter] {
-		if searchTerm.isEmpty {
-			if showAllIfEmpty {
-				return AllFilters
-			}
-			else {
-				return []
-			}
-		}
-
-		return AllFilters
-			.filter { $0.userPresenting.localizedCaseInsensitiveContains(searchTerm) }
-			.sorted(by: { a, b in a.userPresenting < b.userPresenting } )
-	}
-
-	// Return a filter cell
-	func viewForIdentifier<RowContent>(_ identifier: AnyHashable, searchTerm: String) -> RowContent? where RowContent: View {
-		guard let filter = AllFilters.filter({ $0 as AnyHashable == identifier }).first else {
-			return nil
-		}
-		return FilterViewCell(filter: filter) as? RowContent
-	}
-
-	func filter(for identifier: AnyHashable?) -> Filter? {
-		if let identifier = identifier {
-			return AllFilters.filter({ $0 as AnyHashable == identifier }).first
-		}
-		return nil
 	}
 }

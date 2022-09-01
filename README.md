@@ -61,9 +61,9 @@ You can present a quick action bar in the context of a window (where it will be 
 	3. The user double-clicks an item in the result table
 	4. The user selects a row and presses 'return'
 
-## Implementing
+## Implementing for AppKit
 
-The contentSource (`DSFQuickActionBarContentSource`/`DSFQuickActionBarSwiftUIContentSource`) provides the content and feedback for the quick action bar. The basic mechanism is similar to `NSTableViewDataSource`/`NSTableViewDelegate` in that the control will :-
+The contentSource (`DSFQuickActionBarContentSource`) provides the content and feedback for the quick action bar. The basic mechanism is similar to `NSTableViewDataSource`/`NSTableViewDelegate` in that the control will :-
 
 1. query the contentSource for items matching a search term (itemsForSearchTerm)
 2. ask the contentSource for a view to display each item (viewForIdentifier)
@@ -72,41 +72,30 @@ The contentSource (`DSFQuickActionBarContentSource`/`DSFQuickActionBarSwiftUICon
 
 #### identifiersForSearchTerm
 
-Returns an array of the unique identifiers for items that match the search term. The definition of 'match' is entirely up to you - you can perform any check you want
-
 ```swift
 // Swift
 func quickActionBar(_ quickActionBar: DSFQuickActionBar, identifiersForSearchTerm searchTerm: String) -> [AnyHashable]
-
-// SwiftUI
-func identifiersForSearch(_ term: String) -> [AnyHashable]
 ```
 
-#### viewForIdentifier
+Returns an array of the unique identifiers for items that match the search term. The definition of 'match' is entirely up to you - you can perform any check you want. 
 
-Return the view to be displayed in the row for the item that matches the identifier. The search term is also provided to allow the view to be customized for the search term (eg. highlighting the match in the name)
+#### viewForIdentifier
 
 ```swift
 // Swift
 func quickActionBar(_ quickActionBar: DSFQuickActionBar, viewForIdentifier identifier: AnyHashable, searchTerm: String) -> NSView?
-
-// SwiftUI
-func viewForIdentifier<RowContent: View>(_ identifier: AnyHashable, searchTerm: String) -> RowContent?
 ```
 
-#### didSelectIdentifier
+Return the view to be displayed in the row for the item that matches the identifier. The search term is also provided to allow the view to be customized for the search term (eg. highlighting the match in the name)
 
-Indicates the user activated an item in the result list. 
+#### didSelectIdentifier
 
 ```swift
 // Swift
 func quickActionBar(_ quickActionBar: DSFQuickActionBar, didSelectIdentifier identifier: AnyHashable)
-
-// SwiftUI
-func didSelectIdentifier(_ identifier: AnyHashable)
 ```
 
-## Examples
+Indicates the user activated an item in the result list. The 'identifier' parameter is the selected item
 
 <details>
 <summary>Swift Example</summary>
@@ -116,150 +105,128 @@ func didSelectIdentifier(_ identifier: AnyHashable)
 A simple AppKit example using Core Image Filters as the contentSource.
 
 ```swift
-class QuickActions: DSFQuickActionBarContentSource {
+class ViewController: NSViewController {
+   let quickActionBar = DSFQuickActionBar()
+   override func viewDidLoad() {
+      super.viewDidLoad()
 
-   /// DATA
-
-   struct Filter {
-      let identifier = AnyHashable()
-      let name: String
-      var userPresenting: String { return CIFilter.localizedName(forFilterName: self.name) ?? self.name }
-      var description: String { return CIFilter.localizedDescription(forFilterName: self.name) ?? "" }
+      // Set the content source for the quick action bar
+      quickActionBar.contentSource = self
    }
 
-   let AllFilters: [Filter] = {
+   @IBAction func selectFilter(_ sender: Any) {
+      // Present the quick action bar
+      quickActionBar.present(placeholderText: "Search for filters…")
+   }
+}
+
+extension ViewController: DSFQuickActionBarContentSource {
+   func quickActionBar(_ quickActionBar: DSFQuickActionBar, identifiersForSearchTerm searchTerm: String) -> [AnyHashable] {
+      return Filter.search(searchTerm)
+   }
+
+   func quickActionBar(_ quickActionBar: DSFQuickActionBar, viewForIdentifier identifier: AnyHashable, searchTerm: String) -> NSView? {
+      guard let filter = identifier as? Filter else { fatalError() }
+      // For the demo, just return a simple text field with the filter's name
+      return NSTextField(labelWithString: filter.userPresenting)
+   }
+
+   func quickActionBar(_ quickActionBar: DSFQuickActionBar, didSelectIdentifier identifier: AnyHashable) {
+      Swift.print("Selected identifier \(identifier as? Filter)")
+   }
+}
+
+// the datasource for the Quick action bar. Each filter represents a CIFilter
+struct Filter: Hashable, CustomStringConvertible {
+   let name: String // The name is unique within our dataset, therefore it will be our identifier
+   var userPresenting: String { return CIFilter.localizedName(forFilterName: self.name) ?? self.name }
+   var description: String { name }
+
+   // All of the available filters
+   static var AllFilters: [Filter] = {
       let filterNames = CIFilter.filterNames(inCategory: nil).sorted()
       return filterNames.map { name in Filter(name: name) }
    }()
 
-   /// ACTIONS
-
-   let quickActionBar = DSFQuickActionBar()
-
-   func displayQuickActionBar() {
-      self.quickActionBar.contentSource = self
-      self.quickActionBar.presentOnMainScreen(
-         placeholderText: "Quick Actions",
-         width: 600
-      )
-   }
-   
-   /// CALLBACKS
-
-   // Get all the identifiers for the actions that 'match' the term
-   func quickActionBar(_: DSFQuickActionBar, identifiersForSearchTerm searchTerm: String) -> [AnyHashable] {
-      return self.actions
-         .filter { $0.userPresenting.localizedCaseInsensitiveContains(term) }
+   // Return filters matching the search term
+   static func search(_ searchTerm: String) -> [Filter] {
+      if searchTerm.isEmpty { return AllFilters }
+      return Filter.AllFilters
+         .filter { $0.userPresenting.localizedCaseInsensitiveContains(searchTerm) }
          .sorted(by: { a, b in a.userPresenting < b.userPresenting })
-         .map { $0.identifier }
-   }
-
-   // Get the row's view for the action with the specified identifier
-   func quickActionBar(_: DSFQuickActionBar, viewForIdentifier identifier: AnyHashable, searchTerm: String) -> NSView? {
-      // Find the item with the specified item identifier
-      guard let filter = self.actions.filter({ $0.identifier == identifier }).first else {
-         fatalError()
-      }
-      return FilterRowView(filter)  // FilterRowView() is a NSView-derived class
-   }
-
-   // Perform a task with the selected action
-   func quickActionBar(_: DSFQuickActionBar, didSelectIdentifier identifier: AnyHashable) {
-      guard let filter = self.actions.filter({ $0.identifier == identifier }).first else {
-         fatalError()
-      }
-      self.performAction(filter) // Do something with the selected filter
    }
 }
 ```
+
+![Screenshot for the sample data](./Art/documentation-demo.jpg)
+
 </details>
+
+## Implementing for SwiftUI (macOS only)
+
+The SwiftUI implementation is a View. 
+
+```swift
+QuickActionBar<IdentifyingObject, IdentifyingObjectView>
+```
+
+Where :-
+
+* `IdentifyingObject` is the unique identifier object
+* `IdentifyingObjectView` is the type of View used to represent `IdentifyingObject` in the view
+
+| Parameter     | Description     |
+|:-----|:-----|
+| location | Where to locate the quick action bar (.window, .screen) |
+| visible | If true, presents the quick action bar on the screen |
+| barWidth | The width of the presented bar |
+| searchTerm | The search term to use, updated when the quick action bar is closed |
+| selectedItem | The item selected by the user |
+| placeholderText | The text to display in the quick action bar when the search term is empty |
+| identifiersForSearchTerm | A block which returns the identifiers for the specified search term |
+| rowContent | A block which returns the View content to display for the specified identifier |
 
 <details>
 <summary>SwiftUI Example</summary>
 
 ### SwiftUI Example
 
-A simple macOS SwiftUI example using Core Image Filters as the contentSource.
-
-#### Data
-
-```swift
-struct Filter {
-   let identifier = AnyHashable()
-   let name: String
-   var userPresenting: String { return CIFilter.localizedName(forFilterName: self.name) ?? self.name }
-   var description: String { return CIFilter.localizedDescription(forFilterName: self.name) ?? "" }
-}
-
-let AllFilters: [Filter] = {
-   let filterNames = CIFilter.filterNames(inCategory: nil).sorted()
-   return filterNames.map { name in Filter(name: name) }
-}()
-```
+A simple macOS SwiftUI example using Core Image Filters as the content.
 
 #### SwiftUI View
 
 ```swift
-struct ContentView: View {
+struct DocoContentView: View {
 
    // Binding to update when the user selects a filter
    @State var selectedFilter: Filter?
-
-   // A quick action bar that uses FilterViewCell to display each row in the results
-   let quickActionBar = DSFQuickActionBar.SwiftUI<FilterRowCell>()
+   @State var quickActionBarVisible = false
 
    var body: some View {
-      Button("Show Quick Action Bar") {
-         self.quickActionBar.present(
-            placeholderText: "Search Core Image Filters",
-            contentSource: CoreImageFiltersContentSource(selectedFilter: $selectedFilter)
+      VStack {
+         Button("Show Quick Action Bar") {
+            quickActionBarVisible = true
+         }
+         QuickActionBar<Filter, FilterViewCell>(
+            location: .screen,
+            visible: $quickActionBarVisible,
+            selectedItem: $selectedFilter,
+            placeholderText: "Open Quickly...",
+            identifiersForSearchTerm: { searchTerm in
+               filters__.search(searchTerm)
+            },
+            rowContent: { filter, searchTerm in
+               FilterViewCell(filter)
+            }
          )
       }
    }
 }
 ```
 
-#### Content Source Definition
-
-```swift
-class CoreImageFiltersContentSource: DSFQuickActionBarSwiftUIContentSource {
-
-   @Binding var selectedFilter: Filter?
-
-   init(selectedFilter: Binding<Filter?>) {
-      self._selectedFilter = selectedFilter
-   }
-
-   func identifiersForSearch(_ searchTerm: String) -> [AnyHashable] {
-      if term.isEmpty { return [] }
-      return AllFilters
-         .filter { $0.userPresenting.localizedCaseInsensitiveContains(term) }
-         .sorted(by: { a, b in a.userPresenting < b.userPresenting } )
-         .prefix(100)
-         .map { $0.id }
-   }
-
-   func viewForIdentifier<RowContent>(_ identifier: AnyHashable, searchTerm: String) -> RowContent? where RowContent: View {
-      guard let filter = AllFilters.filter({ $0.id == identifier }).first else {
-         return nil
-      }
-      return FilterViewCell(filter: filter) as? RowContent
-   }
-
-   func didSelectIdentifier(_ identifier: AnyHashable) {
-      guard let filter = AllFilters.filter({ $0.id == identifier }).first else {
-         return
-      }
-      selectedFilter = filter
-   }
-
-   func didCancel() {
-      selectedFilter = nil
-   }
-}
-```
-
 #### Filter Row View
+
+The view for displaying the filter
 
 ```swift
 struct FilterViewCell: View {
@@ -275,6 +242,38 @@ struct FilterViewCell: View {
       }
    }
 }
+```
+
+#### Data
+
+```swift
+/// The unique object used as the quick action bar identifier
+struct Filter: Hashable, CustomStringConvertible {
+   let name: String // The name is unique within our dataset, therefore it will be our identifier
+   var userPresenting: String { return CIFilter.localizedName(forFilterName: self.name) ?? self.name }
+   var description: String { name }
+}
+
+class Filters {
+   // If true, displays all of the filters if the search term is empty
+   var showAllIfEmpty = true
+
+   // All the filters
+   var all: [Filter] = {
+      let filterNames = CIFilter.filterNames(inCategory: nil).sorted()
+      return filterNames.map { name in Filter(name: name) }
+   }()
+
+   // Return filters matching the search term
+   func search(_ searchTerm: String) -> [Filter] {
+      if searchTerm.isEmpty && showAllIfEmpty { return all }
+      return all
+         .filter { $0.userPresenting.localizedCaseInsensitiveContains(searchTerm) }
+         .sorted(by: { a, b in a.userPresenting < b.userPresenting })
+   }
+}
+
+let filters__ = Filters()
 ```
 
 </details>

@@ -52,7 +52,7 @@ class EphemeralWindow: NSPanel {
 		/// Sets animations accordingly
 		self.animationBehavior = .utilityWindow
 
-		Swift.print("EphemeralWindow: init")
+		//Swift.print("EphemeralWindow: init")
 	}
 
 	/// Close automatically when out of focus, e.g. outside click
@@ -67,6 +67,7 @@ class EphemeralWindow: NSPanel {
 		self.didDetectClose?()
 	}
 
+	/// A block that gets called when the window closes
 	var didDetectClose: (() -> Void)?
 
 	/// `canBecomeKey` and `canBecomeMain` are both required so that text inputs inside the panel can receive focus
@@ -78,7 +79,7 @@ class EphemeralWindow: NSPanel {
 		return true
 	}
 
-	deinit {
-		Swift.print("EphemeralWindow: deinit")
-	}
+//	deinit {
+//		Swift.print("EphemeralWindow: deinit")
+//	}
 }

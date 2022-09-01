@@ -268,31 +268,3 @@ extension DSFQuickActionBar.Window: NSTextFieldDelegate {
 		return false
 	}
 }
-
-// MARK: - WindowController
-
-extension DSFQuickActionBar {
-	class WindowController: NSWindowController {
-//		func setupWindowListener(_ completion: @escaping () -> Void) {
-//			NotificationCenter.default.addObserver(
-//				forName: NSWindow.willCloseNotification,
-//				object: self.window,
-//				queue: .main
-//			) { _ in
-//				completion()
-//			}
-//
-////			NotificationCenter.default.addObserver(
-////				forName: NSWindow.didResignKeyNotification,
-////				object: self.window,
-////				queue: .main
-////			) { [weak self] notification in
-////				Swift.print("got here!!!")
-////				let obj = notification.object as? NSWindow
-////				if obj === self?.window {
-////					self?.close()
-////				}
-////			}
-//		}
-	}
-}
