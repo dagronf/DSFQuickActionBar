@@ -212,7 +212,7 @@ internal extension DSFQuickActionBar.Window {
 
 			self.primaryStack.layoutSubtreeIfNeeded()
 
-			if let initialSearchText {
+			if let initialSearchText = initialSearchText {
 				self.currentSearchText = initialSearchText
 			}
 

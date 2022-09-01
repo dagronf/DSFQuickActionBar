@@ -17,7 +17,7 @@ struct ContentView: View {
 	@State var showAllIfNoSearchTerm = true
 
 	var body: some View {
-		Self._printChanges()
+		//Self._printChanges()
 		_ = showAllIfNoSearchTerm
 		return VStack(spacing: 12) {
 			VStack(spacing: 12) {
@@ -108,7 +108,7 @@ class CoreImageFiltersContentSource {
 	}
 
 	func filter(for identifier: AnyHashable?) -> Filter? {
-		if let identifier {
+		if let identifier = identifier {
 			return AllFilters.filter({ $0 as AnyHashable == identifier }).first
 		}
 		return nil

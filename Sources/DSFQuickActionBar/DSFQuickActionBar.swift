@@ -87,7 +87,7 @@ public extension DSFQuickActionBar {
 	) {
 		self.width = width
 		self.searchImage = {
-			if let searchImage {
+			if let searchImage = searchImage {
 				// Scale the image to the required size
 				let r = searchImage.scaleImageProportionally(to: 64)
 				r?.isTemplate = searchImage.isTemplate
@@ -100,7 +100,7 @@ public extension DSFQuickActionBar {
 		self.onCloseCallback = didClose
 
 		let originRect: CGRect
-		if let parentWindow {
+		if let parentWindow = parentWindow {
 			originRect = parentWindow.frame
 		}
 		else if let screenFrame = NSScreen.main?.frame {
