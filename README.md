@@ -184,7 +184,7 @@ Where :-
 | selectedItem | The item selected by the user |
 | placeholderText | The text to display in the quick action bar when the search term is empty |
 | identifiersForSearchTerm | A block which returns the identifiers for the specified search term |
-| rowContent | A block which returns the View content to display for the specified identifier |
+| viewForIdentifier | A block which returns the View to display for the specified identifier |
 
 <details>
 <summary>SwiftUI Example</summary>
@@ -197,9 +197,9 @@ A simple macOS SwiftUI example using Core Image Filters as the content.
 
 ```swift
 struct DocoContentView: View {
-
    // Binding to update when the user selects a filter
    @State var selectedFilter: Filter?
+   // Binding to show/hide the quick action bar
    @State var quickActionBarVisible = false
 
    var body: some View {
@@ -207,7 +207,7 @@ struct DocoContentView: View {
          Button("Show Quick Action Bar") {
             quickActionBarVisible = true
          }
-         QuickActionBar<Filter, FilterViewCell>(
+         QuickActionBar<Filter, Text>(
             location: .screen,
             visible: $quickActionBarVisible,
             selectedItem: $selectedFilter,
@@ -215,30 +215,10 @@ struct DocoContentView: View {
             identifiersForSearchTerm: { searchTerm in
                filters__.search(searchTerm)
             },
-            rowContent: { filter, searchTerm in
-               FilterViewCell(filter)
+            viewForIdentifier: { filter, searchTerm in
+               Text(filter.userPresenting)
             }
          )
-      }
-   }
-}
-```
-
-#### Filter Row View
-
-The view for displaying the filter
-
-```swift
-struct FilterViewCell: View {
-   let filter: Filter
-   var body: some View {
-      HStack {
-         Image("filter-color").resizable()
-            .frame(width: 42, height: 42)
-         VStack(alignment: .leading) {
-            Text(filter.userPresenting).font(.title)
-            Text(filter.description).font(.callout).foregroundColor(.gray).italic()
-         }
       }
    }
 }

@@ -9,9 +9,9 @@ import SwiftUI
 import DSFQuickActionBar
 
 struct DocoContentView: View {
-
 	// Binding to update when the user selects a filter
 	@State var selectedFilter: Filter?
+	// Binding to show/hide the quick action bar
 	@State var quickActionBarVisible = false
 
 	var body: some View {
@@ -27,7 +27,7 @@ struct DocoContentView: View {
 				identifiersForSearchTerm: { searchTerm in
 					filters__.search(searchTerm)
 				},
-				rowContent: { filter, searchTerm in
+				viewForIdentifier: { filter, searchTerm in
 					Text(filter.userPresenting)
 				}
 			)

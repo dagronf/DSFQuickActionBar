@@ -56,7 +56,7 @@ struct ContentView: View {
 				identifiersForSearchTerm: { searchTerm in
 					filters__.search(searchTerm)
 				},
-				rowContent: { filter, searchTerm in
+				viewForIdentifier: { filter, searchTerm in
 					FilterViewCell(filter: filter)
 				}
 			)
