@@ -45,7 +45,7 @@ public enum QuickActionBarLocation {
 ///
 /// **`RowContentView`** is the type of SwiftUI View that will be used to represent an identifier in the UI
 @available(macOS 10.15, *)
-public final class QuickActionBar<IdentifierType: Hashable, RowContentView: View>: NSObject, NSViewRepresentable {
+public struct QuickActionBar<IdentifierType: Hashable, RowContentView: View>: NSViewRepresentable {
 	/// A view that can display a quick action bar (spotlight-style bar)
 	/// - Parameters:
 	///   - location: Where to locate the quick action bar. If window, locates the bar over the window containing parent view. If screen, centers on the screen ala Spotlight
@@ -76,7 +76,6 @@ public final class QuickActionBar<IdentifierType: Hashable, RowContentView: View
 		self._selectedItem = selectedItem
 		self._itemsForSearchTerm = itemsForSearchTerm
 		self._rowContent = viewForItem
-		super.init()
 	}
 
 	// private
