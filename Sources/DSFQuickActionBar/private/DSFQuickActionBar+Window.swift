@@ -176,7 +176,13 @@ internal extension DSFQuickActionBar.Window {
 
 			self.backgroundColor = NSColor.clear
 			self.isOpaque = true
-			self.styleMask = [.borderless]
+
+			// We set 'titled' here AND 'borderless' as it seems to give us a bolder
+			// drop shadow than just 'borderless' itself. How odd!
+			self.styleMask = [.titled, .fullSizeContentView, .borderless]
+
+			// Make sure the user cannot move the window
+			self.isMovable = false
 			self.isMovableByWindowBackground = false
 
 			primaryStack.wantsLayer = true
