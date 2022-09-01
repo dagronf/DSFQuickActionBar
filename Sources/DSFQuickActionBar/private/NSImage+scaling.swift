@@ -27,26 +27,41 @@
 import Foundation
 import AppKit
 
+// MARK: - NSImage proportional scaling
+
 public extension NSImage {
-	/// Scale the image proportionally to fit to the target size, returning a new image
+	/// Generate a new image with equal dimensions by scaling proportionally and centering within the target
+	/// - Parameter dimension: The final dimension of the image
+	/// - Returns: The scaled image, or nil if an error occurs
+	@inlinable func scaleImageProportionally(to dimension: Double) -> NSImage? {
+		self.scaleImageProportionally(to: NSSize(width: dimension, height: dimension))
+	}
+
+	/// Generate a new image with a defined size by scaling proportionally and centering within the target
+	/// - Parameter targetSize: The final size of the image to generate
+	/// - Returns: The scaled image, or nil if an error occurs
 	func scaleImageProportionally(to targetSize: NSSize) -> NSImage? {
-		guard let rep = self.representations.first else {
+		// Get a bitmap representation of the image.
+		guard let tiff = self.tiffRepresentation, let rep = NSBitmapImageRep(data: tiff) else {
 			return nil
 		}
-		
+
+		// The size of the original image
 		let origSize = NSSize(width: rep.pixelsWide, height: rep.pixelsHigh)
-		
+
+		// The scaling required to draw the representation in the target rect
 		let ddx: CGFloat = targetSize.width / origSize.width
 		let ddy: CGFloat = targetSize.height / origSize.height
-		
 		let scale = min(ddx, ddy)
-		
-		let newRect = NSRect(x: 0, y: 0, width: origSize.width * scale, height: origSize.height * scale)
-		
-		let representation = NSBitmapImageRep(
+
+		// The size of _this_ image scaled to fit within the target size
+		let scaledImageSize = CGSize(width: origSize.width * scale, height: origSize.height * scale)
+
+		// Create a new bitmap representation with the target size
+		guard let representation = NSBitmapImageRep(
 			bitmapDataPlanes: nil,
-			pixelsWide: Int(newRect.width),
-			pixelsHigh: Int(newRect.height),
+			pixelsWide: Int(targetSize.width),
+			pixelsHigh: Int(targetSize.height),
 			bitsPerSample: 8,
 			samplesPerPixel: 4,
 			hasAlpha: true,
@@ -54,18 +69,35 @@ public extension NSImage {
 			colorSpaceName: .calibratedRGB,
 			bytesPerRow: 0,
 			bitsPerPixel: 0
-		)
-		
-		representation?.size = newRect.size
-		
-		NSGraphicsContext.saveGraphicsState()
-		NSGraphicsContext.current = NSGraphicsContext(bitmapImageRep: representation!)
-		self.draw(in: newRect, from: NSZeroRect, operation: .copy, fraction: 1.0)
-		NSGraphicsContext.restoreGraphicsState()
-		
-		let newImage = NSImage(size: newRect.size)
-		newImage.addRepresentation(representation!)
-		
+		) else {
+			return nil
+		}
+
+		representation.size = targetSize
+
+		let xOffset: Double = (targetSize.width - scaledImageSize.width) / 2.0
+		let yOffset: Double = (targetSize.height - scaledImageSize.height) / 2.0
+
+		// Write the image into the new image rep
+		do {
+			NSGraphicsContext.saveGraphicsState()
+			NSGraphicsContext.current = NSGraphicsContext(bitmapImageRep: representation)
+			self.draw(
+				in: NSRect(
+					x: xOffset,
+					y: yOffset,
+					width: scaledImageSize.width,
+					height: scaledImageSize.height
+				),
+				from: .zero,
+				operation: .copy,
+				fraction: 1.0
+			)
+			NSGraphicsContext.restoreGraphicsState()
+		}
+
+		let newImage = NSImage(size: targetSize)
+		newImage.addRepresentation(representation)
 		return newImage
 	}
 }

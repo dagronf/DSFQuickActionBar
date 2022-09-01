@@ -28,8 +28,8 @@ import AppKit
 
 /// A spotlight inspired floating action bar
 public class DSFQuickActionBar {
-	/// The default width for a quick action bar attached to a window
-	public static let DefaultWidth: Double = 800
+	/// The default width for a quick action bar.
+	public static let DefaultWidth: Double = 640
 
 	// The default placeholder text to display in the edit field
 	public static let DefaultPlaceholderString: String = "Quick Actions"
@@ -89,7 +89,7 @@ public extension DSFQuickActionBar {
 		self.searchImage = {
 			if let searchImage {
 				// Scale the image to the required size
-				let r = searchImage.scaleImageProportionally(to: NSSize(width: 64, height: 64))
+				let r = searchImage.scaleImageProportionally(to: 64)
 				r?.isTemplate = searchImage.isTemplate
 				return r
 			}
