@@ -1,35 +1,34 @@
 //
 //  DSFQuickActionBar+Window.swift
-//  DSFQuickActionBar
 //
-//  Created by Darren Ford on 22/7/21
+//  Copyright © 2022 Darren Ford. All rights reserved.
 //
-//  MIT License
+//  MIT license
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
+//  of this software and associated documentation files (the "Software"), to
+//  deal in the Software without restriction, including without limitation the
+//  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+//  sell copies of the Software, and to permit persons to whom the Software is
 //  furnished to do so, subject to the following conditions:
 //
-//  The above copyright notice and this permission notice shall be included in all
-//  copies or substantial portions of the Software.
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
 //
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 //  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 //  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 //  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-//  SOFTWARE.
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+//  IN THE SOFTWARE.
 //
 
 import AppKit
 import DSFAppearanceManager
 
 extension DSFQuickActionBar {
-	class Window: NSWindow {
+	@objc(DSFQuickActionBarWindow) class Window: EphemeralWindow {
 		// The actionbar instance
 		var quickActionBar: DSFQuickActionBar!
 
@@ -40,10 +39,23 @@ extension DSFQuickActionBar {
 		override var canBecomeKey: Bool { return true }
 		override var canBecomeMain: Bool { return true }
 
+		override func resignFirstResponder() -> Bool {
+			return true
+		}
+
 		// The placeholder text for the edit field
 		var placeholderText: String = "" {
 			didSet {
 				self.editLabel.placeholderString = self.placeholderText
+			}
+		}
+
+		private var _currentSearchText: String = ""
+		private(set) var currentSearchText: String {
+			get { _currentSearchText }
+			set {
+				_currentSearchText = newValue
+				self.editLabel.stringValue = newValue
 			}
 		}
 
@@ -164,9 +176,14 @@ internal extension DSFQuickActionBar.Window {
 
 			self.backgroundColor = NSColor.clear
 			self.isOpaque = true
-			self.styleMask = [.borderless]
+
+			// We set 'titled' here AND 'borderless' as it seems to give us a bolder
+			// drop shadow than just 'borderless' itself. How odd!
+			self.styleMask = [.titled, .fullSizeContentView, .borderless]
+
+			// Make sure the user cannot move the window
+			self.isMovable = false
 			self.isMovableByWindowBackground = false
-			self.makeKeyAndOrderFront(self)
 
 			primaryStack.wantsLayer = true
 			let baseLayer = primaryStack.layer!
@@ -195,8 +212,8 @@ internal extension DSFQuickActionBar.Window {
 
 			self.primaryStack.layoutSubtreeIfNeeded()
 
-			if let initialText = initialSearchText {
-				self.editLabel.stringValue = initialText
+			if let initialSearchText = initialSearchText {
+				self.currentSearchText = initialSearchText
 			}
 
 			self.textChanged()
@@ -208,7 +225,7 @@ extension DSFQuickActionBar.Window {
 	// Called when the user presses 'escape' when the window is present
 	override func cancelOperation(_: Any?) {
 		self.quickActionBar.contentSource?.quickActionBarDidCancel(self.quickActionBar)
-		self.resignKey()
+		self.resignMain()
 	}
 
 	// Called from the results view when the user presses the left arrow
@@ -228,9 +245,13 @@ extension DSFQuickActionBar.Window: NSTextFieldDelegate {
 		guard let contentSource = self.quickActionBar.contentSource else { return }
 
 		let currentSearch = self.editLabel.stringValue
+		self._currentSearchText = currentSearch
 
 		// Get a list of the identifiers than match
-		let identifiers = contentSource.quickActionBar(self.quickActionBar, identifiersForSearchTerm: currentSearch)
+		let identifiers = contentSource.quickActionBar(
+			self.quickActionBar,
+			itemsForSearchTerm: currentSearch
+		)
 
 		// And update the display list
 		self.results.currentSearchTerm = currentSearch
@@ -245,29 +266,5 @@ extension DSFQuickActionBar.Window: NSTextFieldDelegate {
 			return true
 		}
 		return false
-	}
-}
-
-// MARK: - WindowController
-
-extension DSFQuickActionBar {
-	class WindowController: NSWindowController {
-		func setupWindowListener(_ completion: @escaping () -> Void) {
-			NotificationCenter.default.addObserver(
-				forName: NSWindow.didResignKeyNotification,
-				object: self.window,
-				queue: .main
-			) { [weak self] _ in
-				self?.close()
-			}
-
-			NotificationCenter.default.addObserver(
-				forName: NSWindow.willCloseNotification,
-				object: self.window,
-				queue: .main
-			) { _ in
-				completion()
-			}
-		}
 	}
 }

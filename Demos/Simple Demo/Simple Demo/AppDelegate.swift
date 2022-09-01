@@ -42,19 +42,27 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	@IBAction func showQuickActions(_: Any) {
 		self.resultLabel.stringValue = ""
+		filters__.showAllIfEmpty = showAllWhenEmpty
 		self.quickActionBar.present(
-			in: self.window,
+			parentWindow: self.window,
 			placeholderText: "Search Filters",
-			searchImage: NSImage(named: "filter-icon")!
-		)
+			searchImage: NSImage(named: "filter-icon")!,
+			width: min(800, max(500, self.window.frame.width + 50))
+		) {
+			Swift.print("Quick action bar closed")
+		}
 	}
 
 	@IBAction func showGlobalQuickActions(_: Any) {
+		filters__.showAllIfEmpty = showAllWhenEmpty
+
 		self.resultLabel.stringValue = ""
-		self.quickActionBar.presentOnMainScreen(
+		self.quickActionBar.present(
 			placeholderText: "Search Filters Globally",
-			width: 800
-		)
+			searchImage: NSImage(named: "NSColorPanel")!
+		) {
+			Swift.print("Quick action bar closed")
+		}
 	}
 
 	var loadingType = 1
@@ -67,43 +75,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 }
 
 extension AppDelegate: DSFQuickActionBarContentSource {
-	func quickActionBar(_: DSFQuickActionBar, identifiersForSearchTerm searchTerm: String) -> [DSFQuickActionBar.ItemIdentifier] {
-
-		// Display ALL items when there's no search term
-		if showAllWhenEmpty && searchTerm.isEmpty {
-			return AllFilters
-				.sorted { a, b in a.userPresenting < b.userPresenting }
-				.map { $0.id }
-		}
-
+	func quickActionBar(_: DSFQuickActionBar, itemsForSearchTerm searchTerm: String) -> [AnyHashable] {
 		self.currentSearch = searchTerm
-
-		if searchTerm.isEmpty {
-			return []
-		}
-
-		/// Return the item identifiers for the matching mountains
-		let matches = AllFilters
-			.filter { $0.userPresenting.localizedCaseInsensitiveContains(searchTerm) }
-			.sorted(by: { a, b in a.userPresenting < b.userPresenting })
-			.map { $0.id }
-
-		return matches
+		return filters__.search(searchTerm)
 	}
 
-	func quickActionBar(_: DSFQuickActionBar, viewForIdentifier identifier: DSFQuickActionBar.ItemIdentifier, searchTerm: String) -> NSView? {
+	func quickActionBar(_: DSFQuickActionBar, viewForItem item: AnyHashable, searchTerm: String) -> NSView? {
 		// Find the item with the specified item identifier
-		guard let filter = AllFilters.filter({ $0.id == identifier }).first else {
-			return nil
-		}
+		guard let filter = item as? Filter else { fatalError() }
 		return cellForFilter(filter: filter)
 	}
 
-	func quickActionBar(_: DSFQuickActionBar, didSelectIdentifier identifier: DSFQuickActionBar.ItemIdentifier) {
-		guard let mountain = AllFilters.filter({ $0.id == identifier }).first else {
-			fatalError()
-		}
-		self.resultLabel.stringValue = "Quick Action Bar selected '\(mountain.name)'"
+	func quickActionBar(_: DSFQuickActionBar, didSelectItem item: AnyHashable) {
+		guard let filter = item as? Filter else { fatalError() }
+		self.resultLabel.stringValue = "Quick Action Bar selected '\(filter.name)'"
 	}
 
 	func quickActionBarDidCancel(_: DSFQuickActionBar) {
