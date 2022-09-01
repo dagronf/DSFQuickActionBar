@@ -53,10 +53,10 @@ struct ContentView: View {
 				searchTerm: $searchTerm,
 				selectedItem: $selectedFilter,
 				placeholderText: "Type something (eg. blur)",
-				identifiersForSearchTerm: { searchTerm in
+				itemsForSearchTerm: { searchTerm in
 					filters__.search(searchTerm)
 				},
-				viewForIdentifier: { filter, searchTerm in
+				viewForItem: { filter, searchTerm in
 					FilterViewCell(filter: filter)
 				}
 			)

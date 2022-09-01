@@ -73,7 +73,7 @@ public extension DSFQuickActionBar {
 	/// - Parameters:
 	///   - parentWindow: the window to center the quick action bar in, or nil to center on screen
 	///   - placeholderText: the placeholder text to display in the search field
-	///   - searchImage: the image to use as the search image. If nil, uses the default image
+	///   - searchImage: the image to use as the search image. If nil, uses the default magnifying glass image
 	///   - initialSearchText: the text to initially populate the search field with
 	///   - width: the width of the quick action bar to display
 	///   - didClose: A callback to indicate that the quick action bar has closed

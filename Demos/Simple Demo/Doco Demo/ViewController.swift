@@ -24,17 +24,17 @@ class ViewController: NSViewController {
 }
 
 extension ViewController: DSFQuickActionBarContentSource {
-	func quickActionBar(_ quickActionBar: DSFQuickActionBar, identifiersForSearchTerm searchTerm: String) -> [AnyHashable] {
+	func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTerm searchTerm: String) -> [AnyHashable] {
 		return Filter.search(searchTerm)
 	}
 
-	func quickActionBar(_ quickActionBar: DSFQuickActionBar, viewForIdentifier identifier: AnyHashable, searchTerm: String) -> NSView? {
-		guard let filter = identifier as? Filter else { fatalError() }
+	func quickActionBar(_ quickActionBar: DSFQuickActionBar, viewForItem item: AnyHashable, searchTerm: String) -> NSView? {
+		guard let filter = item as? Filter else { fatalError() }
 		return NSTextField(labelWithString: filter.userPresenting)
 	}
 
-	func quickActionBar(_ quickActionBar: DSFQuickActionBar, didSelectIdentifier identifier: AnyHashable) {
-		Swift.print("Selected identifier \(identifier as? Filter)")
+	func quickActionBar(_ quickActionBar: DSFQuickActionBar, didSelectItem item: AnyHashable) {
+		Swift.print("Selected identifier \(item as? Filter)")
 	}
 }
 

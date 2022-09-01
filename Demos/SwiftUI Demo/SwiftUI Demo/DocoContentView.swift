@@ -23,11 +23,11 @@ struct DocoContentView: View {
 				location: .screen,
 				visible: $quickActionBarVisible,
 				selectedItem: $selectedFilter,
-				placeholderText: "Open Quickly...",
-				identifiersForSearchTerm: { searchTerm in
+				placeholderText: "Open Quickly",
+				itemsForSearchTerm: { searchTerm in
 					filters__.search(searchTerm)
 				},
-				viewForIdentifier: { filter, searchTerm in
+				viewForItem: { filter, searchTerm in
 					Text(filter.userPresenting)
 				}
 			)

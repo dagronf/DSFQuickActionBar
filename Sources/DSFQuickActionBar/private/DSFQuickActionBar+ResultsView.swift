@@ -129,7 +129,7 @@ extension DSFQuickActionBar.ResultsView: NSTableViewDelegate, NSTableViewDataSou
 		let itemIdentifier = self.identifiers[row]
 		return self.quickActionBar.contentSource?.quickActionBar(
 			self.quickActionBar,
-			viewForIdentifier: itemIdentifier,
+			viewForItem: itemIdentifier,
 			searchTerm: currentSearchTerm)
 	}
 }
@@ -148,7 +148,7 @@ extension DSFQuickActionBar.ResultsView {
 		}
 
 		let itemIdentifier = self.identifiers[selectedRow]
-		self.quickActionBar.contentSource?.quickActionBar(self.quickActionBar, didSelectIdentifier: itemIdentifier)
+		self.quickActionBar.contentSource?.quickActionBar(self.quickActionBar, didSelectItem: itemIdentifier)
 
 		// If the row is double-clicked, close the bar
 		self.window?.resignMain()

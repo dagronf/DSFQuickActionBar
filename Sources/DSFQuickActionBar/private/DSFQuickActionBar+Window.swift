@@ -250,7 +250,7 @@ extension DSFQuickActionBar.Window: NSTextFieldDelegate {
 		// Get a list of the identifiers than match
 		let identifiers = contentSource.quickActionBar(
 			self.quickActionBar,
-			identifiersForSearchTerm: currentSearch
+			itemsForSearchTerm: currentSearch
 		)
 
 		// And update the display list

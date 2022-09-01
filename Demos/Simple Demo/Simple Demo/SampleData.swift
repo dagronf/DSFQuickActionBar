@@ -21,7 +21,7 @@ class Filters {
 	var showAllIfEmpty = true
 
 	// All the filters
-	var all: [Filter] = {
+	let all: [Filter] = {
 		let filterNames = CIFilter.filterNames(inCategory: nil).sorted()
 		return filterNames.map { name in Filter(name: name) }
 	}()
