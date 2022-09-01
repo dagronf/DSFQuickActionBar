@@ -331,6 +331,12 @@ let filters__ = Filters()
 
 ## Releases
 
+### 3.0.1 BREAKING CHANGES
+
+* The UUID identifier has been replaced with a `Hashable` type. This allows other types to be used as an identifier (eg. `URL` or even structs/classes). 
+* 'Identifier' used within the API has been changed to `Item` (eg. `viewForIdentifier` -> `viewForItem`)
+* The SwiftUI implementation has been changed to be much more SwiftUI-y. Please see the [Implementing for SwiftUI](#implementing-for-swiftui) section for details.
+
 ### 2.0.2
 
 * Updated demo for updated DSFAppKitBuilder
@@ -374,7 +380,7 @@ MIT. Use it and abuse it for anything you want, just attribute my work. Let me k
 ```
 MIT License
 
-Copyright (c) 2021 Darren Ford
+Copyright © 2022 Darren Ford
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
