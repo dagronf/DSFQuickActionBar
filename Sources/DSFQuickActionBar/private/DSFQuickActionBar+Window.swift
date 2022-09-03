@@ -261,8 +261,17 @@ extension DSFQuickActionBar.Window: NSTextFieldDelegate {
 	func control(_: NSControl, textView _: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
 		if commandSelector == #selector(moveDown(_:)) {
 			self.makeFirstResponder(self.results.tableView)
-			let selection: Int = (self.results.tableView.selectedRow == -1) ? 0 : self.results.tableView.selectedRow
-			self.results.tableView.selectRowIndexes(IndexSet(integer: selection), byExtendingSelection: false)
+
+			var currentRowSelection = self.results.selectedRow
+			if currentRowSelection < 0 {
+				currentRowSelection = self.results.firstSelectableRow
+				if currentRowSelection == -1 {
+					// Odd -- no selectable rows?
+					return false
+				}
+			}
+
+			self.results.tableView.selectRowIndexes(IndexSet(integer: currentRowSelection), byExtendingSelection: false)
 			return true
 		}
 		return false

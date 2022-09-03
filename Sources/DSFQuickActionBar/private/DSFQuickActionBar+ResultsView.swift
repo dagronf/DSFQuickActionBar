@@ -42,6 +42,22 @@ extension DSFQuickActionBar {
 			}
 		}
 
+		// Returns the currently selected row in the list
+		@inlinable var selectedRow: Int {
+			return self.tableView.selectedRow
+		}
+
+		// Returns the first selectable row in the list. If no items are selectable, returns -1
+		var firstSelectableRow: Int {
+			let count = self.numberOfRows(in: self.tableView)
+			for index in (0 ..< count) {
+				if self.tableView(self.tableView, shouldSelectRow: index) == true {
+					return index
+				}
+			}
+			return -1
+		}
+
 		override init(frame frameRect: NSRect) {
 			super.init(frame: frameRect)
 			self.translatesAutoresizingMaskIntoConstraints = false
@@ -120,6 +136,12 @@ extension DSFQuickActionBar.ResultsView {
 // MARK: - Table Data
 
 extension DSFQuickActionBar.ResultsView: NSTableViewDelegate, NSTableViewDataSource {
+
+	@inlinable var contentSource: DSFQuickActionBarContentSource? {
+		self.quickActionBar.contentSource
+	}
+
+
 	func numberOfRows(in _: NSTableView) -> Int {
 		return self.identifiers.count
 	}
@@ -127,10 +149,25 @@ extension DSFQuickActionBar.ResultsView: NSTableViewDelegate, NSTableViewDataSou
 	func tableView(_: NSTableView, viewFor _: NSTableColumn?, row: Int) -> NSView? {
 		// Swift.print("view for \(row)")
 		let itemIdentifier = self.identifiers[row]
-		return self.quickActionBar.contentSource?.quickActionBar(
+		return self.contentSource?.quickActionBar(
 			self.quickActionBar,
 			viewForItem: itemIdentifier,
 			searchTerm: currentSearchTerm)
+	}
+
+	func tableView(_ tableView: NSTableView, shouldSelectRow row: Int) -> Bool {
+		return self.contentSource?.quickActionBar(
+			self.quickActionBar,
+			canSelectItem: self.identifiers[row]
+		) ?? false
+	}
+
+	func tableViewSelectionDidChange(_ notification: Notification) {
+		assert(self.selectedRow < self.identifiers.count)
+		self.contentSource?.quickActionBar(
+			self.quickActionBar,
+			didSelectItem: self.identifiers[self.selectedRow]
+		)
 	}
 }
 
@@ -148,7 +185,7 @@ extension DSFQuickActionBar.ResultsView {
 		}
 
 		let itemIdentifier = self.identifiers[selectedRow]
-		self.quickActionBar.contentSource?.quickActionBar(self.quickActionBar, didSelectItem: itemIdentifier)
+		self.quickActionBar.contentSource?.quickActionBar(self.quickActionBar, didActivateItem: itemIdentifier)
 
 		// If the row is double-clicked, close the bar
 		self.window?.resignMain()

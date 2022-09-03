@@ -32,6 +32,7 @@ Please be aware your existing code *will* need changes to support the new v3 cod
 
 * The UUID identifier has been replaced with a `Hashable` type. This allows other types to be used as an identifier (eg. `URL` or even structs/classes). 
 * 'Identifier' used within the API has been changed to `Item` (eg. `viewForIdentifier` -> `viewForItem`)
+* The `didSelectItem` delegate callback is now used when the item is _selected_, not activated. `didActivateItem` is called when the user 'activates' (ie. double-clicks or keyboard selects) a row
 * The SwiftUI implementation has been changed to be much more SwiftUI-y. Please see the [Implementing for SwiftUI](#implementing-for-swiftui) section for details.
 
 ## Features
@@ -49,7 +50,7 @@ You can present a quick action bar in the context of a window (where it will be 
 3. For each change to the search term -
    1. The contentSource will be asked for the item(s) that 'match' the search term (`itemsForSearchTerm`)
    2. For each item, the contentSource will be asked to provide a view which will appear in the result table for that item (`viewForItem`)
-   3. When the user either double-clicks on, or presses the return key on a selected item row, the contentSource will be provided with the item (`didSelectItem`)
+   3. When the user either double-clicks on, or presses the return key on a selected item row, the contentSource will be provided with the item (`didActivateItem`)
 4. The quick action bar will automatically dismiss if
 	1. The user clicks outside the quick action bar (ie. it loses focus)
 	2. The user presses the escape key
@@ -105,11 +106,27 @@ func quickActionBar(_ quickActionBar: DSFQuickActionBar, viewForItem item: AnyHa
 
 Return the view to be displayed in the row for the item. The search term is also provided to allow the view to be customized for the search term (eg. highlighting the match in the name)
 
+#### canSelectItem
+
+```swift
+func quickActionBar(_ quickActionBar: DSFQuickActionBar, canSelectItem item: AnyHashable) -> Bool
+```
+
+Called when a item will be selected (eg. by keyboard navigation or clicking). Return false if this row should not be selected (eg. it's a separator)
+
 #### didSelectItem
 
 ```swift
-// Swift
 func quickActionBar(_ quickActionBar: DSFQuickActionBar, didSelectItem item: AnyHashable)
+```
+
+Called when an item is selected within the list.
+
+#### didActivateItem
+
+```swift
+// Swift
+func quickActionBar(_ quickActionBar: DSFQuickActionBar, didActivateItem item: AnyHashable)
 ```
 
 Indicates the user activated an item in the result list. The 'item' parameter is the item that was selected by the user
@@ -157,8 +174,8 @@ extension ViewController: DSFQuickActionBarContentSource {
       return NSTextField(labelWithString: filter.userPresenting)
    }
 
-   func quickActionBar(_ quickActionBar: DSFQuickActionBar, didSelectItem item: AnyHashable) {
-      Swift.print("Selected item \(item as? Filter)")
+   func quickActionBar(_ quickActionBar: DSFQuickActionBar, didActivateItem item: AnyHashable) {
+      Swift.print("Activated item \(item as? Filter)")
    }
    
    func quickActionBarDidCancel(_ quickActionBar: DSFQuickActionBar) {
@@ -331,10 +348,11 @@ let filters__ = Filters()
 
 ## Releases
 
-### 3.0.1 BREAKING CHANGES
+### 3.0.3 BREAKING CHANGES
 
 * The UUID identifier has been replaced with a `Hashable` type. This allows other types to be used as an identifier (eg. `URL` or even structs/classes). 
 * 'Identifier' used within the API has been changed to `Item` (eg. `viewForIdentifier` -> `viewForItem`)
+* The `didSelectItem` delegate callback is now used when the item is _selected_, not activated. `didActivateItem` is called when the user 'activates' (ie. double-clicks or keyboard selects) a row
 * The SwiftUI implementation has been changed to be much more SwiftUI-y. Please see the [Implementing for SwiftUI](#implementing-for-swiftui) section for details.
 
 ### 2.0.2

@@ -29,6 +29,9 @@ import Foundation
 
 /// A window class that closes when the window resigns its focus (eg clicking outside it)
 class EphemeralWindow: NSPanel {
+
+	private var hasClosed = false
+
 	override init(contentRect: NSRect, styleMask style: NSWindow.StyleMask, backing backingStoreType: NSWindow.BackingStoreType, defer flag: Bool) {
 		super.init(
 			contentRect: contentRect,
@@ -63,8 +66,11 @@ class EphemeralWindow: NSPanel {
 
 	/// Close and toggle presentation, so that it matches the current state of the panel
 	override func close() {
-		super.close()
-		self.didDetectClose?()
+		if self.hasClosed == false {
+			super.close()
+			self.hasClosed = true
+			self.didDetectClose?()
+		}
 	}
 
 	/// A block that gets called when the window closes

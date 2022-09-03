@@ -74,25 +74,84 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 }
 
+func MakeSeparator() -> NSView {
+	let s = NSBox()
+	s.translatesAutoresizingMaskIntoConstraints = false
+	s.boxType = .separator
+	return s
+}
+
 extension AppDelegate: DSFQuickActionBarContentSource {
+	func makeButton() -> NSView {
+		let b = NSButton()
+		b.translatesAutoresizingMaskIntoConstraints = false
+		b.isBordered = false
+		b.title = "Advanced search…"
+		b.font = .systemFont(ofSize: 16)
+		b.alignment = .left
+		b.target = self
+		b.action = #selector(performAdvancedSearch(_:))
+		return b
+	}
+
 	func quickActionBar(_: DSFQuickActionBar, itemsForSearchTerm searchTerm: String) -> [AnyHashable] {
 		self.currentSearch = searchTerm
-		return filters__.search(searchTerm)
+
+		var currentMatches: [AnyHashable] = filters__.search(searchTerm)
+
+		// If there's search results, show a separator
+		if currentMatches.count > 0 {
+			currentMatches.append(MakeSeparator())
+		}
+
+		// Add in an 'advanced search' button
+		currentMatches.append(makeButton())
+		return currentMatches
 	}
 
 	func quickActionBar(_: DSFQuickActionBar, viewForItem item: AnyHashable, searchTerm: String) -> NSView? {
 		// Find the item with the specified item identifier
-		guard let filter = item as? Filter else { fatalError() }
-		return cellForFilter(filter: filter)
+		if let filter = item as? Filter {
+			return cellForFilter(filter: filter)
+		}
+		else if let separator = item as? NSBox {
+			return separator
+		}
+		else if let button = item as? NSButton {
+			return button
+		}
+		else {
+			fatalError()
+		}
 	}
 
-	func quickActionBar(_: DSFQuickActionBar, didSelectItem item: AnyHashable) {
-		guard let filter = item as? Filter else { fatalError() }
-		self.resultLabel.stringValue = "Quick Action Bar selected '\(filter.name)'"
+	func quickActionBar(_ quickActionBar: DSFQuickActionBar, canSelectItem item: AnyHashable) -> Bool {
+		if item is NSBox {
+			return false
+		}
+		return true
+	}
+
+	func quickActionBar(_: DSFQuickActionBar, didActivateItem item: AnyHashable) {
+		if let filter = item as? Filter {
+			self.resultLabel.stringValue = "Quick Action Bar activated '\(filter.name)'"
+		}
+		else if let button = item as? NSButton {
+			self.resultLabel.stringValue = "Quick Action Bar activated 'advanced'"
+			self.performAdvancedSearch(button)
+		}
+		else {
+			fatalError()
+		}
 	}
 
 	func quickActionBarDidCancel(_: DSFQuickActionBar) {
 		self.resultLabel.stringValue = "Quick Action Bar cancelled"
+	}
+
+	@objc func performAdvancedSearch(_ sender: Any) {
+		Swift.print("Perform advanced search...")
+		quickActionBar.cancel()
 	}
 }
 

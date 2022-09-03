@@ -55,6 +55,8 @@ public struct QuickActionBar<IdentifierType: Hashable, RowContentView: View>: NS
 	///   - selectedItem: The item selected by the user
 	///   - placeholderText: The text to display in the quick action bar when the search term is empty
 	///   - itemsForSearchTerm: A block which returns the identifiers for the specified search term.
+	///   - isItemSelectable: Return false to mark an item as 'not selectable' (eg. if the item is a separator). By default, you can always select an item
+	///   - itemSelected: Called when an item is selected in the results
 	///   - viewForItem: A block which returns the View content (of type `RowContentView`) to display for the specified identifier
 	public init(
 		location: QuickActionBarLocation = .screen,
@@ -65,6 +67,8 @@ public struct QuickActionBar<IdentifierType: Hashable, RowContentView: View>: NS
 		placeholderText: String? = DSFQuickActionBar.DefaultPlaceholderString,
 		searchImage: NSImage? = nil,
 		itemsForSearchTerm: @escaping (String) -> [IdentifierType],
+		isItemSelectable: ((IdentifierType) -> Bool)? = nil,
+		itemSelected: ((IdentifierType) -> Void)? = nil,
 		viewForItem: @escaping (_ identifier: IdentifierType, _ searchTerm: String) -> RowContentView?
 	) {
 		self._visible = visible
@@ -74,6 +78,8 @@ public struct QuickActionBar<IdentifierType: Hashable, RowContentView: View>: NS
 		self.placeholderText = placeholderText
 		self._currentSearchText = searchTerm
 		self._selectedItem = selectedItem
+		self._isItemSelectable = isItemSelectable
+		self._itemSelected = itemSelected
 		self._itemsForSearchTerm = itemsForSearchTerm
 		self._rowContent = viewForItem
 	}
@@ -84,6 +90,8 @@ public struct QuickActionBar<IdentifierType: Hashable, RowContentView: View>: NS
 	private let placeholderText: String?
 	private let _rowContent: (IdentifierType, String) -> RowContentView?
 	private let _itemsForSearchTerm: (String) -> [IdentifierType]
+	private let _isItemSelectable: ((IdentifierType) -> Bool)?
+	private let _itemSelected: ((IdentifierType) -> Void)?
 	private let searchImage: NSImage?
 	@Binding var visible: Bool
 	@Binding var selectedItem: IdentifierType?
@@ -100,6 +108,8 @@ public extension QuickActionBar {
 			selectedItem: self.$selectedItem,
 			currentSearchText: self.$currentSearchText,
 			itemsForSearchTerm: self._itemsForSearchTerm,
+			isItemSelectable: self._isItemSelectable,
+			itemSelected: self._itemSelected,
 			rowContent: self._rowContent
 		)
 	}
@@ -157,7 +167,10 @@ public extension QuickActionBar {
 		let quickActionBar = DSFQuickActionBar()
 
 		private var itemsForSearchTerm: (String) -> [IdentifierType]
+		private let isItemSelectable: ((IdentifierType) -> Bool)?
+		private let itemSelected: ((IdentifierType) -> Void)?
 		private let rowContent: (IdentifierType, String) -> RowContentView?
+
 
 		@Binding var isVisible: Bool
 		@Binding var selectedItem: IdentifierType?
@@ -168,12 +181,16 @@ public extension QuickActionBar {
 			selectedItem: Binding<IdentifierType?>,
 			currentSearchText: Binding<String>,
 			itemsForSearchTerm: @escaping (String) -> [IdentifierType],
+			isItemSelectable: ((IdentifierType) -> Bool)?,
+			itemSelected: ((IdentifierType) -> Void)?,
 			rowContent: @escaping (IdentifierType, String) -> RowContentView?
 		) {
 			self._isVisible = isVisible
 			self._selectedItem = selectedItem
 			self._currentSearchText = currentSearchText
+			self.isItemSelectable = isItemSelectable
 			self.itemsForSearchTerm = itemsForSearchTerm
+			self.itemSelected = itemSelected
 			self.rowContent = rowContent
 			super.init()
 
@@ -189,7 +206,7 @@ public extension QuickActionBar {
 
 		public func quickActionBar(
 			_ quickActionBar: DSFQuickActionBar,
-			didSelectItem item: AnyHashable
+			didActivateItem item: AnyHashable
 		) {
 			// Update the selection
 			self.selectedItem = item as? IdentifierType
@@ -199,6 +216,16 @@ public extension QuickActionBar {
 
 			// Tell the window to go away
 			self.isVisible = false
+		}
+
+		public func quickActionBar(_ quickActionBar: DSFQuickActionBar, canSelectItem item: AnyHashable) -> Bool {
+			guard let item = item as? IdentifierType else { fatalError() }
+			return self.isItemSelectable?(item) ?? true
+		}
+
+		public func quickActionBar(_ quickActionBar: DSFQuickActionBar, didSelectItem item: AnyHashable) {
+			guard let item = item as? IdentifierType else { fatalError() }
+			self.itemSelected?(item)
 		}
 
 		public func quickActionBar(

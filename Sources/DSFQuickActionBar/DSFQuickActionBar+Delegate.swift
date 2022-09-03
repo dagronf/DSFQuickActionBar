@@ -28,22 +28,39 @@ import AppKit
 
 /// Delegate for a QSFQuickActionBar instance
 public protocol DSFQuickActionBarContentSource: NSObjectProtocol {
-	/// Return an array of the identifiers to be displayed for the specified search term
+	/// Return an array of item(s) to be displayed for the specified search term
 	func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTerm searchTerm: String) -> [AnyHashable]
 
-	/// Return a configured view to display for the specified identifier and search term
+	/// Return a configured view to display for the specified item and search term
 	func quickActionBar(_ quickActionBar: DSFQuickActionBar, viewForItem item: AnyHashable, searchTerm: String) -> NSView?
 
-	/// Called when the specified identifier is 'activated' (double clicked, return key pressed etc)
+	/// Called when a item will be selected (eg. by keyboard navigation, clicking). Return false to make the row unselectable.
+	func quickActionBar(_ quickActionBar: DSFQuickActionBar, canSelectItem item: AnyHashable) -> Bool
+
+	/// Called when an item is selected.
 	func quickActionBar(_ quickActionBar: DSFQuickActionBar, didSelectItem item: AnyHashable)
+
+	/// Called when the specified item is activated (double clicked, return key pressed while selected etc)
+	func quickActionBar(_ quickActionBar: DSFQuickActionBar, didActivateItem item: AnyHashable)
 
 	/// Called when the quick action bar was dismissed without selecting an item (optional)
 	func quickActionBarDidCancel(_ quickActionBar: DSFQuickActionBar)
 }
 
-extension DSFQuickActionBarContentSource {
+public extension DSFQuickActionBarContentSource {
+
+	/// Default implementation.  Rows are _always_ selectable.
+	func quickActionBar(_ quickActionBar: DSFQuickActionBar, canSelectItem item: AnyHashable) -> Bool {
+		return true
+	}
+
+	/// Default implementation.
+	func quickActionBar(_ quickActionBar: DSFQuickActionBar, didSelectItem item: AnyHashable) {
+		// Do nothing
+	}
+
 	/// Default implementation for cancel
-	public func quickActionBarDidCancel(_ quickActionBar: DSFQuickActionBar) {
+	func quickActionBarDidCancel(_ quickActionBar: DSFQuickActionBar) {
 		// Do nothing
 	}
 }

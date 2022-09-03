@@ -707,12 +707,19 @@
             <objects>
                 <viewController id="XfG-lQ-9wD" customClass="ViewController" customModule="Doco_Demo" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="m2S-Jp-Qdl">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                        <rect key="frame" x="0.0" y="0.0" width="492" height="270"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="v17-Ih-kmz">
-                                <rect key="frame" x="13" y="223" width="125" height="32"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="NxU-fV-aPH">
+                                <rect key="frame" x="18" y="234" width="456" height="16"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="Select a filter from a list.  Any filter with 'blue' in the name is not selectable" id="klY-fV-8Hh">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="v17-Ih-kmz">
+                                <rect key="frame" x="184" y="185" width="125" height="32"/>
                                 <buttonCell key="cell" type="push" title="Select a filter..." bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ZSF-cR-DRW">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -722,11 +729,18 @@
                                 </connections>
                             </button>
                         </subviews>
+                        <constraints>
+                            <constraint firstItem="v17-Ih-kmz" firstAttribute="centerX" secondItem="m2S-Jp-Qdl" secondAttribute="centerX" id="0wj-Lb-eRn"/>
+                            <constraint firstItem="v17-Ih-kmz" firstAttribute="top" secondItem="NxU-fV-aPH" secondAttribute="bottom" constant="22" id="3bL-0i-Hvt"/>
+                            <constraint firstItem="NxU-fV-aPH" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" symbolic="YES" id="ExU-UD-07j"/>
+                            <constraint firstAttribute="trailing" secondItem="NxU-fV-aPH" secondAttribute="trailing" constant="20" symbolic="YES" id="HBr-oX-TvY"/>
+                            <constraint firstItem="NxU-fV-aPH" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="20" symbolic="YES" id="r4a-1K-HMH"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="75" y="655"/>
+            <point key="canvasLocation" x="81" y="655"/>
         </scene>
     </scenes>
 </document>

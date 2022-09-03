@@ -33,8 +33,17 @@ extension ViewController: DSFQuickActionBarContentSource {
 		return NSTextField(labelWithString: filter.userPresenting)
 	}
 
+	func quickActionBar(_ quickActionBar: DSFQuickActionBar, canSelectItem item: AnyHashable) -> Bool {
+		guard let filter = item as? Filter else { fatalError() }
+		return !filter.name.lowercased().contains("blue")
+	}
+
 	func quickActionBar(_ quickActionBar: DSFQuickActionBar, didSelectItem item: AnyHashable) {
-		Swift.print("Selected identifier \(item as? Filter)")
+		Swift.print("Selected item \(item as? Filter)")
+	}
+
+	func quickActionBar(_ quickActionBar: DSFQuickActionBar, didActivateItem item: AnyHashable) {
+		Swift.print("Activated item \(item as? Filter)")
 	}
 }
 
