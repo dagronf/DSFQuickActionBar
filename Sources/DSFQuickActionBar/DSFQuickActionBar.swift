@@ -29,7 +29,9 @@ import AppKit
 /// A spotlight inspired floating action bar
 public class DSFQuickActionBar {
 	/// The default width for a quick action bar.
-	public static let DefaultWidth: Double = 640
+	public static let DefaultWidth: CGFloat = 640
+	/// The default height for a quick action bar.
+	public static let DefaultHeight: CGFloat = 320
 
 	// The default placeholder text to display in the edit field
 	public static let DefaultPlaceholderString: String = "Quick Actions"
@@ -65,6 +67,7 @@ public class DSFQuickActionBar {
 	internal var quickBarController: NSWindowController?
 	internal var onCloseCallback: (() -> Void)?
 	internal var width: CGFloat = DSFQuickActionBar.DefaultWidth
+	internal var height: CGFloat = DSFQuickActionBar.DefaultHeight
 	internal var searchImage: NSImage?
 }
 
@@ -82,10 +85,12 @@ public extension DSFQuickActionBar {
 		placeholderText: String? = DSFQuickActionBar.DefaultPlaceholderString,
 		searchImage: NSImage? = nil,
 		initialSearchText: String? = nil,
-		width: CGFloat = DSFQuickActionBar.DefaultWidth,
+		width: CGFloat = (NSScreen.main?.frame.width ?? (DSFQuickActionBar.DefaultWidth*4)) / 4.0,
+		height: CGFloat = (NSScreen.main?.frame.height ?? (DSFQuickActionBar.DefaultHeight*4)) / 4.0,
 		didClose: (() -> Void)? = nil
 	) {
 		self.width = width
+		self.height = height
 		self.searchImage = {
 			if let searchImage = searchImage {
 				// Scale the image to the required size
