@@ -15,8 +15,14 @@ struct FilterViewCell: View {
 			Image("filter-color").resizable()
 				.frame(width: 42, height: 42)
 			VStack(alignment: .leading) {
-				Text(filter.userPresenting).font(.title)
-				Text(filter.description).font(.callout).foregroundColor(.gray).italic()
+				HStack {
+					Text(filter.userPresenting).font(.title)
+					Spacer()
+				}
+				HStack {
+					Text(filter.description).font(.callout).foregroundColor(.gray).italic()
+					Spacer()
+				}
 			}
 		}
 	}

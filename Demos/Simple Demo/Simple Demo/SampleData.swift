@@ -13,7 +13,7 @@ let filters__ = Filters()
 struct Filter: Hashable, CustomStringConvertible {
 	let name: String // The name is unique within our dataset, therefore it will be our identifier
 	var userPresenting: String { return CIFilter.localizedName(forFilterName: self.name) ?? self.name }
-	var description: String { name }
+	var description: String { CIFilter.localizedDescription(forFilterName: self.name) ?? self.name }
 }
 
 class Filters {

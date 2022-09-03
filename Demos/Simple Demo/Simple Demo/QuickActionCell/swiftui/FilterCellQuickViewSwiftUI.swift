@@ -28,12 +28,18 @@ struct FilterCellQuickViewSwiftUI: View {
 			Image("filter-color").resizable()
 				.frame(width: 32, height: 32)
 			VStack(alignment: .leading) {
-				Text(title)
-					.font(.title)
-					.multilineTextAlignment(.leading)
-				Text(description).italic()
-					.multilineTextAlignment(.leading)
-					.foregroundColor(.gray)
+				HStack {
+					Text(title)
+						.font(.title)
+						.multilineTextAlignment(.leading)
+					Spacer()
+				}
+				HStack {
+					Text(description).italic()
+						.multilineTextAlignment(.leading)
+						.foregroundColor(.gray)
+					Spacer()
+				}
 			}
 		}
 	}
