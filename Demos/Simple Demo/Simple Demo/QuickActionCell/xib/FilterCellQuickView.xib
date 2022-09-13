@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19142.2" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="21223" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19142.2"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="21223"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -16,33 +16,33 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView translatesAutoresizingMaskIntoConstraints="NO" id="c22-O7-iKe">
-            <rect key="frame" x="0.0" y="0.0" width="474" height="50"/>
+            <rect key="frame" x="0.0" y="0.0" width="474" height="45"/>
             <subviews>
                 <stackView distribution="fillProportionally" orientation="horizontal" alignment="centerY" horizontalStackHuggingPriority="999" verticalStackHuggingPriority="999" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="abH-Dq-ae4">
-                    <rect key="frame" x="0.0" y="0.0" width="474" height="50"/>
+                    <rect key="frame" x="0.0" y="0.0" width="474" height="45"/>
                     <subviews>
                         <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="pfu-7R-Zik">
-                            <rect key="frame" x="0.0" y="1" width="48" height="48"/>
+                            <rect key="frame" x="0.0" y="5" width="36" height="36"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="48" id="KWF-Aj-cDh"/>
-                                <constraint firstAttribute="width" constant="48" id="mkQ-Em-a0M"/>
+                                <constraint firstAttribute="height" constant="36" id="KWF-Aj-cDh"/>
+                                <constraint firstAttribute="width" constant="36" id="mkQ-Em-a0M"/>
                             </constraints>
                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyUpOrDown" image="filter-color" id="7Ph-EX-E2C"/>
                         </imageView>
                         <stackView distribution="fillProportionally" orientation="vertical" alignment="leading" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Tiu-ZM-TFO">
-                            <rect key="frame" x="56" y="3" width="418" height="45"/>
+                            <rect key="frame" x="44" y="2" width="430" height="41"/>
                             <subviews>
                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="r38-8w-Up5">
-                                    <rect key="frame" x="-2" y="15" width="140" height="30"/>
+                                    <rect key="frame" x="-2" y="15" width="140" height="26"/>
                                     <textFieldCell key="cell" lineBreakMode="clipping" title="Quick Action 1" id="uSV-g1-9X9">
                                         <font key="font" textStyle="title1" name=".SFNS-Regular"/>
                                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                     </textFieldCell>
                                 </textField>
-                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="T7f-68-Zyq">
+                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="100" verticalCompressionResistancePriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="T7f-68-Zyq">
                                     <rect key="frame" x="-2" y="0.0" width="141" height="15"/>
-                                    <textFieldCell key="cell" lineBreakMode="clipping" title="Quick Action Description" id="3bE-tv-eSU">
+                                    <textFieldCell key="cell" lineBreakMode="truncatingTail" title="Quick Action Description" id="3bE-tv-eSU">
                                         <font key="font" size="13" name="SFProDisplay-RegularItalic"/>
                                         <color key="textColor" name="tertiaryLabelColor" catalog="System" colorSpace="catalog"/>
                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>

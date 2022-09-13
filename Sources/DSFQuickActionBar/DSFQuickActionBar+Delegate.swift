@@ -34,7 +34,8 @@ public protocol DSFQuickActionBarContentSource: NSObjectProtocol {
 	/// Return a configured view to display for the specified item and search term
 	func quickActionBar(_ quickActionBar: DSFQuickActionBar, viewForItem item: AnyHashable, searchTerm: String) -> NSView?
 
-	/// Called when a item will be selected (eg. by keyboard navigation, clicking). Return false to make the row unselectable.
+	/// Called when a item will be selected (eg. by keyboard navigation, clicking).
+	/// Return false to make the row unselectable (for example, if you want to add a separator view)
 	func quickActionBar(_ quickActionBar: DSFQuickActionBar, canSelectItem item: AnyHashable) -> Bool
 
 	/// Called when an item is selected.
@@ -48,7 +49,6 @@ public protocol DSFQuickActionBarContentSource: NSObjectProtocol {
 }
 
 public extension DSFQuickActionBarContentSource {
-
 	/// Default implementation.  Rows are _always_ selectable.
 	func quickActionBar(_ quickActionBar: DSFQuickActionBar, canSelectItem item: AnyHashable) -> Bool {
 		return true

@@ -79,7 +79,7 @@ extension DSFQuickActionBar {
 		}()
 
 		// The edit label
-		private lazy var editLabel: NSTextField = {
+		internal lazy var editLabel: NSTextField = {
 			let t = NSTextField()
 			t.translatesAutoresizingMaskIntoConstraints = false
 			t.wantsLayer = true
@@ -155,8 +155,8 @@ extension DSFQuickActionBar {
 }
 
 extension DSFQuickActionBar.Window {
-	func reloadData() {
-		self.results.tableView.reloadData()
+	@inlinable func reloadData() {
+		self.results.reloadData()
 	}
 }
 
@@ -260,20 +260,18 @@ extension DSFQuickActionBar.Window: NSTextFieldDelegate {
 
 	func control(_: NSControl, textView _: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
 		if commandSelector == #selector(moveDown(_:)) {
-			self.makeFirstResponder(self.results.tableView)
-
-			var currentRowSelection = self.results.selectedRow
-			if currentRowSelection < 0 {
-				currentRowSelection = self.results.firstSelectableRow
-				if currentRowSelection == -1 {
-					// Odd -- no selectable rows?
-					return false
-				}
-			}
-
-			self.results.tableView.selectRowIndexes(IndexSet(integer: currentRowSelection), byExtendingSelection: false)
+			return self.results.selectNextSelectableRow()
+		}
+		else if commandSelector == #selector(moveUp(_:)) {
+			return self.results.selectPreviousSelectableRow()
+		}
+		else if commandSelector == #selector(insertNewline(_:)) {
+			let currentRowSelection = self.results.selectedRow
+			guard currentRowSelection >= 0 else { return false }
+			self.results.rowAction()
 			return true
 		}
+
 		return false
 	}
 }

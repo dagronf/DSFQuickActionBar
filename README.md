@@ -25,16 +25,6 @@ A spotlight-inspired quick action bar for macOS.
 
 I've seen this in other mac applications (particularly Spotlight and [Boop](https://apps.apple.com/us/app/boop/id1518425043?mt=12)) and it's very useful and convenient.
 
-## NOTE: Breaking changes for v2 -> v3
-
-There have been some breaking changes for those moving up from v2 or earlier to v3. This changes were to make the codebase more generic and to improve the SwiftUI support.
-Please be aware your existing code *will* need changes to support the new v3 codebase.
-
-* The UUID identifier has been replaced with a `Hashable` type. This allows other types to be used as an identifier (eg. `URL` or even structs/classes). 
-* 'Identifier' used within the API has been changed to `Item` (eg. `viewForIdentifier` -> `viewForItem`)
-* The `didSelectItem` delegate callback is now used when the item is _selected_, not activated. `didActivateItem` is called when the user 'activates' (ie. double-clicks or keyboard selects) a row
-* The SwiftUI implementation has been changed to be much more SwiftUI-y. Please see the [Implementing for SwiftUI](#implementing-for-swiftui) section for details.
-
 ## Features
 
 * macOS AppKit Swift Support
@@ -348,7 +338,20 @@ let filters__ = Filters()
 
 ## Releases
 
-### 3.0.3 BREAKING CHANGES
+### 4.0.0
+
+* Added ability to mark a row as not selectable (eg. if you want to add a separator item in the results). `canSelectItem` added to the delegate callback. By default, all rows are selectable.
+
+UI changes to move the UX implementation closer to that of Spotlight/Open Quickly (Xcode).
+
+* First search result is selected by default.
+* Typing in the edit field and using the up/down arrows does not change the UI focus to the result view, the result selection moves but the focus is not removed from the edit field
+* Set the number of clicks required to 'activate' an item (`requiredClickCount`). Default to double-click.
+
+### 3.0.5 BREAKING CHANGES
+
+There have been some breaking changes for those moving up from v2 or earlier to v3. This changes were to make the codebase more generic and to improve the SwiftUI support.
+Please be aware your existing code *will* need changes to support the new v3 codebase.
 
 * The UUID identifier has been replaced with a `Hashable` type. This allows other types to be used as an identifier (eg. `URL` or even structs/classes). 
 * 'Identifier' used within the API has been changed to `Item` (eg. `viewForIdentifier` -> `viewForItem`)

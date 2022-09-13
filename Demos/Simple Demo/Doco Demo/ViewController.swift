@@ -30,12 +30,26 @@ extension ViewController: DSFQuickActionBarContentSource {
 
 	func quickActionBar(_ quickActionBar: DSFQuickActionBar, viewForItem item: AnyHashable, searchTerm: String) -> NSView? {
 		guard let filter = item as? Filter else { fatalError() }
-		return NSTextField(labelWithString: filter.userPresenting)
+
+		let disabled = filter.name.lowercased().contains("area")
+
+		let tv: NSTextField
+		if #available(macOS 10.12, *) {
+			tv = NSTextField(labelWithString: filter.userPresenting)
+		} else {
+			tv = NSTextField()
+			tv.stringValue = filter.userPresenting
+			tv.isBordered = false
+			tv.isBezeled = false
+		}
+		tv.textColor = disabled ? NSColor.placeholderTextColor : NSColor.textColor
+
+		return InsetsView(tv, inset: 4)
 	}
 
 	func quickActionBar(_ quickActionBar: DSFQuickActionBar, canSelectItem item: AnyHashable) -> Bool {
 		guard let filter = item as? Filter else { fatalError() }
-		return !filter.name.lowercased().contains("blue")
+		return !filter.name.lowercased().contains("area")
 	}
 
 	func quickActionBar(_ quickActionBar: DSFQuickActionBar, didSelectItem item: AnyHashable) {

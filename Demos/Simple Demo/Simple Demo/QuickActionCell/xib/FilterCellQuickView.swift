@@ -7,7 +7,7 @@
 
 import AppKit
 
-func XIBResultCell(filter: Filter, currentSearch: String) -> NSView {
+func XIBResultCell(filter: Filter, currentSearch: String) -> FilterCellQuickView {
 	let item = FilterCellQuickView()
 
 	let searchText = currentSearch.lowercased()
@@ -29,7 +29,7 @@ func XIBResultCell(filter: Filter, currentSearch: String) -> NSView {
 	return item
 }
 
-class FilterCellQuickView: NSView {
+class FilterCellQuickView: NSTableCellView {
 
 	@IBOutlet var contentView: NSView!
 	@IBOutlet weak var actionName: NSTextField!

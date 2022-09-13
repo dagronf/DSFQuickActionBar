@@ -22,21 +22,21 @@ class DSFAppKitBuilderCell: DSFAppKitBuilderView, DSFAppKitBuilderViewHandler {
 	}
 	
 	lazy var body: Element =
-	HStack(spacing: 4) {
+	HStack(spacing: 8) {
 		ImageView()
 			.image(NSImage(named: "filter-color")!)
-			.size(width: 42, height: 42, priority: .required)
+			.size(width: 36, height: 36, priority: .required)
 		VStack(spacing: 2, alignment: .leading) {
 			Label(filter.userPresenting)
-				.font(NSFont.systemFont(ofSize: 24))
+				.font(NSFont.systemFont(ofSize: 18))
 				.lineBreakMode(.byTruncatingTail)
 				.horizontalPriorities(compressionResistance: 100)
 			Label(filter.description)
-				.font(NSFont.systemFont(ofSize: 12))
+				.font(NSFont.systemFont(ofSize: 11))
 				.textColor(.placeholderTextColor)
 				.lineBreakMode(.byTruncatingTail)
 				.horizontalPriorities(compressionResistance: 100)
 		}
 	}
-	.edgeInsets(bottom: 2)
+	.edgeInsets(top: 4, left: 8, bottom: 4, right: 8)
 }

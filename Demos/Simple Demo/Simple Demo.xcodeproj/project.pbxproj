@@ -6,6 +6,21 @@
 	objectVersion = 54;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		2349CAF228D0022800EE1A40 /* qab_all */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 2349CAF528D0022800EE1A40 /* Build configuration list for PBXAggregateTarget "qab_all" */;
+			buildPhases = (
+			);
+			dependencies = (
+				2349CAF928D0023500EE1A40 /* PBXTargetDependency */,
+				2349CAF728D0023200EE1A40 /* PBXTargetDependency */,
+			);
+			name = qab_all;
+			productName = qab_all;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		2322B90526A8D92B0034EB75 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2322B90426A8D92B0034EB75 /* AppDelegate.swift */; };
 		2322B90726A8D92C0034EB75 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2322B90626A8D92C0034EB75 /* Assets.xcassets */; };
@@ -15,6 +30,8 @@
 		2322B91926A8DAAF0034EB75 /* FilterCellQuickView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2322B91726A8DAAF0034EB75 /* FilterCellQuickView.swift */; };
 		2322B91A26A8DAAF0034EB75 /* FilterCellQuickView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2322B91826A8DAAF0034EB75 /* FilterCellQuickView.xib */; };
 		233CC5D226BE2E36001027E6 /* DSFAppKitBuilderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233CC5D126BE2E36001027E6 /* DSFAppKitBuilderCell.swift */; };
+		2349CAFA28D0036500EE1A40 /* libswiftCoreGraphics.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2379762428C01BCF00B41A17 /* libswiftCoreGraphics.tbd */; };
+		2349CAFC28D0061400EE1A40 /* InsetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2349CAFB28D0061400EE1A40 /* InsetsView.swift */; };
 		235DFFC028C043F900FFB8BF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235DFFBF28C043F900FFB8BF /* AppDelegate.swift */; };
 		235DFFC228C043F900FFB8BF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 235DFFC128C043F900FFB8BF /* ViewController.swift */; };
 		235DFFC428C043FA00FFB8BF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 235DFFC328C043FA00FFB8BF /* Assets.xcassets */; };
@@ -24,6 +41,23 @@
 		2379762528C01BCF00B41A17 /* libswiftCoreGraphics.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2379762428C01BCF00B41A17 /* libswiftCoreGraphics.tbd */; };
 		23C6E93126AFAF3E00FBF106 /* FilterCellQuickViewSwiftUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23C6E93026AFAF3E00FBF106 /* FilterCellQuickViewSwiftUI.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2349CAF628D0023200EE1A40 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2322B8F926A8D92B0034EB75 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2322B90026A8D92B0034EB75;
+			remoteInfo = "Simple Demo";
+		};
+		2349CAF828D0023500EE1A40 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2322B8F926A8D92B0034EB75 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 235DFFBC28C043F900FFB8BF;
+			remoteInfo = "Doco Demo";
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		2322B90126A8D92B0034EB75 /* Simple Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Simple Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -35,6 +69,7 @@
 		2322B91726A8DAAF0034EB75 /* FilterCellQuickView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterCellQuickView.swift; sourceTree = "<group>"; };
 		2322B91826A8DAAF0034EB75 /* FilterCellQuickView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FilterCellQuickView.xib; sourceTree = "<group>"; };
 		233CC5D126BE2E36001027E6 /* DSFAppKitBuilderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSFAppKitBuilderCell.swift; sourceTree = "<group>"; };
+		2349CAFB28D0061400EE1A40 /* InsetsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsetsView.swift; sourceTree = "<group>"; };
 		235DFFBD28C043F900FFB8BF /* Doco Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Doco Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		235DFFBF28C043F900FFB8BF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		235DFFC128C043F900FFB8BF /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -61,6 +96,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2349CAFA28D0036500EE1A40 /* libswiftCoreGraphics.tbd in Frameworks */,
 				235DFFCF28C044C300FFB8BF /* DSFQuickActionBar in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -149,6 +185,7 @@
 			children = (
 				235DFFBF28C043F900FFB8BF /* AppDelegate.swift */,
 				235DFFC128C043F900FFB8BF /* ViewController.swift */,
+				2349CAFB28D0061400EE1A40 /* InsetsView.swift */,
 				235DFFC328C043FA00FFB8BF /* Assets.xcassets */,
 				235DFFC528C043FA00FFB8BF /* Main.storyboard */,
 				235DFFC828C043FA00FFB8BF /* Doco_Demo.entitlements */,
@@ -213,6 +250,9 @@
 					2322B90026A8D92B0034EB75 = {
 						CreatedOnToolsVersion = 13.0;
 					};
+					2349CAF228D0022800EE1A40 = {
+						CreatedOnToolsVersion = 14.0;
+					};
 					235DFFBC28C043F900FFB8BF = {
 						CreatedOnToolsVersion = 14.0;
 					};
@@ -236,6 +276,7 @@
 			targets = (
 				2322B90026A8D92B0034EB75 /* Simple Demo */,
 				235DFFBC28C043F900FFB8BF /* Doco Demo */,
+				2349CAF228D0022800EE1A40 /* qab_all */,
 			);
 		};
 /* End PBXProject section */
@@ -280,11 +321,25 @@
 			buildActionMask = 2147483647;
 			files = (
 				235DFFC228C043F900FFB8BF /* ViewController.swift in Sources */,
+				2349CAFC28D0061400EE1A40 /* InsetsView.swift in Sources */,
 				235DFFC028C043F900FFB8BF /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2349CAF728D0023200EE1A40 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2322B90026A8D92B0034EB75 /* Simple Demo */;
+			targetProxy = 2349CAF628D0023200EE1A40 /* PBXContainerItemProxy */;
+		};
+		2349CAF928D0023500EE1A40 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 235DFFBC28C043F900FFB8BF /* Doco Demo */;
+			targetProxy = 2349CAF828D0023500EE1A40 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		2322B90826A8D92C0034EB75 /* MainMenu.xib */ = {
@@ -446,7 +501,7 @@
 					"$(inherited)",
 					"$(SDKROOT)/usr/lib/swift",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.dagronf.dsfquickbar.simpledemo.Simple-Demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -480,7 +535,7 @@
 					"$(inherited)",
 					"$(SDKROOT)/usr/lib/swift",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.dagronf.dsfquickbar.simpledemo.Simple-Demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -489,9 +544,28 @@
 			};
 			name = Release;
 		};
+		2349CAF328D0022800EE1A40 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 3L6RK3LGGW;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		2349CAF428D0022800EE1A40 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 3L6RK3LGGW;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		235DFFC928C043FA00FFB8BF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -509,7 +583,11 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SDKROOT)/usr/lib/swift",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.dagronf.Doco-Demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -521,6 +599,7 @@
 		235DFFCA28C043FA00FFB8BF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -538,7 +617,11 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SDKROOT)/usr/lib/swift",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.dagronf.Doco-Demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -564,6 +647,15 @@
 			buildConfigurations = (
 				2322B90E26A8D92C0034EB75 /* Debug */,
 				2322B90F26A8D92C0034EB75 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2349CAF528D0022800EE1A40 /* Build configuration list for PBXAggregateTarget "qab_all" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2349CAF328D0022800EE1A40 /* Debug */,
+				2349CAF428D0022800EE1A40 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

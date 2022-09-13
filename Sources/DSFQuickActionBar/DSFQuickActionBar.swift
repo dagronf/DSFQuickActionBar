@@ -43,6 +43,17 @@ public class DSFQuickActionBar {
 		return image
 	}()
 
+	/// Required click count enum
+	public enum RequiredClickCount {
+		/// A single mouse/trackpad click is required to activate a row in the results
+		case single
+		/// A double mouse/trackpad click is required to activate a row in the results
+		case double
+	}
+
+	/// The number of clicks required to activate a row in the results view
+	public var requiredClickCount: RequiredClickCount = .double
+
 	/// The contentSource for the bar
 	public weak var contentSource: DSFQuickActionBarContentSource?
 

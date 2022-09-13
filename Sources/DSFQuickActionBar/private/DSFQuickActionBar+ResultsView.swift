@@ -25,13 +25,15 @@
 //
 
 import AppKit
+import DSFAppearanceManager
 
 extension DSFQuickActionBar {
-	class ResultsView: NSView {
-		let scrollView = NSScrollView()
-		let tableView = DSFQuickActionBar.ResultsTableView()
-		let horizontalView = NSBox()
+	internal class ResultsView: NSView {
+		private let scrollView = NSScrollView()
+		private let tableView = DSFQuickActionBar.ResultsTableView()
+		private let horizontalView = NSBox()
 
+		// The parent
 		var quickActionBar: DSFQuickActionBar!
 
 		var currentSearchTerm: String = ""
@@ -39,23 +41,15 @@ extension DSFQuickActionBar {
 			didSet {
 				self.isHidden = identifiers.count == 0
 				self.tableView.reloadData()
+				if identifiers.count > 0 {
+					_ = self.selectFirstSelectableRow()
+				}
 			}
 		}
 
 		// Returns the currently selected row in the list
 		@inlinable var selectedRow: Int {
 			return self.tableView.selectedRow
-		}
-
-		// Returns the first selectable row in the list. If no items are selectable, returns -1
-		var firstSelectableRow: Int {
-			let count = self.numberOfRows(in: self.tableView)
-			for index in (0 ..< count) {
-				if self.tableView(self.tableView, shouldSelectRow: index) == true {
-					return index
-				}
-			}
-			return -1
 		}
 
 		override init(frame frameRect: NSRect) {
@@ -107,7 +101,12 @@ extension DSFQuickActionBar.ResultsView {
 
 		// Embedded table view
 
-		tableView.addConstraint(NSLayoutConstraint(item: tableView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: self.quickActionBar.width))
+//		tableView.addConstraint(
+//			NSLayoutConstraint(
+//				item: tableView,
+//				attribute: .width, relatedBy: .equal,
+//				toItem: nil, attribute: .notAnAttribute,
+//				multiplier: 1, constant: self.scrollView.contentView.frame.width - 4))
 
 		tableView.dataSource = self
 		tableView.delegate = self
@@ -124,18 +123,23 @@ extension DSFQuickActionBar.ResultsView {
 		}
 		tableView.intercellSpacing = NSSize(width: 0, height: 5)
 
-		// Handle double-click on the row
-		tableView.doubleAction = #selector(didDoubleClickRow(_:))
-
 		// Table column
 		let c = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("searchresult"))
 		tableView.addTableColumn(c)
+
+		// Callback when a row is clicked by the user
+		tableView.action = #selector(didClickRow)
+		tableView.doubleAction = #selector(didDoubleClickRow)
 	}
 }
 
 // MARK: - Table Data
 
 extension DSFQuickActionBar.ResultsView: NSTableViewDelegate, NSTableViewDataSource {
+
+	@inlinable func reloadData() {
+		self.tableView.reloadData()
+	}
 
 	@inlinable var contentSource: DSFQuickActionBarContentSource? {
 		self.quickActionBar.contentSource
@@ -146,7 +150,6 @@ extension DSFQuickActionBar.ResultsView: NSTableViewDelegate, NSTableViewDataSou
 	}
 
 	func tableView(_: NSTableView, viewFor _: NSTableColumn?, row: Int) -> NSView? {
-		// Swift.print("view for \(row)")
 		let itemIdentifier = self.identifiers[row]
 		return self.contentSource?.quickActionBar(
 			self.quickActionBar,
@@ -155,6 +158,7 @@ extension DSFQuickActionBar.ResultsView: NSTableViewDelegate, NSTableViewDataSou
 	}
 
 	func tableView(_ tableView: NSTableView, shouldSelectRow row: Int) -> Bool {
+		if row < 0 { return false }
 		return self.contentSource?.quickActionBar(
 			self.quickActionBar,
 			canSelectItem: self.identifiers[row]
@@ -168,18 +172,38 @@ extension DSFQuickActionBar.ResultsView: NSTableViewDelegate, NSTableViewDataSou
 			didSelectItem: self.identifiers[self.selectedRow]
 		)
 	}
+
+	func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
+		ResultsRowView()
+	}
 }
 
 // MARK: - Table Actions
 
 extension DSFQuickActionBar.ResultsView {
-	@objc func didDoubleClickRow(_: Any) {
+
+	@objc private func didClickRow() {
+		if quickActionBar.requiredClickCount == .single {
+			self.rowAction()
+		}
+	}
+
+	@objc private func didDoubleClickRow() {
 		self.rowAction()
 	}
 
 	func rowAction() {
 		let selectedRow = self.tableView.selectedRow
 		if selectedRow < 0 || selectedRow >= self.identifiers.count {
+			return
+		}
+
+		// If the user clicked a row, check to see if the row can be selected BEFORE
+		// performing the action on the row.
+		if
+			self.tableView.clickedRow >= 0,
+			self.tableView(self.tableView, shouldSelectRow: self.tableView.clickedRow) == false
+		{
 			return
 		}
 
@@ -195,24 +219,86 @@ extension DSFQuickActionBar.ResultsView {
 	}
 }
 
+// MARK: - Safe external selection
+
+extension DSFQuickActionBar.ResultsView {
+
+	/// Selects the first selectable row in the table
+	///
+	/// * Skips any row(s) that identify themselves as 'unselectable'
+	/// * If there are no selectable rows in the results table, no selection is made
+	func selectFirstSelectableRow() -> Bool {
+		for index in (0 ..< self.identifiers.count) {
+			if self.tableView(self.tableView, shouldSelectRow: index) {
+				self.tableView.selectRowIndexes(IndexSet(integer: index), byExtendingSelection: false)
+				return true
+			}
+		}
+		return false
+	}
+
+	/// Move the selection to the next selectable row
+	///
+	/// * Skips any row(s) that identify themselves as 'unselectable'
+	/// * If there are no following selectable rows in the table, does not change the current selection
+	func selectNextSelectableRow() -> Bool {
+		var currentSelection = self.tableView.selectedRow
+		while currentSelection < (self.identifiers.count - 1) {
+			currentSelection += 1
+			if tableView(self.tableView, shouldSelectRow: currentSelection) {
+				self.tableView.selectRowIndexes(IndexSet(integer: currentSelection), byExtendingSelection: false)
+				self.tableView.scrollRowToVisible(currentSelection)
+				return true
+			}
+		}
+		return false
+	}
+
+	/// Move the selection to the previous selectable row
+	///
+	/// * Skips any row(s) that identify themselves as 'unselectable'
+	/// * If there are no prior selectable rows in the table, does not change the current selection
+	func selectPreviousSelectableRow() -> Bool {
+		var currentSelection = self.tableView.selectedRow
+		while currentSelection > 0 {
+			currentSelection -= 1
+			if tableView(self.tableView, shouldSelectRow: currentSelection) {
+				self.tableView.selectRowIndexes(IndexSet(integer: currentSelection), byExtendingSelection: false)
+				self.tableView.scrollRowToVisible(currentSelection)
+				return true
+			}
+		}
+		return false
+	}
+}
+
 extension DSFQuickActionBar {
-	class ResultsTableView: NSTableView {
+	internal class ResultsTableView: NSTableView {
 		weak var parent: DSFQuickActionBar.ResultsView?
+
 		override func keyDown(with event: NSEvent) {
-			if let parent = self.parent {
-				if event.keyCode == 0x24 { // kVK_Return {
-					parent.rowAction()
-				}
-				else if event.keyCode == 0x7B { // kVK_LeftArrow
-					parent.backAction()
-				}
-				else {
-					super.keyDown(with: event)
-				}
+			guard let parent = self.parent else { fatalError() }
+
+			if event.keyCode == 0x24 { // kVK_Return {
+				parent.rowAction()
+			}
+			else if event.keyCode == 0x7B { // kVK_LeftArrow
+				parent.backAction()
 			}
 			else {
 				super.keyDown(with: event)
 			}
+		}
+	}
+}
+
+// Custom row drawing
+private class ResultsRowView: NSTableRowView {
+	override func drawSelection(in dirtyRect: NSRect) {
+		if selectionHighlightStyle != .none {
+			DSFAppearanceManager.AccentColor.setFill()
+			let pth = NSBezierPath(roundedRect: self.bounds.insetBy(dx: 4, dy: 2), xRadius: 4, yRadius: 4)
+			pth.fill()
 		}
 	}
 }

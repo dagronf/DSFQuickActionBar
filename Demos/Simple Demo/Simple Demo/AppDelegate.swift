@@ -30,6 +30,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		//DSFAppKitBuilder.ShowDebuggingOutput = true
 
 		self.resultLabel.stringValue = ""
+		self.quickActionBar.requiredClickCount = self.requireDoubleClick ? .double : .single
 	}
 
 	func applicationWillTerminate(_: Notification) {
@@ -42,7 +43,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	@IBAction func showQuickActions(_: Any) {
 		self.resultLabel.stringValue = ""
+
 		filters__.showAllIfEmpty = showAllWhenEmpty
+		self.quickActionBar.requiredClickCount = self.requireDoubleClick ? .double : .single
+
 		self.quickActionBar.present(
 			parentWindow: self.window,
 			placeholderText: "Search Filters",
@@ -54,9 +58,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 
 	@IBAction func showGlobalQuickActions(_: Any) {
-		filters__.showAllIfEmpty = showAllWhenEmpty
-
 		self.resultLabel.stringValue = ""
+		filters__.showAllIfEmpty = showAllWhenEmpty
+		self.quickActionBar.requiredClickCount = self.requireDoubleClick ? .double : .single
+
 		self.quickActionBar.present(
 			placeholderText: "Search Filters Globally",
 			searchImage: NSImage(named: "NSColorPanel")!
@@ -71,7 +76,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 
 	@objc dynamic var showAllWhenEmpty: Bool = false
-
+	@objc dynamic var showAdvanced: Bool = false
+	@objc dynamic var requireDoubleClick: Bool = true
 }
 
 func MakeSeparator() -> NSView {
@@ -99,13 +105,15 @@ extension AppDelegate: DSFQuickActionBarContentSource {
 
 		var currentMatches: [AnyHashable] = filters__.search(searchTerm)
 
-		// If there's search results, show a separator
-		if currentMatches.count > 0 {
-			currentMatches.append(MakeSeparator())
+		if showAdvanced {
+			// If there's search results, show a separator
+			if currentMatches.count > 0 {
+				currentMatches.append(MakeSeparator())
+			}
+			
+			// Add in an 'advanced search' button
+			currentMatches.append(makeButton())
 		}
-
-		// Add in an 'advanced search' button
-		currentMatches.append(makeButton())
 		return currentMatches
 	}
 
@@ -150,7 +158,7 @@ extension AppDelegate: DSFQuickActionBarContentSource {
 	}
 
 	@objc func performAdvancedSearch(_ sender: Any) {
-		Swift.print("Perform advanced search...")
+		self.resultLabel.stringValue = "Quick Action Bar activated 'advanced'"
 		quickActionBar.cancel()
 	}
 }
