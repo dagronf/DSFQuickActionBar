@@ -156,8 +156,9 @@ private extension DSFQuickActionBar.ResultsView {
 	// Map the first 10 selectable identifiers to the return + (1...9) keyboard shortcuts
 	func buildShortcuts() {
 		guard let content = contentSource else { fatalError() }
-
 		self.shortcutKeyboardMap.removeAll()
+		guard showKeyboardShortcuts else { return }
+
 		var count = 0
 		for identifier in self.identifiers {
 			if content.quickActionBar(self.quickActionBar, canSelectItem: identifier) {
@@ -194,8 +195,11 @@ extension DSFQuickActionBar.ResultsView: NSTableViewDelegate, NSTableViewDataSou
 			searchTerm: currentSearchTerm
 		) ?? NSView()
 
-		// check to see if we have a shortcut
-		guard let shortcut = self.shortcutKeyboardMap[itemIdentifier] else {
+		guard
+			showKeyboardShortcuts == true,
+			let shortcutKey = self.shortcutKeyboardMap[itemIdentifier]
+		else {
+			// We don't have keyboard shortcuts turned on, or there's no shortcut for the identifier
 			return content
 		}
 
@@ -210,7 +214,7 @@ extension DSFQuickActionBar.ResultsView: NSTableViewDelegate, NSTableViewDataSou
 		container.addConstraint(NSLayoutConstraint(item: content, attribute: .top, relatedBy: .equal, toItem: container, attribute: .top, multiplier: 1, constant: 0))
 		container.addConstraint(NSLayoutConstraint(item: content, attribute: .bottom, relatedBy: .equal, toItem: container, attribute: .bottom, multiplier: 1, constant: 0))
 
-		let t = shortcut == 0 ? NSTextField.newLabel("↩︎") : NSTextField.newLabel("⌘\(shortcut)")
+		let t = shortcutKey == 0 ? NSTextField.newLabel("↩︎") : NSTextField.newLabel("⌘\(shortcutKey)")
 		t.alignment = .right
 		t.translatesAutoresizingMaskIntoConstraints = false
 		t.font = self.keyboardShortcutFont

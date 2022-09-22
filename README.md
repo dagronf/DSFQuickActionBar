@@ -14,10 +14,13 @@ A spotlight-inspired quick action bar for macOS.
 
 <p align="center">
    <a href="https://github.com/dagronf/dagronf.github.io/blob/master/art/projects/DSFQuickActionBar/qab_search.png?raw=true">
-      <img src="https://github.com/dagronf/dagronf.github.io/blob/master/art/projects/DSFQuickActionBar/qab_search.png?raw=true" alt="Swift Package Manager" width="400"/></a>
+      <img src="https://github.com/dagronf/dagronf.github.io/blob/master/art/projects/DSFQuickActionBar/qab_search.png?raw=true" alt="Swift Package Manager" width="250"/></a>
    </a>
    <a href="https://github.com/dagronf/dagronf.github.io/blob/master/art/projects/DSFQuickActionBar/qab_results.png?raw=true">
-      <img src="https://github.com/dagronf/dagronf.github.io/blob/master/art/projects/DSFQuickActionBar/qab_results.png?raw=true" alt="Swift Package Manager" width="400"/></a>
+      <img src="https://github.com/dagronf/dagronf.github.io/blob/master/art/projects/DSFQuickActionBar/qab_results.png?raw=true" alt="Swift Package Manager" width="250"/></a>
+   </a>
+   <a href="./Art/kbd-shortcuts.png">
+      <img src="./Art/kbd-shortcuts.png" alt="Swift Package Manager" width="250"/></a>
    </a>
 </p>
 
@@ -30,6 +33,7 @@ I've seen this in other mac applications (particularly Spotlight and [Boop](http
 * macOS AppKit Swift Support
 * macOS AppKit SwiftUI Support
 * Completely keyboard navigable
+* Optional keyboard shortcuts
 
 You can present a quick action bar in the context of a window (where it will be centered above and within the bounds of the window as is shown in the image above) or centered in the current screen (like Spotlight currently does).
 
@@ -65,6 +69,7 @@ Call the `present` method on the quick action bar instance.
 | searchImage       | `NSImage`  | The image to display on the left of the search edit field. If nil, uses the default magnifying glass image |
 | initialSearchText | `String`   | Provide an initial search string to appear when the bar displays |
 | width             | `CGFloat`  | Force the width of the action bar |
+| showKeyboardShortcuts | `Bool` | Display keyboard shortcuts for the first 10 selectable items |
 | didClose          | callback   | Called when the quick action bar closes |
 
 ### Content Source
@@ -219,6 +224,7 @@ For example :-
 
 ```swift
 @State var quickActionBarVisible = false
+@State var selectedItem: URL = URL(...)
 ...
 VStack {
    Button("Show Quick Action Bar") {
@@ -243,16 +249,17 @@ VStack {
 ...
 ```
 
-| Parameter     | Description     |
-|:-----|:-----|
-| location | Where to locate the quick action bar (.window, .screen) |
-| visible | If true, presents the quick action bar on the screen |
-| barWidth | The width of the presented bar |
-| searchTerm | The search term to use, updated when the quick action bar is closed |
-| selectedItem | The item selected by the user |
-| placeholderText | The text to display in the quick action bar when the search term is empty |
-| itemsForSearchTerm | A block which returns the item(s) for the specified search term |
-| viewForItem | A block which returns the View to display for the specified item |
+| Parameter               | Description              |
+|:------------------------|:-------------------------|
+| `location`              | Where to locate the quick action bar (.window, .screen) |
+| `visible`               | If true, presents the quick action bar on the screen |
+| `showKeyboardShortcuts` | Display keyboard shortcuts for the first 10 selectable items |
+| `barWidth`              | The width of the presented bar |
+| `searchTerm`            | The search term to use, updated when the quick action bar is closed |
+| `selectedItem`          | The item selected by the user |
+| `placeholderText`       | The text to display in the quick action bar when the search term is empty |
+| `itemsForSearchTerm`    | A block which returns the item(s) for the specified search term |
+| `viewForItem`           | A block which returns the View to display for the specified item |
 
 <details>
 <summary>SwiftUI Example</summary>
@@ -338,6 +345,10 @@ let filters__ = Filters()
 </p>
 
 ## Releases
+
+### 4.1.0
+
+* Added (optional) keyboard shortcuts
 
 ### 4.0.0
 

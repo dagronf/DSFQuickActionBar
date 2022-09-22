@@ -12,6 +12,7 @@ struct ContentView: View {
 
 	@State var searchTerm = ""
 	@State var visible = false
+	@State var showKeyboardShortcuts = false
 	@State var selectedFilter: Filter?
 	@State var location: QuickActionBarLocation = .screen
 	@State var showAllIfNoSearchTerm = true
@@ -34,22 +35,30 @@ struct ContentView: View {
 					}
 				}
 
-				Toggle(isOn: $showAllIfNoSearchTerm, label: {
-					Text("Show all items if search term is empty")
-				})
-			}
-			Divider()
-			VStack {
+				VStack(alignment: .leading) {
+					Toggle(isOn: $showAllIfNoSearchTerm, label: {
+						Text("Show all items if search term is empty")
+					})
+					Toggle(isOn: $showKeyboardShortcuts, label: {
+						Text("Show keyboard shortcuts")
+					})
+				}
+
 				HStack {
 					Text("Current search term:")
 					TextField("The search term", text: $searchTerm)
 				}
+			}
+			Divider()
+			VStack(spacing: 8) {
 				Text("User selected: '\(selectedFilter?.userPresenting ?? "<none>")'")
+					.font(.title2)
 				Text(selectedFilter?.description ?? "")
 			}
 			QuickActionBar<Filter, FilterViewCell>(
 				location: location,
 				visible: $visible,
+				showKeyboardShortcuts: showKeyboardShortcuts,
 				searchTerm: $searchTerm,
 				selectedItem: $selectedFilter,
 				placeholderText: "Type something (eg. blur)",
@@ -65,7 +74,7 @@ struct ContentView: View {
 				filters__.showAllIfEmpty = newValue
 			})
 			.onChange(of: selectedFilter) { newValue in
-				Swift.print("Selected filter \(newValue)")
+				Swift.print("Selected filter \(newValue?.description ?? "")")
 			}
 		}
 		.padding()

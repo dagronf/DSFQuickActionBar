@@ -51,6 +51,7 @@ public struct QuickActionBar<IdentifierType: Hashable, RowContentView: View>: NS
 	///   - location: Where to locate the quick action bar. If window, locates the bar over the window containing parent view. If screen, centers on the screen ala Spotlight
 	///   - visible: If true, presents the quick action bar on the screen
 	///   - barWidth: The width of the presented bar
+	///   - showKeyboardShortcuts: display keyboard shortcuts for the first 10 entries
 	///   - searchTerm: The search term to use, updated when the quick action bar is closed
 	///   - selectedItem: The item selected by the user
 	///   - placeholderText: The text to display in the quick action bar when the search term is empty
@@ -62,6 +63,7 @@ public struct QuickActionBar<IdentifierType: Hashable, RowContentView: View>: NS
 		location: QuickActionBarLocation = .screen,
 		visible: Binding<Bool>,
 		barWidth: Double? = nil,
+		showKeyboardShortcuts: Bool = false,
 		searchTerm: Binding<String> = .constant(""),
 		selectedItem: Binding<IdentifierType?>,
 		placeholderText: String? = DSFQuickActionBar.DefaultPlaceholderString,
@@ -74,6 +76,7 @@ public struct QuickActionBar<IdentifierType: Hashable, RowContentView: View>: NS
 		self._visible = visible
 		self.searchImage = searchImage
 		self.barWidth = barWidth
+		self.showKeyboardShortcuts = showKeyboardShortcuts
 		self.location = location
 		self.placeholderText = placeholderText
 		self._currentSearchText = searchTerm
@@ -88,6 +91,7 @@ public struct QuickActionBar<IdentifierType: Hashable, RowContentView: View>: NS
 
 	private let location: QuickActionBarLocation
 	private let placeholderText: String?
+	private let showKeyboardShortcuts: Bool
 	private let _rowContent: (IdentifierType, String) -> RowContentView?
 	private let _itemsForSearchTerm: (String) -> [IdentifierType]
 	private let _isItemSelectable: ((IdentifierType) -> Bool)?
@@ -143,6 +147,7 @@ public extension QuickActionBar {
 				searchImage: self.searchImage ?? DSFQuickActionBar.DefaultImage,
 				initialSearchText: self.currentSearchText,
 				width: self.barWidth ?? DSFQuickActionBar.DefaultWidth,
+				showKeyboardShortcuts: self.showKeyboardShortcuts,
 				didClose: {
 					// Make sure we close the quick action var
 					self.visible = false
