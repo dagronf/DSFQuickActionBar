@@ -64,6 +64,9 @@ struct ContentView: View {
 			.onChange(of: showAllIfNoSearchTerm, perform: { newValue in
 				filters__.showAllIfEmpty = newValue
 			})
+			.onChange(of: selectedFilter) { newValue in
+				Swift.print("Selected filter \(newValue)")
+			}
 		}
 		.padding()
 	}

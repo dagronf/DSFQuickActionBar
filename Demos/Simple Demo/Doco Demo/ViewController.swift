@@ -10,6 +10,7 @@ import DSFQuickActionBar
 
 class ViewController: NSViewController {
 	let quickActionBar = DSFQuickActionBar()
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -19,7 +20,10 @@ class ViewController: NSViewController {
 
 	@IBAction func selectFilter(_ sender: Any) {
 		// Present the quick action bar
-		quickActionBar.present(placeholderText: "Search for filters…")
+		quickActionBar.present(
+			placeholderText: "Search for filters…",
+			showKeyboardShortcuts: true
+		)
 	}
 }
 

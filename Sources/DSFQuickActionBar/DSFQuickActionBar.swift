@@ -90,6 +90,7 @@ public extension DSFQuickActionBar {
 	///   - searchImage: the image to use as the search image. If nil, uses the default magnifying glass image
 	///   - initialSearchText: the text to initially populate the search field with
 	///   - width: the width of the quick action bar to display
+	///   - showKeyboardShortcuts: display keyboard shortcuts for the first 10 entries
 	///   - didClose: A callback to indicate that the quick action bar has closed
 	func present(
 		parentWindow: NSWindow? = nil,
@@ -98,6 +99,7 @@ public extension DSFQuickActionBar {
 		initialSearchText: String? = nil,
 		width: CGFloat = (NSScreen.main?.frame.width ?? (DSFQuickActionBar.DefaultWidth*4)) / 4.0,
 		height: CGFloat = (NSScreen.main?.frame.height ?? (DSFQuickActionBar.DefaultHeight*4)) / 4.0,
+		showKeyboardShortcuts: Bool = false,
 		didClose: (() -> Void)? = nil
 	) {
 		self.width = width
@@ -138,6 +140,7 @@ public extension DSFQuickActionBar {
 		self.quickActionBarWindow = quickBarWindow
 
 		quickBarWindow.quickActionBar = self
+		quickBarWindow.showKeyboardShortcuts = showKeyboardShortcuts
 		quickBarWindow.setFrame(posRect, display: true)
 		quickBarWindow.setup(parentWindow: parentWindow, initialSearchText: initialSearchText)
 

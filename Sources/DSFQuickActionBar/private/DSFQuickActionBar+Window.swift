@@ -43,6 +43,8 @@ extension DSFQuickActionBar {
 			return true
 		}
 
+		var showKeyboardShortcuts: Bool = false
+
 		// The placeholder text for the edit field
 		var placeholderText: String = "" {
 			didSet {
@@ -147,6 +149,7 @@ extension DSFQuickActionBar {
 			r.translatesAutoresizingMaskIntoConstraints = false
 			r.setContentHuggingPriority(.defaultLow, for: .horizontal)
 			r.quickActionBar = self.quickActionBar
+			r.showKeyboardShortcuts = self.showKeyboardShortcuts
 			r.configure()
 
 			return r
@@ -270,6 +273,14 @@ extension DSFQuickActionBar.Window: NSTextFieldDelegate {
 			guard currentRowSelection >= 0 else { return false }
 			self.results.rowAction()
 			return true
+		}
+		else if self.showKeyboardShortcuts,
+				  let event = self.currentEvent,
+				  event.modifierFlags.contains(.command),
+				  let chars = event.characters,
+				  let index = Int(chars)
+		{
+			return self.results.performShortcutAction(for: index)
 		}
 
 		return false

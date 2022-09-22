@@ -28,7 +28,7 @@ import AppKit
 import DSFAppearanceManager
 
 extension DSFQuickActionBar {
-	internal class ResultsView: NSView {
+	class ResultsView: NSView {
 		private let scrollView = NSScrollView()
 		private let tableView = DSFQuickActionBar.ResultsTableView()
 		private let horizontalView = NSBox()
@@ -36,14 +36,15 @@ extension DSFQuickActionBar {
 		// The parent
 		var quickActionBar: DSFQuickActionBar!
 
-		var currentSearchTerm: String = ""
+		// Do we show keyboard shortcuts?
+		var showKeyboardShortcuts = false
+
+		var currentSearchTerm = ""
+
+		// The identifiers to be displayed in the results
 		var identifiers: [AnyHashable] = [] {
 			didSet {
-				self.isHidden = identifiers.count == 0
-				self.tableView.reloadData()
-				if identifiers.count > 0 {
-					_ = self.selectFirstSelectableRow()
-				}
+				self.reconfigure()
 			}
 		}
 
@@ -62,6 +63,13 @@ extension DSFQuickActionBar {
 		required init?(coder _: NSCoder) {
 			fatalError("init(coder:) has not been implemented")
 		}
+
+		// Private
+
+		// The font for displaying the keyboard shortcut
+		private let keyboardShortcutFont = NSFont.monospacedDigitSystemFont(ofSize: 16, weight: .medium)
+		// keyboard shortcut assigning
+		private var shortcutKeyboardMap: [AnyHashable: Int] = [:]
 	}
 }
 
@@ -91,7 +99,6 @@ extension DSFQuickActionBar.ResultsView {
 		scrollView.addConstraint(NSLayoutConstraint(item: scrollView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: self.quickActionBar.height))
 
 		// Scrollview
-
 		scrollView.backgroundColor = NSColor.clear
 		scrollView.drawsBackground = false
 		scrollView.autohidesScrollers = true
@@ -100,28 +107,21 @@ extension DSFQuickActionBar.ResultsView {
 		scrollView.hasVerticalScroller = true
 
 		// Embedded table view
-
-//		tableView.addConstraint(
-//			NSLayoutConstraint(
-//				item: tableView,
-//				attribute: .width, relatedBy: .equal,
-//				toItem: nil, attribute: .notAnAttribute,
-//				multiplier: 1, constant: self.scrollView.contentView.frame.width - 4))
-
 		tableView.dataSource = self
 		tableView.delegate = self
 		tableView.parent = self
 		tableView.headerView = nil
-
 		tableView.backgroundColor = NSColor.clear
+		tableView.intercellSpacing = NSSize(width: 0, height: 5)
+
 		if #available(macOS 10.13, *) {
 			tableView.usesAutomaticRowHeights = true
-		} else {
+		}
+		else {
 			// For macOS 10.11 and 10.12, it doesn't support usesAutomaticRowHeights.
 			// User has to specify rowHeight in the parent class
 			tableView.rowHeight = self.quickActionBar.rowHeight
 		}
-		tableView.intercellSpacing = NSSize(width: 0, height: 5)
 
 		// Table column
 		let c = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("searchresult"))
@@ -135,8 +135,44 @@ extension DSFQuickActionBar.ResultsView {
 
 // MARK: - Table Data
 
-extension DSFQuickActionBar.ResultsView: NSTableViewDelegate, NSTableViewDataSource {
+private extension DSFQuickActionBar.ResultsView {
+	// Rebuild the results table
+	func reconfigure() {
+		// If there are no results, hide the results view
+		self.isHidden = self.identifiers.count == 0
 
+		// Build the shortcuts list
+		self.buildShortcuts()
+
+		// Build the first view of the table
+		self.tableView.reloadData()
+
+		// Select the first selectable row (if possible)
+		if self.identifiers.count > 0 {
+			_ = self.selectFirstSelectableRow()
+		}
+	}
+
+	// Map the first 10 selectable identifiers to the return + (1...9) keyboard shortcuts
+	func buildShortcuts() {
+		guard let content = contentSource else { fatalError() }
+
+		self.shortcutKeyboardMap.removeAll()
+		var count = 0
+		for identifier in self.identifiers {
+			if content.quickActionBar(self.quickActionBar, canSelectItem: identifier) {
+				// A selectable item!
+				self.shortcutKeyboardMap[identifier] = count
+				count += 1
+				if count > 9 {
+					break
+				}
+			}
+		}
+	}
+}
+
+extension DSFQuickActionBar.ResultsView: NSTableViewDelegate, NSTableViewDataSource {
 	@inlinable func reloadData() {
 		self.tableView.reloadData()
 	}
@@ -146,15 +182,54 @@ extension DSFQuickActionBar.ResultsView: NSTableViewDelegate, NSTableViewDataSou
 	}
 
 	func numberOfRows(in _: NSTableView) -> Int {
-		return self.identifiers.count
+		self.identifiers.count
 	}
 
-	func tableView(_: NSTableView, viewFor _: NSTableColumn?, row: Int) -> NSView? {
+	func tableView(_ tableView: NSTableView, viewFor _: NSTableColumn?, row: Int) -> NSView? {
 		let itemIdentifier = self.identifiers[row]
-		return self.contentSource?.quickActionBar(
+
+		let content = self.contentSource?.quickActionBar(
 			self.quickActionBar,
 			viewForItem: itemIdentifier,
-			searchTerm: currentSearchTerm)
+			searchTerm: currentSearchTerm
+		) ?? NSView()
+
+		// check to see if we have a shortcut
+		guard let shortcut = self.shortcutKeyboardMap[itemIdentifier] else {
+			return content
+		}
+
+		content.translatesAutoresizingMaskIntoConstraints = false
+		content.setContentHuggingPriority(.defaultLow, for: .horizontal)
+
+		let container = NSView()
+		container.translatesAutoresizingMaskIntoConstraints = false
+		container.addSubview(content)
+
+		container.addConstraint(NSLayoutConstraint(item: content, attribute: .leading, relatedBy: .equal, toItem: container, attribute: .leading, multiplier: 1, constant: 0))
+		container.addConstraint(NSLayoutConstraint(item: content, attribute: .top, relatedBy: .equal, toItem: container, attribute: .top, multiplier: 1, constant: 0))
+		container.addConstraint(NSLayoutConstraint(item: content, attribute: .bottom, relatedBy: .equal, toItem: container, attribute: .bottom, multiplier: 1, constant: 0))
+
+		let t = shortcut == 0 ? NSTextField.newLabel("↩︎") : NSTextField.newLabel("⌘\(shortcut)")
+		t.alignment = .right
+		t.translatesAutoresizingMaskIntoConstraints = false
+		t.font = self.keyboardShortcutFont
+		t.textColor = .secondaryLabelColor
+		t.setContentHuggingPriority(.init(999), for: .horizontal)
+		t.setContentHuggingPriority(.required, for: .vertical)
+		container.addSubview(t)
+
+		// A hack for layout on pre-11 systems. Autolayout didn't account for the appearance of scrollbars back then
+		var inset: CGFloat = -24
+		if #available(macOS 11, *) {
+			inset = 0
+		}
+
+		container.addConstraint(NSLayoutConstraint(item: t, attribute: .trailing, relatedBy: .equal, toItem: container, attribute: .trailing, multiplier: 1, constant: inset))
+		container.addConstraint(NSLayoutConstraint(item: t, attribute: .centerY, relatedBy: .equal, toItem: container, attribute: .centerY, multiplier: 1, constant: 0))
+		container.addConstraint(NSLayoutConstraint(item: t, attribute: .leading, relatedBy: .equal, toItem: content, attribute: .trailing, multiplier: 1, constant: 4))
+
+		return container
 	}
 
 	func tableView(_ tableView: NSTableView, shouldSelectRow row: Int) -> Bool {
@@ -181,7 +256,6 @@ extension DSFQuickActionBar.ResultsView: NSTableViewDelegate, NSTableViewDataSou
 // MARK: - Table Actions
 
 extension DSFQuickActionBar.ResultsView {
-
 	@objc private func didClickRow() {
 		if quickActionBar.requiredClickCount == .single {
 			self.rowAction()
@@ -190,6 +264,25 @@ extension DSFQuickActionBar.ResultsView {
 
 	@objc private func didDoubleClickRow() {
 		self.rowAction()
+	}
+
+	func performShortcutAction(for itemIndex: Int) -> Bool {
+		// Shortcut key is must be between 0 (the initial row) and 1...9
+		guard itemIndex >= 0, itemIndex <= 9 else {
+			return false
+		}
+
+		// Find the identifier for the shortcut
+		guard let which = self.shortcutKeyboardMap.first(where: { $0.value == itemIndex }) else {
+			return false
+		}
+
+		self.quickActionBar.contentSource?.quickActionBar(self.quickActionBar, didActivateItem: which.key)
+
+		// Close the bar
+		self.window?.resignMain()
+
+		return true
 	}
 
 	func rowAction() {
@@ -222,13 +315,12 @@ extension DSFQuickActionBar.ResultsView {
 // MARK: - Safe external selection
 
 extension DSFQuickActionBar.ResultsView {
-
 	/// Selects the first selectable row in the table
 	///
 	/// * Skips any row(s) that identify themselves as 'unselectable'
 	/// * If there are no selectable rows in the results table, no selection is made
 	func selectFirstSelectableRow() -> Bool {
-		for index in (0 ..< self.identifiers.count) {
+		for index in 0 ..< self.identifiers.count {
 			if self.tableView(self.tableView, shouldSelectRow: index) {
 				self.tableView.selectRowIndexes(IndexSet(integer: index), byExtendingSelection: false)
 				return true
@@ -245,7 +337,7 @@ extension DSFQuickActionBar.ResultsView {
 		var currentSelection = self.tableView.selectedRow
 		while currentSelection < (self.identifiers.count - 1) {
 			currentSelection += 1
-			if tableView(self.tableView, shouldSelectRow: currentSelection) {
+			if self.tableView(self.tableView, shouldSelectRow: currentSelection) {
 				self.tableView.selectRowIndexes(IndexSet(integer: currentSelection), byExtendingSelection: false)
 				self.tableView.scrollRowToVisible(currentSelection)
 				return true
@@ -262,7 +354,7 @@ extension DSFQuickActionBar.ResultsView {
 		var currentSelection = self.tableView.selectedRow
 		while currentSelection > 0 {
 			currentSelection -= 1
-			if tableView(self.tableView, shouldSelectRow: currentSelection) {
+			if self.tableView(self.tableView, shouldSelectRow: currentSelection) {
 				self.tableView.selectRowIndexes(IndexSet(integer: currentSelection), byExtendingSelection: false)
 				self.tableView.scrollRowToVisible(currentSelection)
 				return true
@@ -272,8 +364,10 @@ extension DSFQuickActionBar.ResultsView {
 	}
 }
 
+// MARK: - Handle key events in the results table
+
 extension DSFQuickActionBar {
-	internal class ResultsTableView: NSTableView {
+	class ResultsTableView: NSTableView {
 		weak var parent: DSFQuickActionBar.ResultsView?
 
 		override func keyDown(with event: NSEvent) {
@@ -285,6 +379,17 @@ extension DSFQuickActionBar {
 			else if event.keyCode == 0x7B { // kVK_LeftArrow
 				parent.backAction()
 			}
+			else if event.modifierFlags.contains(.command),
+					  let c = event.characters,
+					  let v = Int(c)
+			{
+				if parent.performShortcutAction(for: v) {
+					return
+				}
+				else {
+					super.keyDown(with: event)
+				}
+			}
 			else {
 				super.keyDown(with: event)
 			}
@@ -292,7 +397,8 @@ extension DSFQuickActionBar {
 	}
 }
 
-// Custom row drawing
+// MARK: - Custom row drawing
+
 private class ResultsRowView: NSTableRowView {
 	override func drawSelection(in dirtyRect: NSRect) {
 		if selectionHighlightStyle != .none {
