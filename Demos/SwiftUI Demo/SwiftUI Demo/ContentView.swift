@@ -17,6 +17,8 @@ struct ContentView: View {
 	@State var location: QuickActionBarLocation = .screen
 	@State var showAllIfNoSearchTerm = true
 
+	@State var singleClickToActivate = false
+
 	var body: some View {
 		//Self._printChanges()
 		_ = showAllIfNoSearchTerm
@@ -42,6 +44,9 @@ struct ContentView: View {
 					Toggle(isOn: $showKeyboardShortcuts, label: {
 						Text("Show keyboard shortcuts")
 					})
+					Toggle(isOn: $singleClickToActivate, label: {
+						Text("Single click to activate item")
+					})
 				}
 
 				HStack {
@@ -59,6 +64,7 @@ struct ContentView: View {
 				location: location,
 				visible: $visible,
 				showKeyboardShortcuts: showKeyboardShortcuts,
+				requiredClickCount: singleClickToActivate ? .single : .double,
 				searchTerm: $searchTerm,
 				selectedItem: $selectedFilter,
 				placeholderText: "Type something (eg. blur)",

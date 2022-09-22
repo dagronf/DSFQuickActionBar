@@ -52,6 +52,7 @@ public struct QuickActionBar<IdentifierType: Hashable, RowContentView: View>: NS
 	///   - visible: If true, presents the quick action bar on the screen
 	///   - barWidth: The width of the presented bar
 	///   - showKeyboardShortcuts: display keyboard shortcuts for the first 10 entries
+	///   - requiredClickCount: The number of clicks on an item to activate it
 	///   - searchTerm: The search term to use, updated when the quick action bar is closed
 	///   - selectedItem: The item selected by the user
 	///   - placeholderText: The text to display in the quick action bar when the search term is empty
@@ -64,6 +65,7 @@ public struct QuickActionBar<IdentifierType: Hashable, RowContentView: View>: NS
 		visible: Binding<Bool>,
 		barWidth: Double? = nil,
 		showKeyboardShortcuts: Bool = false,
+		requiredClickCount: DSFQuickActionBar.RequiredClickCount = .double,
 		searchTerm: Binding<String> = .constant(""),
 		selectedItem: Binding<IdentifierType?>,
 		placeholderText: String? = DSFQuickActionBar.DefaultPlaceholderString,
@@ -77,6 +79,7 @@ public struct QuickActionBar<IdentifierType: Hashable, RowContentView: View>: NS
 		self.searchImage = searchImage
 		self.barWidth = barWidth
 		self.showKeyboardShortcuts = showKeyboardShortcuts
+		self.requiredClickCount = requiredClickCount
 		self.location = location
 		self.placeholderText = placeholderText
 		self._currentSearchText = searchTerm
@@ -92,6 +95,7 @@ public struct QuickActionBar<IdentifierType: Hashable, RowContentView: View>: NS
 	private let location: QuickActionBarLocation
 	private let placeholderText: String?
 	private let showKeyboardShortcuts: Bool
+	private let requiredClickCount: DSFQuickActionBar.RequiredClickCount
 	private let _rowContent: (IdentifierType, String) -> RowContentView?
 	private let _itemsForSearchTerm: (String) -> [IdentifierType]
 	private let _isItemSelectable: ((IdentifierType) -> Bool)?
@@ -111,6 +115,7 @@ public extension QuickActionBar {
 			isVisible: self.$visible,
 			selectedItem: self.$selectedItem,
 			currentSearchText: self.$currentSearchText,
+			requiredClickCount: self.requiredClickCount,
 			itemsForSearchTerm: self._itemsForSearchTerm,
 			isItemSelectable: self._isItemSelectable,
 			itemSelected: self._itemSelected,
@@ -139,6 +144,9 @@ public extension QuickActionBar {
 				// We are already visible
 				return
 			}
+
+			// Set the required click count
+			quickAction.requiredClickCount = requiredClickCount
 
 			// We need to present the quick action bar
 			quickAction.present(
@@ -185,6 +193,7 @@ public extension QuickActionBar {
 			isVisible: Binding<Bool>,
 			selectedItem: Binding<IdentifierType?>,
 			currentSearchText: Binding<String>,
+			requiredClickCount: DSFQuickActionBar.RequiredClickCount,
 			itemsForSearchTerm: @escaping (String) -> [IdentifierType],
 			isItemSelectable: ((IdentifierType) -> Bool)?,
 			itemSelected: ((IdentifierType) -> Void)?,

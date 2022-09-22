@@ -254,6 +254,7 @@ VStack {
 | `location`              | Where to locate the quick action bar (.window, .screen) |
 | `visible`               | If true, presents the quick action bar on the screen |
 | `showKeyboardShortcuts` | Display keyboard shortcuts for the first 10 selectable items |
+| `requiredClickCount`    | If `.single`, only requires the user to single-click a row to activate it (defaults to `.double`) |
 | `barWidth`              | The width of the presented bar |
 | `searchTerm`            | The search term to use, updated when the quick action bar is closed |
 | `selectedItem`          | The item selected by the user |
