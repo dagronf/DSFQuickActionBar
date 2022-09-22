@@ -42,9 +42,10 @@ extension DSFQuickActionBar {
 		var currentSearchTerm = ""
 		var identifiers: [AnyHashable] = [] {
 			didSet {
-				self.shortcutKeyboardMap = [:]
-				self.nextShortcutIndex = 0
 				self.isHidden = self.identifiers.count == 0
+
+				self.buildShortcuts()
+
 				self.tableView.reloadData()
 				if self.identifiers.count > 0 {
 					_ = self.selectFirstSelectableRow()
@@ -73,8 +74,7 @@ extension DSFQuickActionBar {
 		// The font for displaying the keyboard shortcut
 		private let keyboardShortcutFont = NSFont.monospacedDigitSystemFont(ofSize: 16, weight: .medium)
 		// keyboard shortcut assigning
-		private var shortcutKeyboardMap: [Int: AnyHashable] = [:]
-		private var nextShortcutIndex = 0
+		private var shortcutKeyboardMap: [AnyHashable: Int] = [:]
 	}
 }
 
@@ -141,6 +141,24 @@ extension DSFQuickActionBar.ResultsView {
 // MARK: - Table Data
 
 extension DSFQuickActionBar.ResultsView: NSTableViewDelegate, NSTableViewDataSource {
+
+	private func buildShortcuts() {
+		guard let content = contentSource else { fatalError() }
+
+		self.shortcutKeyboardMap.removeAll()
+		var count = 0
+		for identifier in self.identifiers {
+			if content.quickActionBar(self.quickActionBar, canSelectItem: identifier) {
+				// A selectable item!
+				self.shortcutKeyboardMap[identifier] = count
+				count += 1
+				if count > 9 {
+					break
+				}
+			}
+		}
+	}
+
 	@inlinable func reloadData() {
 		self.tableView.reloadData()
 	}
@@ -162,15 +180,8 @@ extension DSFQuickActionBar.ResultsView: NSTableViewDelegate, NSTableViewDataSou
 			searchTerm: currentSearchTerm
 		) ?? NSView()
 
-		guard
-			self.showKeyboardShortcuts,
-			(0 ... 9).contains(self.nextShortcutIndex),
-			row < self.identifiers.count
-		else {
-			return content
-		}
-
-		guard self.contentSource?.quickActionBar(self.quickActionBar, canSelectItem: itemIdentifier) ?? false else {
+		// check to see if we have a shortcut
+		guard let shortcut = self.shortcutKeyboardMap[itemIdentifier] else {
 			return content
 		}
 
@@ -185,10 +196,7 @@ extension DSFQuickActionBar.ResultsView: NSTableViewDelegate, NSTableViewDataSou
 		container.addConstraint(NSLayoutConstraint(item: content, attribute: .top, relatedBy: .equal, toItem: container, attribute: .top, multiplier: 1, constant: 0))
 		container.addConstraint(NSLayoutConstraint(item: content, attribute: .bottom, relatedBy: .equal, toItem: container, attribute: .bottom, multiplier: 1, constant: 0))
 
-		let row = self.nextShortcutIndex
-		self.shortcutKeyboardMap[row] = itemIdentifier
-
-		let t = row == 0 ? NSTextField(labelWithString: "↩︎") : NSTextField(labelWithString: "⌘\(row)")
+		let t = shortcut == 0 ? NSTextField(labelWithString: "↩︎") : NSTextField(labelWithString: "⌘\(shortcut)")
 		t.alignment = .right
 		t.translatesAutoresizingMaskIntoConstraints = false
 		t.font = self.keyboardShortcutFont
@@ -207,56 +215,7 @@ extension DSFQuickActionBar.ResultsView: NSTableViewDelegate, NSTableViewDataSou
 		container.addConstraint(NSLayoutConstraint(item: t, attribute: .centerY, relatedBy: .equal, toItem: container, attribute: .centerY, multiplier: 1, constant: 0))
 		container.addConstraint(NSLayoutConstraint(item: t, attribute: .leading, relatedBy: .equal, toItem: content, attribute: .trailing, multiplier: 1, constant: 4))
 
-		nextShortcutIndex += 1
-
 		return container
-	}
-
-	class ContainerView: NSView {
-		let keyboard: NSTextField = {
-			let t = NSTextField(labelWithString: "")
-			t.alignment = .center
-			t.translatesAutoresizingMaskIntoConstraints = false
-			t.font = .systemFont(ofSize: 16, weight: .medium)
-			t.textColor = .secondaryLabelColor
-			t.setContentHuggingPriority(.required, for: .horizontal)
-			t.setContentHuggingPriority(.defaultLow, for: .vertical)
-			return t
-		}()
-
-		private var content = NSView()
-		@available(*, unavailable)
-		required init?(coder: NSCoder) { fatalError() }
-		init() {
-			super.init(frame: .zero)
-			self.translatesAutoresizingMaskIntoConstraints = false
-
-			self.configure()
-		}
-
-		func set(_ content: NSView, shortcutKey: Character) {
-			self.content = content
-			self.keyboard.stringValue = "\(shortcutKey)"
-			self.configure()
-		}
-
-		func configure() {
-			self.keyboard.removeFromSuperview()
-			self.content.removeFromSuperview()
-
-			self.addSubview(self.content)
-			self.content.translatesAutoresizingMaskIntoConstraints = false
-			self.addSubview(self.keyboard)
-
-			self.addConstraint(NSLayoutConstraint(item: self.content, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: 0))
-			self.addConstraint(NSLayoutConstraint(item: self.content, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1, constant: 0))
-			self.addConstraint(NSLayoutConstraint(item: self.content, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1, constant: 0))
-
-			self.addConstraint(NSLayoutConstraint(item: self.keyboard, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: 0))
-			self.addConstraint(NSLayoutConstraint(item: self.keyboard, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0))
-			self.addConstraint(NSLayoutConstraint(item: self.keyboard, attribute: .leading, relatedBy: .equal, toItem: self.content, attribute: .trailing, multiplier: 1, constant: 4))
-			self.addConstraint(NSLayoutConstraint(item: self.keyboard, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 30))
-		}
 	}
 
 	func tableView(_ tableView: NSTableView, shouldSelectRow row: Int) -> Bool {
@@ -294,11 +253,17 @@ extension DSFQuickActionBar.ResultsView {
 	}
 
 	func performShortcutAction(for itemIndex: Int) -> Bool {
-		guard itemIndex >= 0, itemIndex <= 9, let itemIdentifier = self.shortcutKeyboardMap[itemIndex] else {
+		// Shortcut key is must be between 0 (the initial row) and 1...9
+		guard itemIndex >= 0, itemIndex <= 9 else {
 			return false
 		}
 
-		self.quickActionBar.contentSource?.quickActionBar(self.quickActionBar, didActivateItem: itemIdentifier)
+		// Find the identifier for the shortcut
+		guard let which = self.shortcutKeyboardMap.first(where: { $0.value == itemIndex }) else {
+			return false
+		}
+
+		self.quickActionBar.contentSource?.quickActionBar(self.quickActionBar, didActivateItem: which.key)
 
 		// Close the bar
 		self.window?.resignMain()
