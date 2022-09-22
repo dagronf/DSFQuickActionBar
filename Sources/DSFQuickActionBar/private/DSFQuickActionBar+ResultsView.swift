@@ -210,7 +210,7 @@ extension DSFQuickActionBar.ResultsView: NSTableViewDelegate, NSTableViewDataSou
 		container.addConstraint(NSLayoutConstraint(item: content, attribute: .top, relatedBy: .equal, toItem: container, attribute: .top, multiplier: 1, constant: 0))
 		container.addConstraint(NSLayoutConstraint(item: content, attribute: .bottom, relatedBy: .equal, toItem: container, attribute: .bottom, multiplier: 1, constant: 0))
 
-		let t = shortcut == 0 ? NSTextField(labelWithString: "↩︎") : NSTextField(labelWithString: "⌘\(shortcut)")
+		let t = shortcut == 0 ? NSTextField.newLabel("↩︎") : NSTextField.newLabel("⌘\(shortcut)")
 		t.alignment = .right
 		t.translatesAutoresizingMaskIntoConstraints = false
 		t.font = self.keyboardShortcutFont
