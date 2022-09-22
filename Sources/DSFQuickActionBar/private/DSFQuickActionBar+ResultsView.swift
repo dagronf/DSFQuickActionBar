@@ -40,16 +40,11 @@ extension DSFQuickActionBar {
 		var showKeyboardShortcuts = false
 
 		var currentSearchTerm = ""
+
+		// The identifiers to be displayed in the results
 		var identifiers: [AnyHashable] = [] {
 			didSet {
-				self.isHidden = self.identifiers.count == 0
-
-				self.buildShortcuts()
-
-				self.tableView.reloadData()
-				if self.identifiers.count > 0 {
-					_ = self.selectFirstSelectableRow()
-				}
+				self.reconfigure()
 			}
 		}
 
@@ -140,9 +135,26 @@ extension DSFQuickActionBar.ResultsView {
 
 // MARK: - Table Data
 
-extension DSFQuickActionBar.ResultsView: NSTableViewDelegate, NSTableViewDataSource {
+private extension DSFQuickActionBar.ResultsView {
+	// Rebuild the results table
+	func reconfigure() {
+		// If there are no results, hide the results view
+		self.isHidden = self.identifiers.count == 0
 
-	private func buildShortcuts() {
+		// Build the shortcuts list
+		self.buildShortcuts()
+
+		// Build the first view of the table
+		self.tableView.reloadData()
+
+		// Select the first selectable row (if possible)
+		if self.identifiers.count > 0 {
+			_ = self.selectFirstSelectableRow()
+		}
+	}
+
+	// Map the first 10 selectable identifiers to the return + (1...9) keyboard shortcuts
+	func buildShortcuts() {
 		guard let content = contentSource else { fatalError() }
 
 		self.shortcutKeyboardMap.removeAll()
@@ -158,7 +170,9 @@ extension DSFQuickActionBar.ResultsView: NSTableViewDelegate, NSTableViewDataSou
 			}
 		}
 	}
+}
 
+extension DSFQuickActionBar.ResultsView: NSTableViewDelegate, NSTableViewDataSource {
 	@inlinable func reloadData() {
 		self.tableView.reloadData()
 	}
@@ -366,8 +380,8 @@ extension DSFQuickActionBar {
 				parent.backAction()
 			}
 			else if event.modifierFlags.contains(.command),
-			        let c = event.characters,
-			        let v = Int(c)
+					  let c = event.characters,
+					  let v = Int(c)
 			{
 				if parent.performShortcutAction(for: v) {
 					return
