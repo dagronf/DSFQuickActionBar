@@ -24,7 +24,7 @@ class DSFAppKitBuilderCell: DSFAppKitBuilderView, DSFAppKitBuilderViewHandler {
 	lazy var body: Element =
 	HStack(spacing: 8) {
 		ImageView()
-			.image(NSImage(named: "filter-color")!)
+			.image(NSImage(named: "filter-funnel")!)
 			.size(width: 36, height: 36, priority: .required)
 		VStack(spacing: 2, alignment: .leading) {
 			Label(filter.userPresenting)

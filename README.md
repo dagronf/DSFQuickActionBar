@@ -236,6 +236,9 @@ VStack {
          Text(url.path)
       }
    )
+   .onChange(of: selectedItem) { newValue in
+      Swift.print("Selected item \(newValue)")
+   }
 }
 ...
 ```
@@ -250,8 +253,6 @@ VStack {
 | placeholderText | The text to display in the quick action bar when the search term is empty |
 | itemsForSearchTerm | A block which returns the item(s) for the specified search term |
 | viewForItem | A block which returns the View to display for the specified item |
-
-
 
 <details>
 <summary>SwiftUI Example</summary>

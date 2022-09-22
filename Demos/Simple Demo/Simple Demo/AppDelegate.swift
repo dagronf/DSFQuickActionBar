@@ -51,7 +51,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 			parentWindow: self.window,
 			placeholderText: "Search Filters",
 			searchImage: NSImage(named: "filter-icon")!,
-			width: min(800, max(500, self.window.frame.width + 50))
+			width: min(800, max(500, self.window.frame.width + 50)),
+			showKeyboardShortcuts: keyboardShortcuts
 		) {
 			Swift.print("Quick action bar closed")
 		}
@@ -64,7 +65,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 		self.quickActionBar.present(
 			placeholderText: "Search Filters Globally",
-			searchImage: NSImage(named: "NSColorPanel")!
+			searchImage: NSImage(named: "NSColorPanel")!,
+			showKeyboardShortcuts: keyboardShortcuts
 		) {
 			Swift.print("Quick action bar closed")
 		}
@@ -75,6 +77,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		self.loadingType = sender.tag
 	}
 
+	@objc dynamic var keyboardShortcuts: Bool = true
 	@objc dynamic var showAllWhenEmpty: Bool = false
 	@objc dynamic var showAdvanced: Bool = false
 	@objc dynamic var requireDoubleClick: Bool = true
