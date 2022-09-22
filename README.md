@@ -62,15 +62,15 @@ You present a quick action bar by
 
 Call the `present` method on the quick action bar instance.
 
-| Name              | Type       | Description |
-|-------------------|------------|-------------|
-| parentWindow      | `NSWindow` | The window to present the quick action bar over, or nil to display for the current screen (ala Finder Spotlight) |
-| placeholderText   | `String`   | The placeholder text to display in the edit field |
-| searchImage       | `NSImage`  | The image to display on the left of the search edit field. If nil, uses the default magnifying glass image |
-| initialSearchText | `String`   | Provide an initial search string to appear when the bar displays |
-| width             | `CGFloat`  | Force the width of the action bar |
-| showKeyboardShortcuts | `Bool` | Display keyboard shortcuts for the first 10 selectable items |
-| didClose          | callback   | Called when the quick action bar closes |
+| Name                  | Type       | Description |
+|-----------------------|------------|-------------|
+| parentWindow          | `NSWindow` | The window to present the quick action bar over, or nil to display for the current screen (ala Finder Spotlight) |
+| placeholderText       | `String`   | The placeholder text to display in the edit field |
+| searchImage           | `NSImage`  | The image to display on the left of the search edit field. If nil, uses the default magnifying glass image |
+| initialSearchText     | `String`   | Provide an initial search string to appear when the bar displays |
+| width                 | `CGFloat`  | Force the width of the action bar |
+| showKeyboardShortcuts | `Bool`     | Display keyboard shortcuts (↩︎, ⌘1 -> ⌘9) for the first 10 selectable items |
+| didClose              | callback   | Called when the quick action bar closes |
 
 ### Content Source
 
@@ -349,7 +349,7 @@ let filters__ = Filters()
 
 ### 4.1.0
 
-* Added (optional) keyboard shortcuts
+* Added optional keyboard shortcuts. Defaults to off to make sure existing projects don't change their behaviour.
 
 ### 4.0.0
 
