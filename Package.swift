@@ -10,14 +10,9 @@ let package = Package(
 	],
 	products: [
 		// Products define the executables and libraries a package produces, and make them visible to other packages.
-		.library(
-			name: "DSFQuickActionBar",
-			type: .static,
-			targets: ["DSFQuickActionBar"]),
-		.library(
-			name: "DSFQuickActionBarDynamic",
-			type: .dynamic,
-			targets: ["DSFQuickActionBar"]),
+		.library(name: "DSFQuickActionBar", targets: ["DSFQuickActionBar"]),
+		.library(name: "DSFQuickActionBar-static", type: .static, targets: ["DSFQuickActionBar"]),
+		.library(name: "DSFQuickActionBar-shared", type: .dynamic, targets: ["DSFQuickActionBar"]),
 	],
 	dependencies: [
 		// Dependencies declare other packages that this package depends on.
