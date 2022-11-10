@@ -68,9 +68,7 @@ struct ContentView: View {
 				searchTerm: $searchTerm,
 				selectedItem: $selectedFilter,
 				placeholderText: "Type something (eg. blur)",
-				itemsForSearchTerm: { searchTerm, resultsCallback in
-					resultsCallback(filters__.search(searchTerm))
-				},
+				itemsForSearchTerm: self.asyncItemsForSearchTermFn,
 				viewForItem: { filter, searchTerm in
 					FilterViewCell(filter: filter)
 				}
@@ -84,6 +82,19 @@ struct ContentView: View {
 			}
 		}
 		.padding()
+	}
+
+	private func asyncItemsForSearchTermFn(_ searchTerm: String, _ completion: @escaping ([Filter]) -> Void) {
+		// Fake an asynchronous search
+		DispatchQueue.global(qos: .background).async {
+			let results = filters__.search(searchTerm)
+			DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + 0.1) {
+				completion(results)
+			}
+		}
+
+		// Simple sync response
+		// completion(filters__.search(searchTerm))
 	}
 }
 

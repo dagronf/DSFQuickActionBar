@@ -23,6 +23,13 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		2304980D291D9CA900CD661A /* SwiftUI_DemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2304980C291D9CA900CD661A /* SwiftUI_DemoApp.swift */; };
+		2304980F291D9CA900CD661A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2304980E291D9CA900CD661A /* ContentView.swift */; };
+		23049811291D9CAA00CD661A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 23049810291D9CAA00CD661A /* Assets.xcassets */; };
+		23049814291D9CAA00CD661A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 23049813291D9CAA00CD661A /* Preview Assets.xcassets */; };
+		23049819291D9CF100CD661A /* SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2322B91426A8D9F80034EB75 /* SampleData.swift */; };
+		2304981D291D9D4200CD661A /* DSFQuickActionBar in Frameworks */ = {isa = PBXBuildFile; productRef = 2304981C291D9D4200CD661A /* DSFQuickActionBar */; };
+		2304981F291D9E0200CD661A /* FilterViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2304981E291D9E0200CD661A /* FilterViewCell.swift */; };
 		2322B90526A8D92B0034EB75 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2322B90426A8D92B0034EB75 /* AppDelegate.swift */; };
 		2322B90726A8D92C0034EB75 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2322B90626A8D92C0034EB75 /* Assets.xcassets */; };
 		2322B90A26A8D92C0034EB75 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2322B90826A8D92C0034EB75 /* MainMenu.xib */; };
@@ -74,6 +81,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2304980A291D9CA900CD661A /* SwiftUI Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SwiftUI Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2304980C291D9CA900CD661A /* SwiftUI_DemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUI_DemoApp.swift; sourceTree = "<group>"; };
+		2304980E291D9CA900CD661A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		23049810291D9CAA00CD661A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		23049813291D9CAA00CD661A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		23049815291D9CAA00CD661A /* SwiftUI_Demo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SwiftUI_Demo.entitlements; sourceTree = "<group>"; };
+		2304981E291D9E0200CD661A /* FilterViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterViewCell.swift; sourceTree = "<group>"; };
 		2322B90126A8D92B0034EB75 /* Simple Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Simple Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2322B90426A8D92B0034EB75 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2322B90626A8D92C0034EB75 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -103,6 +117,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		23049807291D9CA900CD661A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2304981D291D9D4200CD661A /* DSFQuickActionBar in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2322B8FE26A8D92B0034EB75 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -133,6 +155,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2304980B291D9CA900CD661A /* SwiftUI Demo */ = {
+			isa = PBXGroup;
+			children = (
+				2304980C291D9CA900CD661A /* SwiftUI_DemoApp.swift */,
+				2304980E291D9CA900CD661A /* ContentView.swift */,
+				2304981E291D9E0200CD661A /* FilterViewCell.swift */,
+				23049810291D9CAA00CD661A /* Assets.xcassets */,
+				23049815291D9CAA00CD661A /* SwiftUI_Demo.entitlements */,
+				23049812291D9CAA00CD661A /* Preview Content */,
+			);
+			path = "SwiftUI Demo";
+			sourceTree = "<group>";
+		};
+		23049812291D9CAA00CD661A /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				23049813291D9CAA00CD661A /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
 		2322B8F826A8D92B0034EB75 = {
 			isa = PBXGroup;
 			children = (
@@ -140,6 +183,7 @@
 				2322B90326A8D92B0034EB75 /* Simple Demo */,
 				235DFFBE28C043F900FFB8BF /* Doco Demo */,
 				239A39AA291C634C0050093F /* FauxSpotlight */,
+				2304980B291D9CA900CD661A /* SwiftUI Demo */,
 				2322B90226A8D92B0034EB75 /* Products */,
 				2322B91126A8D9450034EB75 /* Frameworks */,
 			);
@@ -151,6 +195,7 @@
 				2322B90126A8D92B0034EB75 /* Simple Demo.app */,
 				235DFFBD28C043F900FFB8BF /* Doco Demo.app */,
 				239A39A9291C634C0050093F /* FauxSpotlight.app */,
+				2304980A291D9CA900CD661A /* SwiftUI Demo.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -240,6 +285,26 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		23049809291D9CA900CD661A /* SwiftUI Demo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 23049818291D9CAA00CD661A /* Build configuration list for PBXNativeTarget "SwiftUI Demo" */;
+			buildPhases = (
+				23049806291D9CA900CD661A /* Sources */,
+				23049807291D9CA900CD661A /* Frameworks */,
+				23049808291D9CA900CD661A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "SwiftUI Demo";
+			packageProductDependencies = (
+				2304981C291D9D4200CD661A /* DSFQuickActionBar */,
+			);
+			productName = "SwiftUI Demo";
+			productReference = 2304980A291D9CA900CD661A /* SwiftUI Demo.app */;
+			productType = "com.apple.product-type.application";
+		};
 		2322B90026A8D92B0034EB75 /* Simple Demo */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2322B90D26A8D92C0034EB75 /* Build configuration list for PBXNativeTarget "Simple Demo" */;
@@ -311,6 +376,9 @@
 				LastSwiftUpdateCheck = 1410;
 				LastUpgradeCheck = 1410;
 				TargetAttributes = {
+					23049809291D9CA900CD661A = {
+						CreatedOnToolsVersion = 14.1;
+					};
 					2322B90026A8D92B0034EB75 = {
 						CreatedOnToolsVersion = 13.0;
 					};
@@ -345,11 +413,21 @@
 				235DFFBC28C043F900FFB8BF /* Doco Demo */,
 				2349CAF228D0022800EE1A40 /* qab_all */,
 				239A39A8291C634C0050093F /* FauxSpotlight */,
+				23049809291D9CA900CD661A /* SwiftUI Demo */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		23049808291D9CA900CD661A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				23049814291D9CAA00CD661A /* Preview Assets.xcassets in Resources */,
+				23049811291D9CAA00CD661A /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2322B8FF26A8D92B0034EB75 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -381,6 +459,17 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		23049806291D9CA900CD661A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2304980F291D9CA900CD661A /* ContentView.swift in Sources */,
+				23049819291D9CF100CD661A /* SampleData.swift in Sources */,
+				2304980D291D9CA900CD661A /* SwiftUI_DemoApp.swift in Sources */,
+				2304981F291D9E0200CD661A /* FilterViewCell.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2322B8FD26A8D92B0034EB75 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -461,6 +550,64 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		23049816291D9CAA00CD661A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = "SwiftUI Demo/SwiftUI_Demo.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"SwiftUI Demo/Preview Content\"";
+				DEVELOPMENT_TEAM = 3L6RK3LGGW;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.dagronf.dsfquickactionbar.SwiftUI-Demo";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		23049817291D9CAA00CD661A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = "SwiftUI Demo/SwiftUI_Demo.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"SwiftUI Demo/Preview Content\"";
+				DEVELOPMENT_TEAM = 3L6RK3LGGW;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.dagronf.dsfquickactionbar.SwiftUI-Demo";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 		2322B90B26A8D92C0034EB75 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -809,6 +956,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		23049818291D9CAA00CD661A /* Build configuration list for PBXNativeTarget "SwiftUI Demo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				23049816291D9CAA00CD661A /* Debug */,
+				23049817291D9CAA00CD661A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		2322B8FC26A8D92B0034EB75 /* Build configuration list for PBXProject "Simple Demo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -868,6 +1024,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		2304981C291D9D4200CD661A /* DSFQuickActionBar */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DSFQuickActionBar;
+		};
 		2322B91226A8D9450034EB75 /* DSFQuickActionBar */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = DSFQuickActionBar;
