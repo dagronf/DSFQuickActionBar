@@ -46,6 +46,10 @@ public enum QuickActionBarLocation {
 /// **`RowContentView`** is the type of SwiftUI View that will be used to represent an identifier in the UI
 @available(macOS 10.15, *)
 public struct QuickActionBar<IdentifierType: Hashable, RowContentView: View>: NSViewRepresentable {
+
+	public typealias ResultItemsForSearchAsyncType = ([IdentifierType]) -> Void
+	public typealias ItemsForSearchTermAsyncType = (String, @escaping ResultItemsForSearchAsyncType) -> Void
+
 	/// A view that can display a quick action bar (spotlight-style bar)
 	/// - Parameters:
 	///   - location: Where to locate the quick action bar. If window, locates the bar over the window containing parent view. If screen, centers on the screen ala Spotlight
@@ -56,6 +60,7 @@ public struct QuickActionBar<IdentifierType: Hashable, RowContentView: View>: NS
 	///   - searchTerm: The search term to use, updated when the quick action bar is closed
 	///   - selectedItem: The item selected by the user
 	///   - placeholderText: The text to display in the quick action bar when the search term is empty
+	///   - searchImage: Provide an image to display on the left of the search term
 	///   - itemsForSearchTerm: A block which returns the identifiers for the specified search term.
 	///   - isItemSelectable: Return false to mark an item as 'not selectable' (eg. if the item is a separator). By default, you can always select an item
 	///   - itemSelected: Called when an item is selected in the results
@@ -70,7 +75,7 @@ public struct QuickActionBar<IdentifierType: Hashable, RowContentView: View>: NS
 		selectedItem: Binding<IdentifierType?>,
 		placeholderText: String? = DSFQuickActionBar.DefaultPlaceholderString,
 		searchImage: NSImage? = nil,
-		itemsForSearchTerm: @escaping (String) -> [IdentifierType],
+		itemsForSearchTerm: @escaping ItemsForSearchTermAsyncType,
 		isItemSelectable: ((IdentifierType) -> Bool)? = nil,
 		itemSelected: ((IdentifierType) -> Void)? = nil,
 		viewForItem: @escaping (_ identifier: IdentifierType, _ searchTerm: String) -> RowContentView?
@@ -97,7 +102,7 @@ public struct QuickActionBar<IdentifierType: Hashable, RowContentView: View>: NS
 	private let showKeyboardShortcuts: Bool
 	private let requiredClickCount: DSFQuickActionBar.RequiredClickCount
 	private let _rowContent: (IdentifierType, String) -> RowContentView?
-	private let _itemsForSearchTerm: (String) -> [IdentifierType]
+	private let _itemsForSearchTerm: ItemsForSearchTermAsyncType
 	private let _isItemSelectable: ((IdentifierType) -> Bool)?
 	private let _itemSelected: ((IdentifierType) -> Void)?
 	private let searchImage: NSImage?
@@ -179,7 +184,7 @@ public extension QuickActionBar {
 		// Use the coordinator to hold on to the AppKit ui object
 		let quickActionBar = DSFQuickActionBar()
 
-		private var itemsForSearchTerm: (String) -> [IdentifierType]
+		private var itemsForSearchTerm: ItemsForSearchTermAsyncType
 		private let isItemSelectable: ((IdentifierType) -> Bool)?
 		private let itemSelected: ((IdentifierType) -> Void)?
 		private let rowContent: (IdentifierType, String) -> RowContentView?
@@ -194,7 +199,7 @@ public extension QuickActionBar {
 			selectedItem: Binding<IdentifierType?>,
 			currentSearchText: Binding<String>,
 			requiredClickCount: DSFQuickActionBar.RequiredClickCount,
-			itemsForSearchTerm: @escaping (String) -> [IdentifierType],
+			itemsForSearchTerm: @escaping ItemsForSearchTermAsyncType,
 			isItemSelectable: ((IdentifierType) -> Bool)?,
 			itemSelected: ((IdentifierType) -> Void)?,
 			rowContent: @escaping (IdentifierType, String) -> RowContentView?
@@ -213,9 +218,11 @@ public extension QuickActionBar {
 
 		public func quickActionBar(
 			_ quickActionBar: DSFQuickActionBar,
-			itemsForSearchTerm searchTerm: String
-		) -> [AnyHashable] {
-			return self.itemsForSearchTerm(searchTerm)
+			itemsForSearchTerm searchTerm: String,
+			resultsCallback: @escaping ([AnyHashable]) -> Void)
+		{
+			self.itemsForSearchTerm(searchTerm, resultsCallback)
+			//resultsCallback(self.itemsForSearchTerm(searchTerm))
 		}
 
 		public func quickActionBar(

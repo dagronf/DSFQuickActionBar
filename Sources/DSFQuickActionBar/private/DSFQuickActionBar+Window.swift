@@ -240,6 +240,12 @@ extension DSFQuickActionBar.Window {
 	}
 }
 
+extension DSFQuickActionBar.Window {
+	func provideResultIdentifiers(_ identifiers: [AnyHashable]) {
+		self.results.identifiers = identifiers
+	}
+}
+
 extension DSFQuickActionBar.Window: NSTextFieldDelegate {
 	func controlTextDidChange(_: Notification) {
 		self.debouncer.debounce { [weak self] in
@@ -254,14 +260,19 @@ extension DSFQuickActionBar.Window: NSTextFieldDelegate {
 		self._currentSearchText = currentSearch
 
 		// Get a list of the identifiers than match
-		let identifiers = contentSource.quickActionBar(
+		contentSource.quickActionBar(
 			self.quickActionBar,
 			itemsForSearchTerm: currentSearch
-		)
+		) { [weak self] results in
+			ensuringMainThreadAsync { [weak self] in
+				self?.updateResults(currentSearch: currentSearch, results: results)
+			}
+		}
+	}
 
-		// And update the display list
+	private func updateResults(currentSearch: String, results: [AnyHashable]) {
 		self.results.currentSearchTerm = currentSearch
-		self.results.identifiers = identifiers
+		self.results.identifiers = results
 	}
 
 	func control(_: NSControl, textView _: NSTextView, doCommandBy commandSelector: Selector) -> Bool {

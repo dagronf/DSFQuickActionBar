@@ -28,8 +28,16 @@ import AppKit
 
 /// Delegate for a QSFQuickActionBar instance
 public protocol DSFQuickActionBarContentSource: NSObjectProtocol {
-	/// Return an array of item(s) to be displayed for the specified search term
-	func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTerm searchTerm: String) -> [AnyHashable]
+
+	/// Called to retrieve the items that match the search term.
+	/// - Parameters:
+	///   - quickActionBar: The quick action bar
+	///   - searchTerm: The search term
+	///   - resultsCallback: A callback block for returning the items that match the search term.
+	///
+	/// The resultsCallback can be stored and called later, for example if the item search is asynchronous
+	/// (such as performing an `NSMetadataQuery` to retrieve URLs)
+	func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTerm searchTerm: String, resultsCallback: @escaping ([AnyHashable]) -> Void)
 
 	/// Return a configured view to display for the specified item and search term
 	func quickActionBar(_ quickActionBar: DSFQuickActionBar, viewForItem item: AnyHashable, searchTerm: String) -> NSView?

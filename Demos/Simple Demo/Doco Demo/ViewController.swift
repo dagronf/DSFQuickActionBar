@@ -28,8 +28,9 @@ class ViewController: NSViewController {
 }
 
 extension ViewController: DSFQuickActionBarContentSource {
-	func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTerm searchTerm: String) -> [AnyHashable] {
-		return Filter.search(searchTerm)
+
+	func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTerm searchTerm: String, resultsCallback: @escaping ([AnyHashable]) -> Void) {
+		resultsCallback(Filter.search(searchTerm))
 	}
 
 	func quickActionBar(_ quickActionBar: DSFQuickActionBar, viewForItem item: AnyHashable, searchTerm: String) -> NSView? {
