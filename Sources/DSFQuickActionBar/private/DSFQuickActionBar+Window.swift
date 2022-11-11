@@ -121,10 +121,14 @@ extension DSFQuickActionBar {
 			return imageView
 		}()
 
+		// The async task indicator
+		private let asyncActivityIndicator = DSFDelayedIndeterminiteRadialProgressIndicator()
+
 		// The stack of '[image] | [edit field]'
 		private lazy var searchStack: NSStackView = {
 			let stack = NSStackView()
 			stack.translatesAutoresizingMaskIntoConstraints = false
+			stack.detachesHiddenViews = true
 			stack.orientation = .horizontal
 
 			if let _ = self.quickActionBar.searchImage {
@@ -134,6 +138,8 @@ extension DSFQuickActionBar {
 			stack.addArrangedSubview(editLabel)
 			editLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
 			editLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
+
+			stack.addArrangedSubview(asyncActivityIndicator)
 
 			stack.setContentHuggingPriority(.defaultHigh, for: .horizontal)
 			stack.setContentHuggingPriority(.defaultHigh, for: .vertical)
@@ -222,7 +228,9 @@ internal extension DSFQuickActionBar.Window {
 				self.currentSearchText = initialSearchText
 			}
 
-			self.textChanged()
+			ensuringMainThreadAsync { [weak self] in
+				self?.searchTermDidChange()
+			}
 		}
 	}
 }
@@ -249,16 +257,19 @@ extension DSFQuickActionBar.Window {
 extension DSFQuickActionBar.Window: NSTextFieldDelegate {
 	func controlTextDidChange(_: Notification) {
 		self.debouncer.debounce { [weak self] in
-			self?.textChanged()
+			self?.searchTermDidChange()
 		}
 	}
 
-	func textChanged() {
+	private func searchTermDidChange() {
+		assert(Thread.isMainThread)
+
 		guard let contentSource = self.quickActionBar.contentSource else { return }
 
 		let currentSearch = self.editLabel.stringValue
 		self._currentSearchText = currentSearch
 
+		self.asyncActivityIndicator.startAnimation(self)
 		// Get a list of the identifiers than match
 		contentSource.quickActionBar(
 			self.quickActionBar,
@@ -271,6 +282,9 @@ extension DSFQuickActionBar.Window: NSTextFieldDelegate {
 	}
 
 	private func updateResults(currentSearch: String, results: [AnyHashable]) {
+		assert(Thread.isMainThread)
+
+		self.asyncActivityIndicator.stopAnimation(self)
 		self.results.currentSearchTerm = currentSearch
 		self.results.identifiers = results
 	}

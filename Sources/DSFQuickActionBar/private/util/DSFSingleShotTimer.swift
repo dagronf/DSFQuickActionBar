@@ -1,5 +1,5 @@
 //
-//  DSFFlippedClipView.swift
+//  DSFSingleShotTimer.swift
 //
 //  Copyright © 2022 Darren Ford. All rights reserved.
 //
@@ -24,9 +24,40 @@
 //  IN THE SOFTWARE.
 //
 
-import AppKit.NSClipView
+import Foundation
 
-/// A simple flipped clip view for NSScrollView
-class DSFFlippedClipView: NSClipView {
-	override var isFlipped: Bool { return true }
+// A single use cancellable timer
+class DSFSingleShotTimer {
+	/// Create a single-use timer object
+	/// - Parameters:
+	///   - delay: The amount of time to delay before calling
+	///   - queue: The queue to on which to call the completion block
+	///   - completionBlock: Called when the timer
+	init(delay: TimeInterval, queue: DispatchQueue = .main, _ completionBlock: @escaping () -> Void) {
+		Swift.print("SingleShotTimer: init")
+		self.workItem = DispatchWorkItem(block: {
+			completionBlock()
+		})
+		queue.asyncAfter(deadline: .now() + delay, execute: workItem!)
+	}
+
+	func cancel() {
+		Swift.print("SingleShotTimer: cancel")
+		self.stop()
+	}
+
+	deinit {
+		Swift.print("SingleShotTimer: deinit")
+		self.stop()
+	}
+
+	// Private
+	private var workItem: DispatchWorkItem?
+}
+
+private extension DSFSingleShotTimer {
+	private func stop() {
+		self.workItem?.cancel()
+		self.workItem = nil
+	}
 }
