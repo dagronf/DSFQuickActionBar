@@ -1,5 +1,5 @@
 //
-//  DSFQuickActionBar.swift
+//  DSFQuickActionBar+Block.swift
 //
 //  Copyright © 2022 Darren Ford. All rights reserved.
 //
@@ -27,50 +27,74 @@
 import AppKit
 
 extension DSFQuickActionBar {
-	/// A quick action bar object for AppKit using blocks instead of delegate callbacks (Swift only)
+	/// A quick action bar using block callbacks instead of delegate callbacks
 	///
-	/// Useful if you don't want to pollute your existing code with delegate overrides and callbacks
-	public class Source<IdentifierType: Hashable, RowContentView: NSView>: NSObject {
+	/// Useful if you don't want to pollute your existing codebase with delegate handling, plus better handling
+	/// of identifier types via template parameters
+	public class Block<IdentifierType: Hashable, RowContentView: NSView>: NSObject {
 
-		public typealias ViewForIdentifierType = (_ identifier: IdentifierType, _ currentSearchTerm: String) -> RowContentView?
+		public typealias ViewForIdentifierType = (_ identifier: IdentifierType, _ searchTerm: String) -> RowContentView?
 
-		/// Return an array of identifiers that match against the search term
-		public var identifiersForSearchTermAsync: (_ task: DSFQuickActionBar.SearchTask) -> Void = { _ in
-			assert(false, "[DSFQuickActionBar.Source]: Must implement identifiersForSearchTermAsync")
+		/// **[required]** Return an array of identifiers that match against the search term
+		///
+		/// This block is called passing a task object containing :-
+		///  * the search term
+		///  * a completion block which must be called when the search task is complete
+		public var identifiersForSearchTerm: (_ task: DSFQuickActionBar.SearchTask) -> Void = { task in
+			Swift.print("[DSFQuickActionBar.Source]: Must implement identifiersForSearchTermAsync")
+			task.complete(with: [])
 		}
 
-		/// Returns a view for the specified identifier. Passes the current search term
-		public var viewForIdentifier: ViewForIdentifierType? = { _, _ in
+		/// **[required]** Returns a view for the specified identifier. Passes the current search term
+		public var viewForIdentifier: ViewForIdentifierType? = { identifier, searchTerm in
 			assert(false, "[DSFQuickActionBar.Source]: Must implement viewForIdentifier")
 			return nil
 		}
-		/// Called when the user 'activates' an identifier
-		public var didActivateIdentifier: ((IdentifierType) -> Void)? = { _ in
+
+		/// **[required]** Called when the user 'activates' an identifier
+		public var didActivateIdentifier: ((IdentifierType) -> Void)? = { identifier in
 			assert(false, "[DSFQuickActionBar.Source]: Must implement didActivateIdentifier")
 		}
 
 		/// Called when an identifier is about to be selected in the quick action bar
+		///
 		/// Return `false` to stop the identifier from being selected
 		public var canSelectIdentifier: ((IdentifierType) -> Bool)?
+
 		/// Called when an identifier is selected within the quick action bar
 		public var didSelectIdentifier: ((IdentifierType) -> Void)?
 
 		/// Called when the user cancels the quick action bar.
+		///
+		/// This can be triggered a number of ways, such as :-
+		/// * user hitting the `esc` key to dismiss
+		/// * the quick action bar loses key focus
+		///
+		/// This will **NOT** be called if the user activates an item in the list
 		public var didCancel: (() -> Void)?
-		/// Called when the quick action bar closes. Passes the current search term
+
+		/// Called when the quick action bar closes.
+		///
+		/// This is called :-
+		/// * If the user cancels the quick action bar
+		/// * The user activates an item in the quick action bar
 		public var didClose: (() -> Void)?
 
 		/// The placeholder text to display in the quick action bar when the search text is empty
 		public var placeholderText: String? = nil
+
 		/// The size of the quick action bar window
 		public var size: CGSize = CGSize(
 			width: (NSScreen.main?.frame.width ?? (DSFQuickActionBar.DefaultWidth*4)) / 4.0,
 			height: (NSScreen.main?.frame.height ?? (DSFQuickActionBar.DefaultHeight*4)) / 4.0
 		)
+
 		/// Does the quick action bar show keyboard shortcuts for the first 10 items?
 		public var showsKeyboardShortcuts = false
+
 		/// The image to display on the left of the search term
 		public var searchImage: NSImage? = nil
+
 		/// The number of clicks required to activate a row in the results view
 		public var requiredClickCount: RequiredClickCount {
 			get { self.qab.requiredClickCount }
@@ -89,7 +113,7 @@ extension DSFQuickActionBar {
 		/// Show the quick action bar
 		/// - Parameters:
 		///   - initialSearchTerm: The search term to search when the quick action bar is initially presented
-		///   - parentWindow: /// The window to attach the quick action bar to. If nil, presents for the current screen
+		///   - parentWindow: The window to attach the quick action bar to. If nil, presents for the current screen
 		public func show(
 			initialSearchTerm: String? = nil,
 			parentWindow: NSWindow? = nil
@@ -119,11 +143,11 @@ extension DSFQuickActionBar {
 
 // MARK: - Delegate callback handling
 
-extension DSFQuickActionBar.Source: DSFQuickActionBarContentSource {
+extension DSFQuickActionBar.Block: DSFQuickActionBarContentSource {
 
 	public func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTermTask task: DSFQuickActionBar.SearchTask) {
 		self.lastSearchTerm = task.searchTerm
-		self.identifiersForSearchTermAsync(task)
+		self.identifiersForSearchTerm(task)
 	}
 
 	public func quickActionBar(_ quickActionBar: DSFQuickActionBar, viewForItem item: AnyHashable, searchTerm: String) -> NSView? {

@@ -15,13 +15,12 @@ class ViewController: NSViewController {
 //	let qab = DSFQuickActionBar()
 	@IBOutlet weak var scopeControl: NSPathControl!
 
-	let qsab = DSFQuickActionBar.Source<URL, NSTextField>()
+	// Use the block-based quick action bar
+	let qsab = DSFQuickActionBar.Block<URL, NSTextField>()
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-
-		scopeControl.url = nil //URL.documentsDirectory
-
+		scopeControl.url = nil
 	}
 
 	override func viewDidAppear() {
@@ -29,7 +28,7 @@ class ViewController: NSViewController {
 
 		qsab.placeholderText = "FauxSpotlight Search"
 
-		qsab.identifiersForSearchTermAsync = { [weak self] task in
+		qsab.identifiersForSearchTerm = { [weak self] task in
 			guard let `self` = self else { return }
 
 			// Cancel an old query
