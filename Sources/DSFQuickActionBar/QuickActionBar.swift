@@ -215,15 +215,6 @@ public extension QuickActionBar {
 			self.quickActionBar.contentSource = self
 		}
 
-//		public func quickActionBar(
-//			_ quickActionBar: DSFQuickActionBar,
-//			itemsForSearchTerm searchTerm: String,
-//			resultsCallback: @escaping ([AnyHashable]) -> Void)
-//		{
-//			self.itemsForSearchTerm(searchTerm, resultsCallback)
-//			//resultsCallback(self.itemsForSearchTerm(searchTerm))
-//		}
-
 		public func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTermTask task: DSFQuickActionBar.SearchTask) {
 			self.itemsForSearchTerm(task)
 		}

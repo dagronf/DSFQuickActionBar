@@ -88,7 +88,7 @@ struct ContentView: View {
 		// Fake an asynchronous search
 		DispatchQueue.global(qos: .background).async {
 			let results = filters__.search(task.searchTerm)
-			DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + 0.4) {
+			DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + 0.1) {
 				task.complete(with: results)
 			}
 		}

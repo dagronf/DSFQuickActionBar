@@ -283,7 +283,7 @@ extension DSFQuickActionBar.Window: NSTextFieldDelegate {
 
 		// Create a search task
 		let itemsTask = DSFQuickActionBar.SearchTask(searchTerm: currentSearch) { [weak self] results in
-			ensuringMainThreadAsync { [weak self] in
+			DispatchQueue.main.async { [weak self] in
 				self?.updateResults(currentSearch: currentSearch, results: results)
 			}
 		}
