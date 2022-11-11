@@ -103,21 +103,21 @@ extension AppDelegate: DSFQuickActionBarContentSource {
 		return b
 	}
 
-	func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTerm searchTerm: String, resultsCallback: @escaping ([AnyHashable]) -> Void) {
-		self.currentSearch = searchTerm
+	func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTermTask task: DSFQuickActionBar.SearchTask) {
+		self.currentSearch = task.searchTerm
 
-		var currentMatches: [AnyHashable] = filters__.search(searchTerm)
+		var currentMatches: [AnyHashable] = filters__.search(task.searchTerm)
 
 		if showAdvanced {
 			// If there's search results, show a separator
 			if currentMatches.count > 0 {
 				currentMatches.append(MakeSeparator())
 			}
-			
+
 			// Add in an 'advanced search' button
 			currentMatches.append(makeButton())
 		}
-		resultsCallback(currentMatches)
+		task.complete(with: currentMatches)
 	}
 
 	func quickActionBar(_: DSFQuickActionBar, viewForItem item: AnyHashable, searchTerm: String) -> NSView? {

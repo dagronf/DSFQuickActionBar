@@ -26,18 +26,40 @@
 
 import AppKit
 
+
+public extension DSFQuickActionBar {
+	class SearchTask {
+		/// The search term for the query
+		public let searchTerm: String
+
+		/// Is the current search task cancelled?
+		public var isCancelled: Bool { completion == nil }
+
+		/// Call to supply the results for the search query.
+		public func complete(with results: [AnyHashable]) {
+			completion?(results)
+		}
+
+		internal init(searchTerm: String, completion: @escaping ([AnyHashable]) -> Void) {
+			self.completion = completion
+			self.searchTerm = searchTerm
+		}
+
+		internal var completion: (([AnyHashable]) -> Void)?
+	}
+}
+
 /// Delegate for a QSFQuickActionBar instance
 public protocol DSFQuickActionBarContentSource: NSObjectProtocol {
 
 	/// Called to retrieve the items that match the search term.
 	/// - Parameters:
 	///   - quickActionBar: The quick action bar
-	///   - searchTerm: The search term
-	///   - resultsCallback: A callback block for returning the items that match the search term.
+	///   - itemsForSearchTermTask: A task object
 	///
-	/// The resultsCallback can be stored and called later, for example if the item search is asynchronous
+	/// The task object can be stored and completed later, for example if the item search is asynchronous
 	/// (such as performing an `NSMetadataQuery` to retrieve URLs)
-	func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTerm searchTerm: String, resultsCallback: @escaping ([AnyHashable]) -> Void)
+	func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTermTask task: DSFQuickActionBar.SearchTask)
 
 	/// Return a configured view to display for the specified item and search term
 	func quickActionBar(_ quickActionBar: DSFQuickActionBar, viewForItem item: AnyHashable, searchTerm: String) -> NSView?

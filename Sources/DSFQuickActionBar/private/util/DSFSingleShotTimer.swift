@@ -34,7 +34,7 @@ class DSFSingleShotTimer {
 	///   - queue: The queue to on which to call the completion block
 	///   - completionBlock: Called when the timer
 	init(delay: TimeInterval, queue: DispatchQueue = .main, _ completionBlock: @escaping () -> Void) {
-		Swift.print("SingleShotTimer: init")
+		//Swift.print("DSFSingleShotTimer: init")
 		self.workItem = DispatchWorkItem(block: {
 			completionBlock()
 		})
@@ -42,12 +42,12 @@ class DSFSingleShotTimer {
 	}
 
 	func cancel() {
-		Swift.print("SingleShotTimer: cancel")
+		//Swift.print("DSFSingleShotTimer: cancel")
 		self.stop()
 	}
 
 	deinit {
-		Swift.print("SingleShotTimer: deinit")
+		//Swift.print("DSFSingleShotTimer: deinit")
 		self.stop()
 	}
 

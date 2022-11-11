@@ -35,7 +35,7 @@ extension DSFQuickActionBar {
 		public typealias ViewForIdentifierType = (_ identifier: IdentifierType, _ currentSearchTerm: String) -> RowContentView?
 
 		/// Return an array of identifiers that match against the search term
-		public var identifiersForSearchTermAsync: (_ searchTerm: String, @escaping (([IdentifierType]) -> Void)) -> Void = { _, _ in
+		public var identifiersForSearchTermAsync: (_ task: DSFQuickActionBar.SearchTask) -> Void = { _ in
 			assert(false, "[DSFQuickActionBar.Source]: Must implement identifiersForSearchTermAsync")
 		}
 
@@ -121,10 +121,9 @@ extension DSFQuickActionBar {
 
 extension DSFQuickActionBar.Source: DSFQuickActionBarContentSource {
 
-
-	public func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTerm searchTerm: String, resultsCallback: @escaping ([AnyHashable]) -> Void) {
-		self.lastSearchTerm = searchTerm
-		self.identifiersForSearchTermAsync(searchTerm, resultsCallback)
+	public func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTermTask task: DSFQuickActionBar.SearchTask) {
+		self.lastSearchTerm = task.searchTerm
+		self.identifiersForSearchTermAsync(task)
 	}
 
 	public func quickActionBar(_ quickActionBar: DSFQuickActionBar, viewForItem item: AnyHashable, searchTerm: String) -> NSView? {

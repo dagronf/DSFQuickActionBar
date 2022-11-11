@@ -29,16 +29,19 @@ class ViewController: NSViewController {
 
 		qsab.placeholderText = "FauxSpotlight Search"
 
-		qsab.identifiersForSearchTermAsync = { [weak self] searchTerm, resultsCallback in
+		qsab.identifiersForSearchTermAsync = { [weak self] task in
 			guard let `self` = self else { return }
 
 			// Cancel an old query
 			self.currentQuery?.cancel()
 			self.currentQuery = nil
 
+			// Simple cleanup before query
+			let searchTerm = task.searchTerm.trimmingCharacters(in: .whitespacesAndNewlines)
+
 			// If the search term is empty, there are no results
 			if searchTerm.count == 0 {
-				resultsCallback([])
+				task.complete(with: [])
 				return
 			}
 
@@ -62,7 +65,9 @@ class ViewController: NSViewController {
 				scope: [scope],
 				sortDescriptors: [sort],
 				completionBlock: { [weak self] results in
-					resultsCallback(results)
+					if !task.isCancelled {
+						task.complete(with: results)
+					}
 					self?.currentQuery = nil
 				}
 			)

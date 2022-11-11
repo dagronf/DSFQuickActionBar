@@ -83,19 +83,40 @@ The contentSource (`DSFQuickActionBarContentSource`) provides the content and fe
 
 ### `DSFQuickActionBarContentSource`
 
-#### itemsForSearchTerm
+#### itemsForSearchTermTask
 
 ```swift
-// Swift
-func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTerm searchTerm: String) -> [AnyHashable]
+func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTermTask task: DSFQuickActionBar.SearchTask)
 ```
 
-Returns an array of the unique item(s) for items that match the search term. The definition of 'match' is entirely up to you - you can perform any check you want. 
+Called when the control needs a array of items to display within the control that match a search term.
+The definition of 'match' is entirely up to you - you can perform any check you want. 
+
+##### Simple synchronous example
+
+```swift
+func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTermTask task: DSFQuickActionBar.SearchTask)
+   let results = items.filter { $0.name.startsWith(task.searchTerm) }
+   task.complete(with: results)
+}
+```
+
+##### Simple asynchronous example
+
+```swift
+var currentSearch: RemoteSearch?
+func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTermTask task: DSFQuickActionBar.SearchTask)
+   currentSearch?.cancel()
+   currentSearch = RemoteSearch(task.searchTerm) { [weak self] results in
+      task.complete(with: results)
+      self?.currentSearch = nil
+   }
+}
+```
 
 #### viewForItem
 
 ```swift
-// Swift
 func quickActionBar(_ quickActionBar: DSFQuickActionBar, viewForItem item: AnyHashable, searchTerm: String) -> NSView?
 ```
 

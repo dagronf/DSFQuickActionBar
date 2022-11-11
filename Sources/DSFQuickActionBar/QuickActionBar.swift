@@ -47,8 +47,7 @@ public enum QuickActionBarLocation {
 @available(macOS 10.15, *)
 public struct QuickActionBar<IdentifierType: Hashable, RowContentView: View>: NSViewRepresentable {
 
-	public typealias ResultItemsForSearchAsyncType = ([IdentifierType]) -> Void
-	public typealias ItemsForSearchTermAsyncType = (String, @escaping ResultItemsForSearchAsyncType) -> Void
+	public typealias ItemsForSearchTermAsyncType = (DSFQuickActionBar.SearchTask) -> Void
 
 	/// A view that can display a quick action bar (spotlight-style bar)
 	/// - Parameters:
@@ -216,13 +215,17 @@ public extension QuickActionBar {
 			self.quickActionBar.contentSource = self
 		}
 
-		public func quickActionBar(
-			_ quickActionBar: DSFQuickActionBar,
-			itemsForSearchTerm searchTerm: String,
-			resultsCallback: @escaping ([AnyHashable]) -> Void)
-		{
-			self.itemsForSearchTerm(searchTerm, resultsCallback)
-			//resultsCallback(self.itemsForSearchTerm(searchTerm))
+//		public func quickActionBar(
+//			_ quickActionBar: DSFQuickActionBar,
+//			itemsForSearchTerm searchTerm: String,
+//			resultsCallback: @escaping ([AnyHashable]) -> Void)
+//		{
+//			self.itemsForSearchTerm(searchTerm, resultsCallback)
+//			//resultsCallback(self.itemsForSearchTerm(searchTerm))
+//		}
+
+		public func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTermTask task: DSFQuickActionBar.SearchTask) {
+			self.itemsForSearchTerm(task)
 		}
 
 		public func quickActionBar(

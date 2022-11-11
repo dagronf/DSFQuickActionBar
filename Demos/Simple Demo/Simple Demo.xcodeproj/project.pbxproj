@@ -13,6 +13,7 @@
 			buildPhases = (
 			);
 			dependencies = (
+				23049821291E190600CD661A /* PBXTargetDependency */,
 				239A39BD291C8FF70050093F /* PBXTargetDependency */,
 				2349CAF928D0023500EE1A40 /* PBXTargetDependency */,
 				2349CAF728D0023200EE1A40 /* PBXTargetDependency */,
@@ -57,6 +58,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		23049820291E190600CD661A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2322B8F926A8D92B0034EB75 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 23049809291D9CA900CD661A;
+			remoteInfo = "SwiftUI Demo";
+		};
 		2349CAF628D0023200EE1A40 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2322B8F926A8D92B0034EB75 /* Project object */;
@@ -409,9 +417,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
+				2349CAF228D0022800EE1A40 /* qab_all */,
 				2322B90026A8D92B0034EB75 /* Simple Demo */,
 				235DFFBC28C043F900FFB8BF /* Doco Demo */,
-				2349CAF228D0022800EE1A40 /* qab_all */,
 				239A39A8291C634C0050093F /* FauxSpotlight */,
 				23049809291D9CA900CD661A /* SwiftUI Demo */,
 			);
@@ -505,6 +513,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		23049821291E190600CD661A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 23049809291D9CA900CD661A /* SwiftUI Demo */;
+			targetProxy = 23049820291E190600CD661A /* PBXContainerItemProxy */;
+		};
 		2349CAF728D0023200EE1A40 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 2322B90026A8D92B0034EB75 /* Simple Demo */;

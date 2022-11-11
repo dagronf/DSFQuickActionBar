@@ -43,6 +43,7 @@ extension DSFQuickActionBar {
 			return true
 		}
 
+		// Should the control display keyboard shortcuts?
 		var showKeyboardShortcuts: Bool = false
 
 		// The placeholder text for the edit field
@@ -54,9 +55,9 @@ extension DSFQuickActionBar {
 
 		private var _currentSearchText: String = ""
 		private(set) var currentSearchText: String {
-			get { _currentSearchText }
+			get { self._currentSearchText }
 			set {
-				_currentSearchText = newValue
+				self._currentSearchText = newValue
 				self.editLabel.stringValue = newValue
 			}
 		}
@@ -94,6 +95,9 @@ extension DSFQuickActionBar {
 			t.isEnabled = true
 			t.isEditable = true
 			t.isSelectable = true
+			t.cell?.wraps = false
+			t.cell?.isScrollable = true
+			t.maximumNumberOfLines = 1
 			t.placeholderString = DSFQuickActionBar.DefaultPlaceholderString
 
 			t.focusRingType = .none
@@ -163,6 +167,9 @@ extension DSFQuickActionBar {
 
 		// Is set to true when the user 'activates' an item in the result list
 		internal var userDidActivateItem: Bool = false
+
+		// The task if the control is waiting for search results
+		private var currentSearchRequestTask: DSFQuickActionBar.SearchTask?
 	}
 }
 
@@ -179,7 +186,6 @@ internal extension DSFQuickActionBar.Window {
 
 		// Make sure we adopt the effective appearance
 		UsingEffectiveAppearance(ofWindow: parentWindow) {
-
 			primaryStack.translatesAutoresizingMaskIntoConstraints = false
 			primaryStack.setContentHuggingPriority(.required, for: .horizontal)
 			primaryStack.setContentHuggingPriority(.required, for: .vertical)
@@ -264,21 +270,32 @@ extension DSFQuickActionBar.Window: NSTextFieldDelegate {
 	private func searchTermDidChange() {
 		assert(Thread.isMainThread)
 
+		// Cancel any outstanding search task
+		self.currentSearchRequestTask?.completion = nil
+		self.currentSearchRequestTask = nil
+
 		guard let contentSource = self.quickActionBar.contentSource else { return }
 
 		let currentSearch = self.editLabel.stringValue
 		self._currentSearchText = currentSearch
 
 		self.asyncActivityIndicator.startAnimation(self)
-		// Get a list of the identifiers than match
-		contentSource.quickActionBar(
-			self.quickActionBar,
-			itemsForSearchTerm: currentSearch
-		) { [weak self] results in
+
+		// Create a search task
+		let itemsTask = DSFQuickActionBar.SearchTask(searchTerm: currentSearch) { [weak self] results in
 			ensuringMainThreadAsync { [weak self] in
 				self?.updateResults(currentSearch: currentSearch, results: results)
 			}
 		}
+
+		// Store the current search so that we can cancel it if needed
+		self.currentSearchRequestTask = itemsTask
+
+		// Get a list of the identifiers that match
+		contentSource.quickActionBar(
+			self.quickActionBar,
+			itemsForSearchTermTask: itemsTask
+		)
 	}
 
 	private func updateResults(currentSearch: String, results: [AnyHashable]) {
@@ -289,7 +306,7 @@ extension DSFQuickActionBar.Window: NSTextFieldDelegate {
 		self.results.identifiers = results
 	}
 
-	func control(_: NSControl, textView _: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
+	func control(_ control: NSControl, textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
 		if commandSelector == #selector(moveDown(_:)) {
 			return self.results.selectNextSelectableRow()
 		}

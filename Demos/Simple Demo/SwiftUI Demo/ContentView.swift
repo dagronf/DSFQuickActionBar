@@ -84,17 +84,17 @@ struct ContentView: View {
 		.padding()
 	}
 
-	private func asyncItemsForSearchTermFn(_ searchTerm: String, _ completion: @escaping ([Filter]) -> Void) {
+	private func asyncItemsForSearchTermFn(_ task: DSFQuickActionBar.SearchTask) {
 		// Fake an asynchronous search
 		DispatchQueue.global(qos: .background).async {
-			let results = filters__.search(searchTerm)
-			DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + 0.1) {
-				completion(results)
+			let results = filters__.search(task.searchTerm)
+			DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + 0.4) {
+				task.complete(with: results)
 			}
 		}
 
 		// Simple sync response
-		// completion(filters__.search(searchTerm))
+		// task.completion(with: filters__.search(searchTerm))
 	}
 }
 
