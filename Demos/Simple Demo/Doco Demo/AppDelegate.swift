@@ -9,12 +9,11 @@ import Cocoa
 
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
-
-	
-
-
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
 		// Insert code here to initialize your application
+		Swift.print("""
+		Demonstrates using a quick action bar synchronously from AppKit.
+		""")
 	}
 
 	func applicationWillTerminate(_ aNotification: Notification) {
@@ -24,7 +23,4 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool {
 		return true
 	}
-
-
 }
-

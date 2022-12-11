@@ -9,9 +9,14 @@ import SwiftUI
 
 @main
 struct SwiftUI_DemoApp: App {
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
-    }
+	var body: some Scene {
+		WindowGroup {
+			ContentView()
+				.onAppear {
+					Swift.print("""
+						Demonstrates using a quick action bar from SwiftUI\n
+						""")
+				}
+		}
+	}
 }

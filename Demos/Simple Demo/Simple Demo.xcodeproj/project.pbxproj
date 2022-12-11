@@ -13,6 +13,7 @@
 			buildPhases = (
 			);
 			dependencies = (
+				231DF70E2946AD0D00287717 /* PBXTargetDependency */,
 				23049821291E190600CD661A /* PBXTargetDependency */,
 				239A39BD291C8FF70050093F /* PBXTargetDependency */,
 				2349CAF928D0023500EE1A40 /* PBXTargetDependency */,
@@ -31,6 +32,13 @@
 		23049819291D9CF100CD661A /* SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2322B91426A8D9F80034EB75 /* SampleData.swift */; };
 		2304981D291D9D4200CD661A /* DSFQuickActionBar in Frameworks */ = {isa = PBXBuildFile; productRef = 2304981C291D9D4200CD661A /* DSFQuickActionBar */; };
 		2304981F291D9E0200CD661A /* FilterViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2304981E291D9E0200CD661A /* FilterViewCell.swift */; };
+		231DF6FD29468C2600287717 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231DF6FC29468C2600287717 /* AppDelegate.swift */; };
+		231DF6FF29468C2600287717 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231DF6FE29468C2600287717 /* ViewController.swift */; };
+		231DF70129468C2900287717 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 231DF70029468C2900287717 /* Assets.xcassets */; };
+		231DF70429468C2900287717 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 231DF70229468C2900287717 /* Main.storyboard */; };
+		231DF70A29468CC200287717 /* DSFQuickActionBar-static in Frameworks */ = {isa = PBXBuildFile; productRef = 231DF70929468CC200287717 /* DSFQuickActionBar-static */; };
+		231DF70C294695EF00287717 /* countries.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231DF70B294695EF00287717 /* countries.swift */; };
+		231DF7112946B43900287717 /* countries.txt in Resources */ = {isa = PBXBuildFile; fileRef = 231DF7102946B43900287717 /* countries.txt */; };
 		2322B90526A8D92B0034EB75 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2322B90426A8D92B0034EB75 /* AppDelegate.swift */; };
 		2322B90726A8D92C0034EB75 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2322B90626A8D92C0034EB75 /* Assets.xcassets */; };
 		2322B90A26A8D92C0034EB75 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2322B90826A8D92C0034EB75 /* MainMenu.xib */; };
@@ -65,6 +73,13 @@
 			remoteGlobalIDString = 23049809291D9CA900CD661A;
 			remoteInfo = "SwiftUI Demo";
 		};
+		231DF70D2946AD0D00287717 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2322B8F926A8D92B0034EB75 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 231DF6F929468C2600287717;
+			remoteInfo = "StatusBar Item Demo";
+		};
 		2349CAF628D0023200EE1A40 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2322B8F926A8D92B0034EB75 /* Project object */;
@@ -96,6 +111,14 @@
 		23049813291D9CAA00CD661A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		23049815291D9CAA00CD661A /* SwiftUI_Demo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SwiftUI_Demo.entitlements; sourceTree = "<group>"; };
 		2304981E291D9E0200CD661A /* FilterViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterViewCell.swift; sourceTree = "<group>"; };
+		231DF6FA29468C2600287717 /* StatusBar Item Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "StatusBar Item Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		231DF6FC29468C2600287717 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		231DF6FE29468C2600287717 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		231DF70029468C2900287717 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		231DF70329468C2900287717 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		231DF70529468C2900287717 /* StatusBar_Item_Demo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = StatusBar_Item_Demo.entitlements; sourceTree = "<group>"; };
+		231DF70B294695EF00287717 /* countries.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = countries.swift; sourceTree = "<group>"; };
+		231DF7102946B43900287717 /* countries.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = countries.txt; sourceTree = "<group>"; };
 		2322B90126A8D92B0034EB75 /* Simple Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Simple Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2322B90426A8D92B0034EB75 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2322B90626A8D92C0034EB75 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -130,6 +153,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				2304981D291D9D4200CD661A /* DSFQuickActionBar in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		231DF6F729468C2600287717 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				231DF70A29468CC200287717 /* DSFQuickActionBar-static in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -184,6 +215,28 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		231DF6FB29468C2600287717 /* StatusBar Item Demo */ = {
+			isa = PBXGroup;
+			children = (
+				231DF70F2946B42F00287717 /* resources */,
+				231DF6FC29468C2600287717 /* AppDelegate.swift */,
+				231DF6FE29468C2600287717 /* ViewController.swift */,
+				231DF70029468C2900287717 /* Assets.xcassets */,
+				231DF70229468C2900287717 /* Main.storyboard */,
+				231DF70529468C2900287717 /* StatusBar_Item_Demo.entitlements */,
+				231DF70B294695EF00287717 /* countries.swift */,
+			);
+			path = "StatusBar Item Demo";
+			sourceTree = "<group>";
+		};
+		231DF70F2946B42F00287717 /* resources */ = {
+			isa = PBXGroup;
+			children = (
+				231DF7102946B43900287717 /* countries.txt */,
+			);
+			path = resources;
+			sourceTree = "<group>";
+		};
 		2322B8F826A8D92B0034EB75 = {
 			isa = PBXGroup;
 			children = (
@@ -192,6 +245,7 @@
 				235DFFBE28C043F900FFB8BF /* Doco Demo */,
 				239A39AA291C634C0050093F /* FauxSpotlight */,
 				2304980B291D9CA900CD661A /* SwiftUI Demo */,
+				231DF6FB29468C2600287717 /* StatusBar Item Demo */,
 				2322B90226A8D92B0034EB75 /* Products */,
 				2322B91126A8D9450034EB75 /* Frameworks */,
 			);
@@ -204,6 +258,7 @@
 				235DFFBD28C043F900FFB8BF /* Doco Demo.app */,
 				239A39A9291C634C0050093F /* FauxSpotlight.app */,
 				2304980A291D9CA900CD661A /* SwiftUI Demo.app */,
+				231DF6FA29468C2600287717 /* StatusBar Item Demo.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -313,6 +368,26 @@
 			productReference = 2304980A291D9CA900CD661A /* SwiftUI Demo.app */;
 			productType = "com.apple.product-type.application";
 		};
+		231DF6F929468C2600287717 /* StatusBar Item Demo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 231DF70829468C2900287717 /* Build configuration list for PBXNativeTarget "StatusBar Item Demo" */;
+			buildPhases = (
+				231DF6F629468C2600287717 /* Sources */,
+				231DF6F729468C2600287717 /* Frameworks */,
+				231DF6F829468C2600287717 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "StatusBar Item Demo";
+			packageProductDependencies = (
+				231DF70929468CC200287717 /* DSFQuickActionBar-static */,
+			);
+			productName = "StatusBar Item Demo";
+			productReference = 231DF6FA29468C2600287717 /* StatusBar Item Demo.app */;
+			productType = "com.apple.product-type.application";
+		};
 		2322B90026A8D92B0034EB75 /* Simple Demo */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2322B90D26A8D92C0034EB75 /* Build configuration list for PBXNativeTarget "Simple Demo" */;
@@ -387,6 +462,9 @@
 					23049809291D9CA900CD661A = {
 						CreatedOnToolsVersion = 14.1;
 					};
+					231DF6F929468C2600287717 = {
+						CreatedOnToolsVersion = 14.1;
+					};
 					2322B90026A8D92B0034EB75 = {
 						CreatedOnToolsVersion = 13.0;
 					};
@@ -422,6 +500,7 @@
 				235DFFBC28C043F900FFB8BF /* Doco Demo */,
 				239A39A8291C634C0050093F /* FauxSpotlight */,
 				23049809291D9CA900CD661A /* SwiftUI Demo */,
+				231DF6F929468C2600287717 /* StatusBar Item Demo */,
 			);
 		};
 /* End PBXProject section */
@@ -433,6 +512,16 @@
 			files = (
 				23049814291D9CAA00CD661A /* Preview Assets.xcassets in Resources */,
 				23049811291D9CAA00CD661A /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		231DF6F829468C2600287717 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				231DF7112946B43900287717 /* countries.txt in Resources */,
+				231DF70129468C2900287717 /* Assets.xcassets in Resources */,
+				231DF70429468C2900287717 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -478,6 +567,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		231DF6F629468C2600287717 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				231DF6FF29468C2600287717 /* ViewController.swift in Sources */,
+				231DF6FD29468C2600287717 /* AppDelegate.swift in Sources */,
+				231DF70C294695EF00287717 /* countries.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2322B8FD26A8D92B0034EB75 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -518,6 +617,11 @@
 			target = 23049809291D9CA900CD661A /* SwiftUI Demo */;
 			targetProxy = 23049820291E190600CD661A /* PBXContainerItemProxy */;
 		};
+		231DF70E2946AD0D00287717 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 231DF6F929468C2600287717 /* StatusBar Item Demo */;
+			targetProxy = 231DF70D2946AD0D00287717 /* PBXContainerItemProxy */;
+		};
 		2349CAF728D0023200EE1A40 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 2322B90026A8D92B0034EB75 /* Simple Demo */;
@@ -536,6 +640,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		231DF70229468C2900287717 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				231DF70329468C2900287717 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
 		2322B90826A8D92C0034EB75 /* MainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -615,6 +727,66 @@
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.dagronf.dsfquickactionbar.SwiftUI-Demo";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		231DF70629468C2900287717 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = "StatusBar Item Demo/StatusBar_Item_Demo.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3L6RK3LGGW;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.dagronf.StatusBar-Item-Demo";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		231DF70729468C2900287717 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = "StatusBar Item Demo/StatusBar_Item_Demo.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3L6RK3LGGW;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.dagronf.StatusBar-Item-Demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -978,6 +1150,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		231DF70829468C2900287717 /* Build configuration list for PBXNativeTarget "StatusBar Item Demo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				231DF70629468C2900287717 /* Debug */,
+				231DF70729468C2900287717 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		2322B8FC26A8D92B0034EB75 /* Build configuration list for PBXProject "Simple Demo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -1040,6 +1221,10 @@
 		2304981C291D9D4200CD661A /* DSFQuickActionBar */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = DSFQuickActionBar;
+		};
+		231DF70929468CC200287717 /* DSFQuickActionBar-static */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = "DSFQuickActionBar-static";
 		};
 		2322B91226A8D9450034EB75 /* DSFQuickActionBar */ = {
 			isa = XCSwiftPackageProductDependency;

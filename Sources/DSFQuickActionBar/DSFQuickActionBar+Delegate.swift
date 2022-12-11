@@ -26,39 +26,27 @@
 
 import AppKit
 
-
-public extension DSFQuickActionBar {
-	class SearchTask {
-		/// The search term for the query
-		public let searchTerm: String
-
-		/// Is the current search task cancelled?
-		public var isCancelled: Bool { completion == nil }
-
-		/// Call to supply the results for the search query.
-		public func complete(with results: [AnyHashable]) {
-			completion?(results)
-		}
-
-		internal init(searchTerm: String, completion: @escaping ([AnyHashable]) -> Void) {
-			self.completion = completion
-			self.searchTerm = searchTerm
-		}
-
-		internal var completion: (([AnyHashable]) -> Void)?
-	}
-}
-
-/// Delegate for a QSFQuickActionBar instance
+/// Delegate for a DSFQuickActionBar instance
 public protocol DSFQuickActionBarContentSource: NSObjectProtocol {
-
 	/// Called to retrieve the items that match the search term.
 	/// - Parameters:
 	///   - quickActionBar: The quick action bar
-	///   - itemsForSearchTermTask: A task object
+	///   - itemsForSearchTermTask: An async-capable task object
 	///
 	/// The task object can be stored and completed later, for example if the item search is asynchronous
-	/// (such as performing an `NSMetadataQuery` to retrieve URLs)
+	/// (such as performing an `NSMetadataQuery` to retrieve URLs).
+	/// * To complete a search task, call its 'complete' method.
+	/// * If you want to cancel the search request, call `cancel`
+	///
+	/// If you are upgrading from an earlier version of this library, it's relatively easy to migrate to the
+	/// new api, for example :-
+	///
+	/// ```swift
+	/// func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTermTask task: DSFQuickActionBar.SearchTask) {
+	///    let results = items.filter { $0.name.startsWith(task.searchTerm) }
+	///    task.complete(with: results)
+	/// }
+	/// ```
 	func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTermTask task: DSFQuickActionBar.SearchTask)
 
 	/// Return a configured view to display for the specified item and search term

@@ -12,11 +12,9 @@ import UniformTypeIdentifiers
 
 class ViewController: NSViewController {
 
-//	let qab = DSFQuickActionBar()
 	@IBOutlet weak var scopeControl: NSPathControl!
 
-	// Use the block-based quick action bar
-	let qsab = DSFQuickActionBar.Block<URL, NSTextField>()
+	let qab = DSFQuickActionBar()
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -26,70 +24,15 @@ class ViewController: NSViewController {
 	override func viewDidAppear() {
 		super.viewDidAppear()
 
-		qsab.placeholderText = "FauxSpotlight Search"
-
-		qsab.identifiersForSearchTerm = { [weak self] task in
-			guard let `self` = self else { return }
-
-			// Cancel an old query
-			self.currentQuery?.cancel()
-			self.currentQuery = nil
-
-			// Simple cleanup before query
-			let searchTerm = task.searchTerm.trimmingCharacters(in: .whitespacesAndNewlines)
-
-			// If the search term is empty, there are no results
-			if searchTerm.count == 0 {
-				task.complete(with: [])
-				return
-			}
-
-			// Create a predicate that searches both in the display name and content
-			// Note that the constructor for predicate automatically adds '' around any arguments!
-			let predicate = NSPredicate(
-				format: "kMDItemDisplayName contains[cd] %@ || kMDItemTextContent contains[cd] %@",
-				searchTerm, searchTerm)
-
-			let scope: MetadataSearch.Scope = {
-				if let s = self.scopeControl.url { return .fileUrl(s) }
-				return .userHome
-			}()
-
-			// Sort by most recently accessed (like spotlight does)
-			let sort = NSSortDescriptor(key: NSMetadataItemFSContentChangeDateKey, ascending: false)
-
-			// Start a new query.
-			self.currentQuery = MetadataSearch(
-				predicate: predicate,
-				scope: [scope],
-				sortDescriptors: [sort],
-				completionBlock: { [weak self] results in
-					if !task.isCancelled {
-						task.complete(with: results)
-					}
-					self?.currentQuery = nil
-				}
-			)
-		}
-
-		qsab.viewForIdentifier = { item, searchTerm in
-			return NSTextField(labelWithString: item.lastPathComponent)
-		}
-
-		qsab.didCancel = { [weak self] in
-			if let `self` = self {
-				self.currentQuery?.cancel()
-				self.currentQuery = nil
-			}
-		}
-
-		qsab.didActivateIdentifier = { item in
-			NSWorkspace.shared.selectFile(item.path, inFileViewerRootedAtPath: "~")
-		}
+		// Set the content delegate
+		qab.contentSource = self
 	}
 
 	@IBAction func showFauxSpotlight(_ sender: Any) {
-		qsab.show(initialSearchTerm: qsab.lastSearchTerm)
+		qab.present(
+			placeholderText: "FauxSpotlight Search",
+			initialSearchText: lastSearchTerm
+		)
 	}
 
 	@IBAction func setScopeFolder(_ sender: Any) {
@@ -109,9 +52,7 @@ class ViewController: NSViewController {
 
 			self.scopeControl.url = url
 		})
-
 	}
-
 
 	override var representedObject: Any? {
 		didSet {
@@ -119,5 +60,68 @@ class ViewController: NSViewController {
 		}
 	}
 
+	var lastSearchTerm = ""
 	var currentQuery: MetadataSearch?
+}
+
+extension ViewController: DSFQuickActionBarContentSource {
+	func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTermTask task: DSFQuickActionBar.SearchTask) {
+		// Cancel an old query
+		self.currentQuery?.cancel()
+		self.currentQuery = nil
+
+		self.lastSearchTerm = task.searchTerm
+
+		// Simple cleanup before query
+		let searchTerm = task.searchTerm.trimmingCharacters(in: .whitespacesAndNewlines)
+
+		// If the search term is empty, there are no results
+		if searchTerm.count == 0 {
+			task.complete(with: [])
+			return
+		}
+
+		// Create a predicate that searches both in the display name and content
+		// Note that the constructor for predicate automatically adds '' around any arguments!
+		let predicate = NSPredicate(
+			format: "kMDItemDisplayName contains[cd] %@ || kMDItemTextContent contains[cd] %@",
+			searchTerm, searchTerm)
+
+		let scope: MetadataSearch.Scope = {
+			if let s = self.scopeControl.url { return .fileUrl(s) }
+			return .userHome
+		}()
+
+		// Sort by most recently accessed (like spotlight does)
+		let sort = NSSortDescriptor(key: NSMetadataItemFSContentChangeDateKey, ascending: false)
+
+		// Start a new query.
+		self.currentQuery = MetadataSearch(
+			predicate: predicate,
+			scope: [scope],
+			sortDescriptors: [sort],
+			completionBlock: { [weak self] results in
+				if !task.isCancelled {
+					task.complete(with: results)
+				}
+				self?.currentQuery = nil
+			}
+		)
+	}
+
+	func quickActionBar(_ quickActionBar: DSFQuickActionBar, viewForItem item: AnyHashable, searchTerm: String) -> NSView? {
+		guard let url = item as? URL else { fatalError() }
+		return NSTextField(labelWithString: url.lastPathComponent)
+	}
+
+	func quickActionBarDidCancel(_ quickActionBar: DSFQuickActionBar) {
+		self.currentQuery?.cancel()
+		self.currentQuery = nil
+	}
+
+	func quickActionBar(_ quickActionBar: DSFQuickActionBar, didActivateItem item: AnyHashable) {
+		guard let url = item as? URL else { fatalError() }
+		NSWorkspace.shared.selectFile(url.path, inFileViewerRootedAtPath: "~")
+	}
+
 }

@@ -260,20 +260,18 @@ extension DSFQuickActionBar.Window {
 	}
 }
 
-extension DSFQuickActionBar.Window: NSTextFieldDelegate {
-	func controlTextDidChange(_: Notification) {
-		self.debouncer.debounce { [weak self] in
-			self?.searchTermDidChange()
-		}
-	}
+// MARK: - Search
 
+extension DSFQuickActionBar.Window {
 	private func searchTermDidChange() {
-		assert(Thread.isMainThread)
+		// Must be called on the main thread
+		precondition(Thread.isMainThread)
 
-		// Cancel any outstanding search task
-		self.currentSearchRequestTask?.completion = nil
-		self.currentSearchRequestTask = nil
+		// Cancel any outstanding search task.
+		// Note we don't need to lock here, as we are guaranteed to be on the main thread
+		self.cancelCurrentSearchTask()
 
+		// If we have no content source, there's nothing left to do
 		guard let contentSource = self.quickActionBar.contentSource else { return }
 
 		let currentSearch = self.editLabel.stringValue
@@ -284,26 +282,45 @@ extension DSFQuickActionBar.Window: NSTextFieldDelegate {
 		// Create a search task
 		let itemsTask = DSFQuickActionBar.SearchTask(searchTerm: currentSearch) { [weak self] results in
 			DispatchQueue.main.async { [weak self] in
-				self?.updateResults(currentSearch: currentSearch, results: results)
+				guard let `self` = self else { return }
+				self.cancelCurrentSearchTask()
+				self.updateResults(currentSearch: currentSearch, results: results ?? [])
 			}
 		}
 
 		// Store the current search so that we can cancel it if needed
 		self.currentSearchRequestTask = itemsTask
 
-		// Get a list of the identifiers that match
-		contentSource.quickActionBar(
-			self.quickActionBar,
-			itemsForSearchTermTask: itemsTask
-		)
+		// And finally ask the content source to retrieve an array of identifiers that match
+		contentSource.quickActionBar(self.quickActionBar, itemsForSearchTermTask: itemsTask)
 	}
 
 	private func updateResults(currentSearch: String, results: [AnyHashable]) {
-		assert(Thread.isMainThread)
+		// Must always be called on the main thread
+		precondition(Thread.isMainThread)
 
 		self.asyncActivityIndicator.stopAnimation(self)
 		self.results.currentSearchTerm = currentSearch
 		self.results.identifiers = results
+	}
+
+	private func cancelCurrentSearchTask() {
+		// Must be called on the main thread
+		precondition(Thread.isMainThread)
+
+		// Mark the request as invalid
+		self.currentSearchRequestTask?.completion = nil
+		self.currentSearchRequestTask = nil
+	}
+}
+
+// MARK: - Text control handling
+
+extension DSFQuickActionBar.Window: NSTextFieldDelegate {
+	func controlTextDidChange(_: Notification) {
+		self.debouncer.debounce { [weak self] in
+			self?.searchTermDidChange()
+		}
 	}
 
 	func control(_ control: NSControl, textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
@@ -319,11 +336,12 @@ extension DSFQuickActionBar.Window: NSTextFieldDelegate {
 			self.results.rowAction()
 			return true
 		}
-		else if self.showKeyboardShortcuts,
-				  let event = self.currentEvent,
-				  event.modifierFlags.contains(.command),
-				  let chars = event.characters,
-				  let index = Int(chars)
+		else if
+			self.showKeyboardShortcuts,
+			let event = self.currentEvent,
+			event.modifierFlags.contains(.command),
+			let chars = event.characters,
+			let index = Int(chars)
 		{
 			return self.results.performShortcutAction(for: index)
 		}
