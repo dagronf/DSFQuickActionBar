@@ -33,6 +33,11 @@ extension DSFQuickActionBar {
 		private let tableView = DSFQuickActionBar.ResultsTableView()
 		private let horizontalView = NSBox()
 
+		// The parent window
+		var quickActionBarWindow: DSFQuickActionBar.Window? {
+			self.window as? DSFQuickActionBar.Window
+		}
+
 		// The parent
 		var quickActionBar: DSFQuickActionBar!
 
@@ -284,6 +289,10 @@ extension DSFQuickActionBar.ResultsView {
 			return false
 		}
 
+		// Mark that the user activated an item in the list
+		self.quickActionBarWindow?.userDidActivateItem = true
+
+		// Tell the delegate that the user selected an item
 		self.quickActionBar.contentSource?.quickActionBar(self.quickActionBar, didActivateItem: which.key)
 
 		// Close the bar
@@ -307,10 +316,13 @@ extension DSFQuickActionBar.ResultsView {
 			return
 		}
 
+		// Mark that the user has activated an item in the list
+		self.quickActionBarWindow?.userDidActivateItem = true
+
 		let itemIdentifier = self.identifiers[selectedRow]
 		self.quickActionBar.contentSource?.quickActionBar(self.quickActionBar, didActivateItem: itemIdentifier)
 
-		// If the row is double-clicked, close the bar
+		// Make the bar lose focus, which will trigger it to close.
 		self.window?.resignMain()
 	}
 

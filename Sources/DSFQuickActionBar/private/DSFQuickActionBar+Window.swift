@@ -154,6 +154,9 @@ extension DSFQuickActionBar {
 
 			return r
 		}()
+
+		// Is set to true when the user 'activates' an item in the result list
+		internal var userDidActivateItem: Bool = false
 	}
 }
 
@@ -227,7 +230,7 @@ internal extension DSFQuickActionBar.Window {
 extension DSFQuickActionBar.Window {
 	// Called when the user presses 'escape' when the window is present
 	override func cancelOperation(_: Any?) {
-		self.quickActionBar.contentSource?.quickActionBarDidCancel(self.quickActionBar)
+		// Tell the window to lose its initial responder status, which will close it.
 		self.resignMain()
 	}
 

@@ -147,8 +147,22 @@ public extension DSFQuickActionBar {
 		quickBarWindow.placeholderText = placeholderText ?? ""
 
 		quickBarWindow.didDetectClose = { [weak self] in
-			self?.quickBarController = nil
-			self?.onCloseCallback?()
+			guard
+				let self = self,
+				let window = self.quickActionBarWindow
+			else {
+				return
+			}
+
+			// If the user hasn't activated an item, call the didCancel() delegate if it is present
+			if window.userDidActivateItem == false {
+				self.contentSource?.quickActionBarDidCancel(self)
+			}
+
+			self.quickBarController = nil
+
+			// Call the close callback
+			self.onCloseCallback?()
 		}
 
 		// Make sure that the application is frontmost or else the quick action bar won't display (it cannot be
