@@ -246,10 +246,13 @@ extension DSFQuickActionBar.ResultsView: NSTableViewDelegate, NSTableViewDataSou
 
 	func tableViewSelectionDidChange(_ notification: Notification) {
 		assert(self.selectedRow < self.identifiers.count)
-		self.contentSource?.quickActionBar(
-			self.quickActionBar,
-			didSelectItem: self.identifiers[self.selectedRow]
-		)
+
+		// If you click on the tableview but NOT on one of those rows the selected row will be -1. Ignore this.
+		guard self.selectedRow > 0 else {
+			return
+		}
+
+		self.contentSource?.quickActionBar(self.quickActionBar, didSelectItem: self.identifiers[self.selectedRow])
 	}
 
 	func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {

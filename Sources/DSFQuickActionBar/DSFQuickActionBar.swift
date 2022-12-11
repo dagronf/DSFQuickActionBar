@@ -151,6 +151,11 @@ public extension DSFQuickActionBar {
 			self?.onCloseCallback?()
 		}
 
+		// Make sure that the application is frontmost or else the quick action bar won't display (it cannot be
+		// made first responder for a non-frontmost application)
+		NSApp.activate(ignoringOtherApps: true)
+
+		// Now present the window
 		quickBarWindow.makeKeyAndOrderFront(self)
 	}
 }
