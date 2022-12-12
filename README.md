@@ -34,15 +34,26 @@ I've seen this in other mac applications (particularly Spotlight and [Boop](http
 * macOS AppKit SwiftUI Support
 * Completely keyboard navigable
 * Optional keyboard shortcuts
+* Asynchronous API to avoid beachballing on complex queries.
 
 You can present a quick action bar in the context of a window (where it will be centered above and within the bounds of the window as is shown in the image above) or centered in the current screen (like Spotlight currently does).
+
+## Demos
+
+You can find macOS demo apps in the `Demos` subfolder.
+
+* `Simple Demo` - a simple AppKit application demonstrating a synchronous quick action bar using AppKit, SwiftUI and custom cell types
+* `Doco Demo` - AppKit demo used for generating images for the website
+* `Faux Spotlight` - An AppKit demo showing asynchronous searching support using MDItemQuery()
+* `SwiftUI Demo` - A SwiftUI demonstration
+* `StatusBar Item Demo` - Demonstrates displaying a quick action bar from a statusbar item (in the menu). 
 
 ## Process
 
 1. Present the quick action bar, automatically focussing on the edit field so your hands can stay on the keyboard
 2. User starts typing in the search field
 3. For each change to the search term -
-   1. The contentSource will be asked for the item(s) that 'match' the search term (`itemsForSearchTerm`)
+   1. The contentSource will be asked for the item(s) that 'match' the search term (`itemsForSearchTerm`). The `items` request is asynchronous, and can be completed at any point in the future (as long as it hasn't been cancelled by another search request)
    2. For each item, the contentSource will be asked to provide a view which will appear in the result table for that item (`viewForItem`)
    3. When the user either double-clicks on, or presses the return key on a selected item row, the contentSource will be provided with the item (`didActivateItem`)
 4. The quick action bar will automatically dismiss if
@@ -104,7 +115,7 @@ to the new api.
 
 ```swift
 func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTermTask task: DSFQuickActionBar.SearchTask)
-   let results = items.filter { $0.name.startsWith(task.searchTerm) }
+   let results = countryNames.filter { $0.name.startsWith(task.searchTerm) }
    task.complete(with: results)
 }
 ```
@@ -112,10 +123,10 @@ func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTermTask 
 ##### Simple asynchronous example
 
 ```swift
-var currentSearch: RemoteSearch?
+var currentSearch: SomeRemoteSearchMechanism?
 func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTermTask task: DSFQuickActionBar.SearchTask)
    currentSearch?.cancel()
-   currentSearch = RemoteSearch(task.searchTerm) { [weak self] results in
+   currentSearch = SomeRemoteSearchMechanism(task.searchTerm) { [weak self] results in
       task.complete(with: results)
       self?.currentSearch = nil
    }

@@ -34,9 +34,12 @@ public protocol DSFQuickActionBarContentSource: NSObjectProtocol {
 	///   - itemsForSearchTermTask: An async-capable task object
 	///
 	/// The task object can be stored and completed later, for example if the item search is asynchronous
-	/// (such as performing an `NSMetadataQuery` to retrieve URLs).
+	/// (such as performing an `NSMetadataQuery` to retrieve URLs). If your search matching isn't complex, you
+	/// can return your results synchronously by directly calling `complete` in the `itemsForSearchTermTask`
+	/// delegate call.
+	///
 	/// * To complete a search task, call its 'complete' method.
-	/// * If you want to cancel the search request, call `cancel`
+	/// * To cancel an async search request, call `cancel`
 	///
 	/// If you are upgrading from an earlier version of this library, it's relatively easy to migrate to the
 	/// new api, for example :-
