@@ -1,5 +1,5 @@
 //
-//  DSFDebounce.swift
+//  DSFSingleShotTimer.swift
 //
 //  Copyright © 2022 Darren Ford. All rights reserved.
 //
@@ -24,28 +24,40 @@
 //  IN THE SOFTWARE.
 //
 
-import Dispatch
 import Foundation
 
-class DSFDebounce {
-	// MARK: - Properties
-
-	private let interval: TimeInterval
-	private let queue: DispatchQueue
-	private var workItem = DispatchWorkItem(block: {})
-
-	// MARK: - Initializer
-
-	init(seconds: TimeInterval, queue: DispatchQueue = DispatchQueue.main) {
-		self.interval = seconds
-		self.queue = queue
+// A single use cancellable timer
+class DSFSingleShotTimer {
+	/// Create a single-use timer object
+	/// - Parameters:
+	///   - delay: The amount of time to delay before calling
+	///   - queue: The queue to on which to call the completion block
+	///   - completionBlock: Called when the timer
+	init(delay: TimeInterval, queue: DispatchQueue = .main, _ completionBlock: @escaping () -> Void) {
+		//Swift.print("DSFSingleShotTimer: init")
+		self.workItem = DispatchWorkItem(block: {
+			completionBlock()
+		})
+		queue.asyncAfter(deadline: .now() + delay, execute: workItem!)
 	}
 
-	// MARK: - Debouncing function
+	func cancel() {
+		//Swift.print("DSFSingleShotTimer: cancel")
+		self.stop()
+	}
 
-	func debounce(action: @escaping (() -> Void)) {
-		self.workItem.cancel()
-		self.workItem = DispatchWorkItem(block: { action() })
-		self.queue.asyncAfter(deadline: .now() + self.interval, execute: self.workItem)
+	deinit {
+		//Swift.print("DSFSingleShotTimer: deinit")
+		self.stop()
+	}
+
+	// Private
+	private var workItem: DispatchWorkItem?
+}
+
+private extension DSFSingleShotTimer {
+	private func stop() {
+		self.workItem?.cancel()
+		self.workItem = nil
 	}
 }

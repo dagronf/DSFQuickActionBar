@@ -53,7 +53,8 @@ You can present a quick action bar in the context of a window (where it will be 
 
 ## Implementing for AppKit
 
-You present a quick action bar by
+You present a quick action bar by :-
+
 1. creating an instance of `DSFQuickActionBar` 
 2. set the content source on the instance
 3. call the `present` method.
@@ -81,25 +82,57 @@ The contentSource (`DSFQuickActionBarContentSource`) provides the content and fe
 3. indicate that the user has pressed/clicked a selection in the results.
 4. (optional) indicate to the contentSource that the quick action bar has been dismissed.
 
-### `DSFQuickActionBarContentSource`
+## Delegate style content source
 
-#### itemsForSearchTerm
+#### itemsForSearchTermTask
 
 ```swift
-// Swift
-func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTerm searchTerm: String) -> [AnyHashable]
+func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTermTask task: DSFQuickActionBar.SearchTask)
 ```
 
-Returns an array of the unique item(s) for items that match the search term. The definition of 'match' is entirely up to you - you can perform any check you want. 
+Called when the control needs a array of items to display within the control that match a search term.
+The definition of 'match' is entirely up to you - you can perform any check you want. 
+
+The `task` object contains the search term and a completion block to call when the search results become 
+available. If the search text changes during an asynchronous search call the task is marked as invalid and the
+result will be ignored.
+
+##### Simple synchronous example
+
+If you have code using the old synchronous API, it's relatively straightforward to convert your existing code
+to the new api. 
+
+```swift
+func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTermTask task: DSFQuickActionBar.SearchTask)
+   let results = items.filter { $0.name.startsWith(task.searchTerm) }
+   task.complete(with: results)
+}
+```
+
+##### Simple asynchronous example
+
+```swift
+var currentSearch: RemoteSearch?
+func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTermTask task: DSFQuickActionBar.SearchTask)
+   currentSearch?.cancel()
+   currentSearch = RemoteSearch(task.searchTerm) { [weak self] results in
+      task.complete(with: results)
+      self?.currentSearch = nil
+   }
+}
+```
+
+---
 
 #### viewForItem
 
 ```swift
-// Swift
 func quickActionBar(_ quickActionBar: DSFQuickActionBar, viewForItem item: AnyHashable, searchTerm: String) -> NSView?
 ```
 
 Return the view to be displayed in the row for the item. The search term is also provided to allow the view to be customized for the search term (eg. highlighting the match in the name)
+
+---
 
 #### canSelectItem
 
@@ -109,6 +142,8 @@ func quickActionBar(_ quickActionBar: DSFQuickActionBar, canSelectItem item: Any
 
 Called when a item will be selected (eg. by keyboard navigation or clicking). Return false if this row should not be selected (eg. it's a separator)
 
+---
+
 #### didSelectItem
 
 ```swift
@@ -116,6 +151,8 @@ func quickActionBar(_ quickActionBar: DSFQuickActionBar, didSelectItem item: Any
 ```
 
 Called when an item is selected within the list.
+
+---
 
 #### didActivateItem
 
@@ -126,6 +163,8 @@ func quickActionBar(_ quickActionBar: DSFQuickActionBar, didActivateItem item: A
 
 Indicates the user activated an item in the result list. The 'item' parameter is the item that was selected by the user
 
+---
+
 #### didCancel
 
 ```swift
@@ -133,6 +172,8 @@ func quickActionBarDidCancel(_ quickActionBar: DSFQuickActionBar)
 ```
 
 Called if the user cancels the quick action bar (eg. by hitting the `esc` key or clicking outside the bar)
+
+---
 
 <details>
 <summary>Swift Example</summary>
@@ -204,7 +245,7 @@ struct Filter: Hashable, CustomStringConvertible {
 
 </details>
 
-## Implementing for SwiftUI
+## SwiftUI interface
 
 The SwiftUI implementation is a View. You 'install' the quick action bar just like you would any other SwiftUI view.
 The `QuickActionBar` view is zero-sized, and does not display content within the view its installed on.
@@ -235,8 +276,9 @@ VStack {
       visible: $quickActionBarVisible,
       selectedItem: $selectedItem,
       placeholderText: "Open Quickly",
-      itemsForSearchTerm: { searchTerm in
-         /* return URL(s) that match the search term */
+      itemsForSearchTerm: { searchTask in
+         let results = /* array of matching URLs */
+         searchTask.complete(with: results)
       },
       viewForItem: { url, searchTerm in
          Text(url.path)
@@ -288,8 +330,9 @@ struct DocoContentView: View {
             visible: $quickActionBarVisible,
             selectedItem: $selectedFilter,
             placeholderText: "Open Quickly...",
-            itemsForSearchTerm: { searchTerm in
-               filters__.search(searchTerm)
+            itemsForSearchTerm: { searchTask in
+               let results = filters__.search(searchTask.searchTerm)
+               searchTask.complete(with: results)
             },
             viewForItem: { filter, searchTerm in
                Text(filter.userPresenting)
@@ -346,6 +389,10 @@ let filters__ = Filters()
 </p>
 
 ## Releases
+
+### 5.0.0
+
+* **[BREAKING API]** Move to using an asynchronous API for the item search to allow background searching without locking up the UI.
 
 ### 4.1.0
 

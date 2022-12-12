@@ -182,3 +182,9 @@ public extension DSFQuickActionBar {
 		}
 	}
 }
+
+public extension DSFQuickActionBar {
+	func provideResultIdentifiers(_ identifiers: [AnyHashable]) {
+		self.quickActionBarWindow?.provideResultIdentifiers(identifiers)
+	}
+}

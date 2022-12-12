@@ -68,9 +68,7 @@ struct ContentView: View {
 				searchTerm: $searchTerm,
 				selectedItem: $selectedFilter,
 				placeholderText: "Type something (eg. blur)",
-				itemsForSearchTerm: { searchTerm in
-					filters__.search(searchTerm)
-				},
+				itemsForSearchTerm: self.asyncItemsForSearchTermFn,
 				viewForItem: { filter, searchTerm in
 					FilterViewCell(filter: filter)
 				}
@@ -84,6 +82,19 @@ struct ContentView: View {
 			}
 		}
 		.padding()
+	}
+
+	private func asyncItemsForSearchTermFn(_ task: DSFQuickActionBar.SearchTask) {
+		// Fake an asynchronous search
+		DispatchQueue.global(qos: .background).async {
+			let results = filters__.search(task.searchTerm)
+			DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + 0.1) {
+				task.complete(with: results)
+			}
+		}
+
+		// Simple sync response
+		// task.completion(with: filters__.search(searchTerm))
 	}
 }
 

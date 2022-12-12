@@ -188,7 +188,7 @@ extension DSFQuickActionBar.ResultsView: NSTableViewDelegate, NSTableViewDataSou
 	}
 
 	func numberOfRows(in _: NSTableView) -> Int {
-		self.identifiers.count
+		return self.identifiers.count
 	}
 
 	func tableView(_ tableView: NSTableView, viewFor _: NSTableColumn?, row: Int) -> NSView? {

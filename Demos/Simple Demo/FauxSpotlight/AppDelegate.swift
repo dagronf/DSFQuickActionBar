@@ -1,18 +1,23 @@
 //
 //  AppDelegate.swift
-//  Doco Demo
+//  FauxSpotlight
 //
-//  Created by Darren Ford on 1/9/2022.
+//  Created by Darren Ford on 10/11/2022.
 //
 
 import Cocoa
 
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
+
+	
+
+
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
 		// Insert code here to initialize your application
 		Swift.print("""
-		Demonstrates using a quick action bar synchronously from AppKit.
+		A fake spotlight-style quick action bar that uses async `NSMetadataQuery` calls to asynchronously return results
+		* Demonstrates retrieving results asynchronously
 		""")
 	}
 
@@ -23,4 +28,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool {
 		return true
 	}
+
+
 }
+

@@ -1,5 +1,5 @@
 //
-//  DSFDebounce.swift
+//  DSFQuickActionBar+SearchTask.swift
 //
 //  Copyright © 2022 Darren Ford. All rights reserved.
 //
@@ -24,28 +24,40 @@
 //  IN THE SOFTWARE.
 //
 
-import Dispatch
 import Foundation
 
-class DSFDebounce {
-	// MARK: - Properties
-
-	private let interval: TimeInterval
-	private let queue: DispatchQueue
-	private var workItem = DispatchWorkItem(block: {})
-
-	// MARK: - Initializer
-
-	init(seconds: TimeInterval, queue: DispatchQueue = DispatchQueue.main) {
-		self.interval = seconds
-		self.queue = queue
-	}
-
-	// MARK: - Debouncing function
-
-	func debounce(action: @escaping (() -> Void)) {
-		self.workItem.cancel()
-		self.workItem = DispatchWorkItem(block: { action() })
-		self.queue.asyncAfter(deadline: .now() + self.interval, execute: self.workItem)
+public extension DSFQuickActionBar {
+	class SearchTask {
+		/// The search term for the query
+		public let searchTerm: String
+		
+		/// Is the current search task cancelled?
+		public var isCancelled: Bool {
+			self.completionLock.usingLock {
+				completion == nil
+			}
+		}
+		
+		/// Call to supply the results for the search query.
+		public func complete(with results: [AnyHashable]) {
+			self.completionLock.usingLock {
+				self.completion?(results)
+			}
+		}
+		
+		/// Cancel the current search request
+		public func cancel() {
+			self.completionLock.usingLock {
+				self.completion?(nil)
+			}
+		}
+		
+		internal init(searchTerm: String, completion: @escaping ([AnyHashable]?) -> Void) {
+			self.completion = completion
+			self.searchTerm = searchTerm
+		}
+		
+		internal var completion: (([AnyHashable]?) -> Void)?
+		internal let completionLock = NSLock()
 	}
 }

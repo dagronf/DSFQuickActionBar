@@ -2,7 +2,7 @@
 //  SwiftUI_DemoApp.swift
 //  SwiftUI Demo
 //
-//  Created by Darren Ford on 23/7/21.
+//  Created by Darren Ford on 11/11/2022.
 //
 
 import SwiftUI
@@ -12,6 +12,11 @@ struct SwiftUI_DemoApp: App {
 	var body: some Scene {
 		WindowGroup {
 			ContentView()
+				.onAppear {
+					Swift.print("""
+						Demonstrates using a quick action bar from SwiftUI\n
+						""")
+				}
 		}
 	}
 }

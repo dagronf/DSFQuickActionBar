@@ -1,0 +1,249 @@
+AF|🇦🇫|Afghanistan|Afghanistan
+AX|🇦🇽|Åland Islands|Aland Islands
+AL|🇦🇱|Albania|Albania
+DZ|🇩🇿|Algeria|Algeria
+AS|🇦🇸|American Samoa|American Samoa
+AD|🇦🇩|Andorra|Andorra
+AO|🇦🇴|Angola|Angola
+AI|🇦🇮|Anguilla|Anguilla
+AQ|🇦🇶|Antarctica|Antarctica
+AG|🇦🇬|Antigua & Barbuda|Antigua & Barbuda
+AR|🇦🇷|Argentina|Argentina
+AM|🇦🇲|Armenia|Armenia
+AW|🇦🇼|Aruba|Aruba
+AU|🇦🇺|Australia|Australia
+AT|🇦🇹|Austria|Austria
+AZ|🇦🇿|Azerbaijan|Azerbaijan
+BS|🇧🇸|Bahamas|Bahamas
+BH|🇧🇭|Bahrain|Bahrain
+BD|🇧🇩|Bangladesh|Bangladesh
+BB|🇧🇧|Barbados|Barbados
+BY|🇧🇾|Belarus|Belarus
+BE|🇧🇪|Belgium|Belgium
+BZ|🇧🇿|Belize|Belize
+BJ|🇧🇯|Benin|Benin
+BM|🇧🇲|Bermuda|Bermuda
+BT|🇧🇹|Bhutan|Bhutan
+BO|🇧🇴|Bolivia|Bolivia
+BA|🇧🇦|Bosnia & Herzegovina|Bosnia & Herzegovina
+BW|🇧🇼|Botswana|Botswana
+BV|🇧🇻|Bouvet Island|Bouvet Island
+BR|🇧🇷|Brazil|Brazil
+IO|🇮🇴|British Indian Ocean Territory|British Indian Ocean Territory
+VG|🇻🇬|British Virgin Islands|British Virgin Islands
+BN|🇧🇳|Brunei|Brunei
+BG|🇧🇬|Bulgaria|Bulgaria
+BF|🇧🇫|Burkina Faso|Burkina Faso
+BI|🇧🇮|Burundi|Burundi
+KH|🇰🇭|Cambodia|Cambodia
+CM|🇨🇲|Cameroon|Cameroon
+CA|🇨🇦|Canada|Canada
+CV|🇨🇻|Cape Verde|Cape Verde
+BQ|🇧🇶|Caribbean Netherlands|Caribbean Netherlands
+KY|🇰🇾|Cayman Islands|Cayman Islands
+CF|🇨🇫|Central African Republic|Central African Republic
+TD|🇹🇩|Chad|Chad
+CL|🇨🇱|Chile|Chile
+CN|🇨🇳|China|China
+CX|🇨🇽|Christmas Island|Christmas Island
+CC|🇨🇨|Cocos (Keeling) Islands|Cocos (Keeling) Islands
+CO|🇨🇴|Colombia|Colombia
+KM|🇰🇲|Comoros|Comoros
+CG|🇨🇬|Congo - Brazzaville|Congo - Brazzaville
+CD|🇨🇩|Congo - Kinshasa|Congo - Kinshasa
+CK|🇨🇰|Cook Islands|Cook Islands
+CR|🇨🇷|Costa Rica|Costa Rica
+CI|🇨🇮|Côte d’Ivoire|Cote d’Ivoire
+HR|🇭🇷|Croatia|Croatia
+CU|🇨🇺|Cuba|Cuba
+CW|🇨🇼|Curaçao|Curacao
+CY|🇨🇾|Cyprus|Cyprus
+CZ|🇨🇿|Czechia|Czechia
+DK|🇩🇰|Denmark|Denmark
+DJ|🇩🇯|Djibouti|Djibouti
+DM|🇩🇲|Dominica|Dominica
+DO|🇩🇴|Dominican Republic|Dominican Republic
+EC|🇪🇨|Ecuador|Ecuador
+EG|🇪🇬|Egypt|Egypt
+SV|🇸🇻|El Salvador|El Salvador
+GQ|🇬🇶|Equatorial Guinea|Equatorial Guinea
+ER|🇪🇷|Eritrea|Eritrea
+EE|🇪🇪|Estonia|Estonia
+SZ|🇸🇿|Eswatini|Eswatini
+ET|🇪🇹|Ethiopia|Ethiopia
+FK|🇫🇰|Falkland Islands|Falkland Islands
+FO|🇫🇴|Faroe Islands|Faroe Islands
+FJ|🇫🇯|Fiji|Fiji
+FI|🇫🇮|Finland|Finland
+FR|🇫🇷|France|France
+GF|🇬🇫|French Guiana|French Guiana
+PF|🇵🇫|French Polynesia|French Polynesia
+TF|🇹🇫|French Southern Territories|French Southern Territories
+GA|🇬🇦|Gabon|Gabon
+GM|🇬🇲|Gambia|Gambia
+GE|🇬🇪|Georgia|Georgia
+DE|🇩🇪|Germany|Germany
+GH|🇬🇭|Ghana|Ghana
+GI|🇬🇮|Gibraltar|Gibraltar
+GR|🇬🇷|Greece|Greece
+GL|🇬🇱|Greenland|Greenland
+GD|🇬🇩|Grenada|Grenada
+GP|🇬🇵|Guadeloupe|Guadeloupe
+GU|🇬🇺|Guam|Guam
+GT|🇬🇹|Guatemala|Guatemala
+GG|🇬🇬|Guernsey|Guernsey
+GN|🇬🇳|Guinea|Guinea
+GW|🇬🇼|Guinea-Bissau|Guinea-Bissau
+GY|🇬🇾|Guyana|Guyana
+HT|🇭🇹|Haiti|Haiti
+HM|🇭🇲|Heard & McDonald Islands|Heard & McDonald Islands
+HN|🇭🇳|Honduras|Honduras
+HK|🇭🇰|Hong Kong SAR China|Hong Kong SAR China
+HU|🇭🇺|Hungary|Hungary
+IS|🇮🇸|Iceland|Iceland
+IN|🇮🇳|India|India
+ID|🇮🇩|Indonesia|Indonesia
+IR|🇮🇷|Iran|Iran
+IQ|🇮🇶|Iraq|Iraq
+IE|🇮🇪|Ireland|Ireland
+IM|🇮🇲|Isle of Man|Isle of Man
+IL|🇮🇱|Israel|Israel
+IT|🇮🇹|Italy|Italy
+JM|🇯🇲|Jamaica|Jamaica
+JP|🇯🇵|Japan|Japan
+JE|🇯🇪|Jersey|Jersey
+JO|🇯🇴|Jordan|Jordan
+KZ|🇰🇿|Kazakhstan|Kazakhstan
+KE|🇰🇪|Kenya|Kenya
+KI|🇰🇮|Kiribati|Kiribati
+KW|🇰🇼|Kuwait|Kuwait
+KG|🇰🇬|Kyrgyzstan|Kyrgyzstan
+LA|🇱🇦|Laos|Laos
+LV|🇱🇻|Latvia|Latvia
+LB|🇱🇧|Lebanon|Lebanon
+LS|🇱🇸|Lesotho|Lesotho
+LR|🇱🇷|Liberia|Liberia
+LY|🇱🇾|Libya|Libya
+LI|🇱🇮|Liechtenstein|Liechtenstein
+LT|🇱🇹|Lithuania|Lithuania
+LU|🇱🇺|Luxembourg|Luxembourg
+MO|🇲🇴|Macao SAR China|Macao SAR China
+MG|🇲🇬|Madagascar|Madagascar
+MW|🇲🇼|Malawi|Malawi
+MY|🇲🇾|Malaysia|Malaysia
+MV|🇲🇻|Maldives|Maldives
+ML|🇲🇱|Mali|Mali
+MT|🇲🇹|Malta|Malta
+MH|🇲🇭|Marshall Islands|Marshall Islands
+MQ|🇲🇶|Martinique|Martinique
+MR|🇲🇷|Mauritania|Mauritania
+MU|🇲🇺|Mauritius|Mauritius
+YT|🇾🇹|Mayotte|Mayotte
+MX|🇲🇽|Mexico|Mexico
+FM|🇫🇲|Micronesia|Micronesia
+MD|🇲🇩|Moldova|Moldova
+MC|🇲🇨|Monaco|Monaco
+MN|🇲🇳|Mongolia|Mongolia
+ME|🇲🇪|Montenegro|Montenegro
+MS|🇲🇸|Montserrat|Montserrat
+MA|🇲🇦|Morocco|Morocco
+MZ|🇲🇿|Mozambique|Mozambique
+MM|🇲🇲|Myanmar (Burma)|Myanmar (Burma)
+NA|🇳🇦|Namibia|Namibia
+NR|🇳🇷|Nauru|Nauru
+NP|🇳🇵|Nepal|Nepal
+NL|🇳🇱|Netherlands|Netherlands
+NC|🇳🇨|New Caledonia|New Caledonia
+NZ|🇳🇿|New Zealand|New Zealand
+NI|🇳🇮|Nicaragua|Nicaragua
+NE|🇳🇪|Niger|Niger
+NG|🇳🇬|Nigeria|Nigeria
+NU|🇳🇺|Niue|Niue
+NF|🇳🇫|Norfolk Island|Norfolk Island
+KP|🇰🇵|North Korea|North Korea
+MK|🇲🇰|North Macedonia|North Macedonia
+MP|🇲🇵|Northern Mariana Islands|Northern Mariana Islands
+NO|🇳🇴|Norway|Norway
+OM|🇴🇲|Oman|Oman
+PK|🇵🇰|Pakistan|Pakistan
+PW|🇵🇼|Palau|Palau
+PS|🇵🇸|Palestinian Territories|Palestinian Territories
+PA|🇵🇦|Panama|Panama
+PG|🇵🇬|Papua New Guinea|Papua New Guinea
+PY|🇵🇾|Paraguay|Paraguay
+PE|🇵🇪|Peru|Peru
+PH|🇵🇭|Philippines|Philippines
+PN|🇵🇳|Pitcairn Islands|Pitcairn Islands
+PL|🇵🇱|Poland|Poland
+PT|🇵🇹|Portugal|Portugal
+PR|🇵🇷|Puerto Rico|Puerto Rico
+QA|🇶🇦|Qatar|Qatar
+RE|🇷🇪|Réunion|Reunion
+RO|🇷🇴|Romania|Romania
+RU|🇷🇺|Russia|Russia
+RW|🇷🇼|Rwanda|Rwanda
+WS|🇼🇸|Samoa|Samoa
+SM|🇸🇲|San Marino|San Marino
+ST|🇸🇹|São Tomé & Príncipe|Sao Tome & Principe
+SA|🇸🇦|Saudi Arabia|Saudi Arabia
+SN|🇸🇳|Senegal|Senegal
+RS|🇷🇸|Serbia|Serbia
+SC|🇸🇨|Seychelles|Seychelles
+SL|🇸🇱|Sierra Leone|Sierra Leone
+SG|🇸🇬|Singapore|Singapore
+SX|🇸🇽|Sint Maarten|Sint Maarten
+SK|🇸🇰|Slovakia|Slovakia
+SI|🇸🇮|Slovenia|Slovenia
+SB|🇸🇧|Solomon Islands|Solomon Islands
+SO|🇸🇴|Somalia|Somalia
+ZA|🇿🇦|South Africa|South Africa
+GS|🇬🇸|South Georgia & South Sandwich Islands|South Georgia & South Sandwich Islands
+KR|🇰🇷|South Korea|South Korea
+SS|🇸🇸|South Sudan|South Sudan
+ES|🇪🇸|Spain|Spain
+LK|🇱🇰|Sri Lanka|Sri Lanka
+BL|🇧🇱|St. Barthélemy|St. Barthelemy
+SH|🇸🇭|St. Helena|St. Helena
+KN|🇰🇳|St. Kitts & Nevis|St. Kitts & Nevis
+LC|🇱🇨|St. Lucia|St. Lucia
+MF|🇲🇫|St. Martin|St. Martin
+PM|🇵🇲|St. Pierre & Miquelon|St. Pierre & Miquelon
+VC|🇻🇨|St. Vincent & Grenadines|St. Vincent & Grenadines
+SD|🇸🇩|Sudan|Sudan
+SR|🇸🇷|Suriname|Suriname
+SJ|🇸🇯|Svalbard & Jan Mayen|Svalbard & Jan Mayen
+SE|🇸🇪|Sweden|Sweden
+CH|🇨🇭|Switzerland|Switzerland
+SY|🇸🇾|Syria|Syria
+TW|🇹🇼|Taiwan|Taiwan
+TJ|🇹🇯|Tajikistan|Tajikistan
+TZ|🇹🇿|Tanzania|Tanzania
+TH|🇹🇭|Thailand|Thailand
+TL|🇹🇱|Timor-Leste|Timor-Leste
+TG|🇹🇬|Togo|Togo
+TK|🇹🇰|Tokelau|Tokelau
+TO|🇹🇴|Tonga|Tonga
+TT|🇹🇹|Trinidad & Tobago|Trinidad & Tobago
+TN|🇹🇳|Tunisia|Tunisia
+TR|🇹🇷|Turkey|Turkey
+TM|🇹🇲|Turkmenistan|Turkmenistan
+TC|🇹🇨|Turks & Caicos Islands|Turks & Caicos Islands
+TV|🇹🇻|Tuvalu|Tuvalu
+UM|🇺🇲|U.S. Outlying Islands|U.S. Outlying Islands
+VI|🇻🇮|U.S. Virgin Islands|U.S. Virgin Islands
+UG|🇺🇬|Uganda|Uganda
+UA|🇺🇦|Ukraine|Ukraine
+AE|🇦🇪|United Arab Emirates|United Arab Emirates
+GB|🇬🇧|United Kingdom|United Kingdom
+US|🇺🇸|United States|United States
+UY|🇺🇾|Uruguay|Uruguay
+UZ|🇺🇿|Uzbekistan|Uzbekistan
+VU|🇻🇺|Vanuatu|Vanuatu
+VA|🇻🇦|Vatican City|Vatican City
+VE|🇻🇪|Venezuela|Venezuela
+VN|🇻🇳|Vietnam|Vietnam
+WF|🇼🇫|Wallis & Futuna|Wallis & Futuna
+EH|🇪🇭|Western Sahara|Western Sahara
+YE|🇾🇪|Yemen|Yemen
+ZM|🇿🇲|Zambia|Zambia
+ZW|🇿🇼|Zimbabwe|Zimbabwe

@@ -1,5 +1,5 @@
 //
-//  DSFDebounce.swift
+//  NSLock+extensions.swift
 //
 //  Copyright © 2022 Darren Ford. All rights reserved.
 //
@@ -24,28 +24,13 @@
 //  IN THE SOFTWARE.
 //
 
-import Dispatch
 import Foundation
 
-class DSFDebounce {
-	// MARK: - Properties
-
-	private let interval: TimeInterval
-	private let queue: DispatchQueue
-	private var workItem = DispatchWorkItem(block: {})
-
-	// MARK: - Initializer
-
-	init(seconds: TimeInterval, queue: DispatchQueue = DispatchQueue.main) {
-		self.interval = seconds
-		self.queue = queue
-	}
-
-	// MARK: - Debouncing function
-
-	func debounce(action: @escaping (() -> Void)) {
-		self.workItem.cancel()
-		self.workItem = DispatchWorkItem(block: { action() })
-		self.queue.asyncAfter(deadline: .now() + self.interval, execute: self.workItem)
+extension NSLock {
+	/// Call the block within the confines of the lock
+	@inlinable func usingLock<ReturnType>(_ block: () -> ReturnType) -> ReturnType {
+		self.lock()
+		defer { self.unlock() }
+		return block()
 	}
 }

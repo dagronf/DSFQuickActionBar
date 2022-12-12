@@ -1,5 +1,5 @@
 //
-//  DSFDebounce.swift
+//  MainThread+extensions.swift
 //
 //  Copyright © 2022 Darren Ford. All rights reserved.
 //
@@ -24,28 +24,23 @@
 //  IN THE SOFTWARE.
 //
 
-import Dispatch
 import Foundation
 
-class DSFDebounce {
-	// MARK: - Properties
-
-	private let interval: TimeInterval
-	private let queue: DispatchQueue
-	private var workItem = DispatchWorkItem(block: {})
-
-	// MARK: - Initializer
-
-	init(seconds: TimeInterval, queue: DispatchQueue = DispatchQueue.main) {
-		self.interval = seconds
-		self.queue = queue
+/// Call 'work' block on the main thread, asynchronously.
+///
+/// If this is called from the main thread it just executes the work block instantly
+/// Otherwise, schedules the block to be run on the main thread in the next run loop.
+@inlinable func ensuringMainThreadAsync(
+	group: DispatchGroup? = nil,
+	qos: DispatchQoS = .unspecified,
+	flags: DispatchWorkItemFlags = [],
+	execute work: @escaping @convention(block) () -> Void
+) {
+	if Thread.isMainThread {
+		// If we're already on the main thread, just call the work block
+		work()
 	}
-
-	// MARK: - Debouncing function
-
-	func debounce(action: @escaping (() -> Void)) {
-		self.workItem.cancel()
-		self.workItem = DispatchWorkItem(block: { action() })
-		self.queue.asyncAfter(deadline: .now() + self.interval, execute: self.workItem)
+	else {
+		DispatchQueue.main.async(group: group, qos: qos, flags: flags, execute: work)
 	}
 }

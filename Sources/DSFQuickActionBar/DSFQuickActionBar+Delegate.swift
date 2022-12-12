@@ -26,10 +26,28 @@
 
 import AppKit
 
-/// Delegate for a QSFQuickActionBar instance
+/// Delegate for a DSFQuickActionBar instance
 public protocol DSFQuickActionBarContentSource: NSObjectProtocol {
-	/// Return an array of item(s) to be displayed for the specified search term
-	func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTerm searchTerm: String) -> [AnyHashable]
+	/// Called to retrieve the items that match the search term.
+	/// - Parameters:
+	///   - quickActionBar: The quick action bar
+	///   - itemsForSearchTermTask: An async-capable task object
+	///
+	/// The task object can be stored and completed later, for example if the item search is asynchronous
+	/// (such as performing an `NSMetadataQuery` to retrieve URLs).
+	/// * To complete a search task, call its 'complete' method.
+	/// * If you want to cancel the search request, call `cancel`
+	///
+	/// If you are upgrading from an earlier version of this library, it's relatively easy to migrate to the
+	/// new api, for example :-
+	///
+	/// ```swift
+	/// func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTermTask task: DSFQuickActionBar.SearchTask) {
+	///    let results = items.filter { $0.name.startsWith(task.searchTerm) }
+	///    task.complete(with: results)
+	/// }
+	/// ```
+	func quickActionBar(_ quickActionBar: DSFQuickActionBar, itemsForSearchTermTask task: DSFQuickActionBar.SearchTask)
 
 	/// Return a configured view to display for the specified item and search term
 	func quickActionBar(_ quickActionBar: DSFQuickActionBar, viewForItem item: AnyHashable, searchTerm: String) -> NSView?

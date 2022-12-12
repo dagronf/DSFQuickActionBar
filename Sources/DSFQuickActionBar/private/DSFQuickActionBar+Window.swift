@@ -43,6 +43,7 @@ extension DSFQuickActionBar {
 			return true
 		}
 
+		// Should the control display keyboard shortcuts?
 		var showKeyboardShortcuts: Bool = false
 
 		// The placeholder text for the edit field
@@ -54,9 +55,9 @@ extension DSFQuickActionBar {
 
 		private var _currentSearchText: String = ""
 		private(set) var currentSearchText: String {
-			get { _currentSearchText }
+			get { self._currentSearchText }
 			set {
-				_currentSearchText = newValue
+				self._currentSearchText = newValue
 				self.editLabel.stringValue = newValue
 			}
 		}
@@ -94,6 +95,9 @@ extension DSFQuickActionBar {
 			t.isEnabled = true
 			t.isEditable = true
 			t.isSelectable = true
+			t.cell?.wraps = false
+			t.cell?.isScrollable = true
+			t.maximumNumberOfLines = 1
 			t.placeholderString = DSFQuickActionBar.DefaultPlaceholderString
 
 			t.focusRingType = .none
@@ -121,10 +125,14 @@ extension DSFQuickActionBar {
 			return imageView
 		}()
 
+		// The async task indicator
+		private let asyncActivityIndicator = DSFDelayedIndeterminiteRadialProgressIndicator()
+
 		// The stack of '[image] | [edit field]'
 		private lazy var searchStack: NSStackView = {
 			let stack = NSStackView()
 			stack.translatesAutoresizingMaskIntoConstraints = false
+			stack.detachesHiddenViews = true
 			stack.orientation = .horizontal
 
 			if let _ = self.quickActionBar.searchImage {
@@ -134,6 +142,8 @@ extension DSFQuickActionBar {
 			stack.addArrangedSubview(editLabel)
 			editLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
 			editLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
+
+			stack.addArrangedSubview(asyncActivityIndicator)
 
 			stack.setContentHuggingPriority(.defaultHigh, for: .horizontal)
 			stack.setContentHuggingPriority(.defaultHigh, for: .vertical)
@@ -157,6 +167,9 @@ extension DSFQuickActionBar {
 
 		// Is set to true when the user 'activates' an item in the result list
 		internal var userDidActivateItem: Bool = false
+
+		// The task if the control is waiting for search results
+		private var currentSearchRequestTask: DSFQuickActionBar.SearchTask?
 	}
 }
 
@@ -173,7 +186,6 @@ internal extension DSFQuickActionBar.Window {
 
 		// Make sure we adopt the effective appearance
 		UsingEffectiveAppearance(ofWindow: parentWindow) {
-
 			primaryStack.translatesAutoresizingMaskIntoConstraints = false
 			primaryStack.setContentHuggingPriority(.required, for: .horizontal)
 			primaryStack.setContentHuggingPriority(.required, for: .vertical)
@@ -222,7 +234,9 @@ internal extension DSFQuickActionBar.Window {
 				self.currentSearchText = initialSearchText
 			}
 
-			self.textChanged()
+			ensuringMainThreadAsync { [weak self] in
+				self?.searchTermDidChange()
+			}
 		}
 	}
 }
@@ -240,31 +254,76 @@ extension DSFQuickActionBar.Window {
 	}
 }
 
-extension DSFQuickActionBar.Window: NSTextFieldDelegate {
-	func controlTextDidChange(_: Notification) {
-		self.debouncer.debounce { [weak self] in
-			self?.textChanged()
-		}
+extension DSFQuickActionBar.Window {
+	func provideResultIdentifiers(_ identifiers: [AnyHashable]) {
+		self.results.identifiers = identifiers
 	}
+}
 
-	func textChanged() {
+// MARK: - Search
+
+extension DSFQuickActionBar.Window {
+	private func searchTermDidChange() {
+		// Must be called on the main thread
+		precondition(Thread.isMainThread)
+
+		// Cancel any outstanding search task.
+		// Note we don't need to lock here, as we are guaranteed to be on the main thread
+		self.cancelCurrentSearchTask()
+
+		// If we have no content source, there's nothing left to do
 		guard let contentSource = self.quickActionBar.contentSource else { return }
 
 		let currentSearch = self.editLabel.stringValue
 		self._currentSearchText = currentSearch
 
-		// Get a list of the identifiers than match
-		let identifiers = contentSource.quickActionBar(
-			self.quickActionBar,
-			itemsForSearchTerm: currentSearch
-		)
+		self.asyncActivityIndicator.startAnimation(self)
 
-		// And update the display list
-		self.results.currentSearchTerm = currentSearch
-		self.results.identifiers = identifiers
+		// Create a search task
+		let itemsTask = DSFQuickActionBar.SearchTask(searchTerm: currentSearch) { [weak self] results in
+			DispatchQueue.main.async { [weak self] in
+				guard let `self` = self else { return }
+				self.cancelCurrentSearchTask()
+				self.updateResults(currentSearch: currentSearch, results: results ?? [])
+			}
+		}
+
+		// Store the current search so that we can cancel it if needed
+		self.currentSearchRequestTask = itemsTask
+
+		// And finally ask the content source to retrieve an array of identifiers that match
+		contentSource.quickActionBar(self.quickActionBar, itemsForSearchTermTask: itemsTask)
 	}
 
-	func control(_: NSControl, textView _: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
+	private func updateResults(currentSearch: String, results: [AnyHashable]) {
+		// Must always be called on the main thread
+		precondition(Thread.isMainThread)
+
+		self.asyncActivityIndicator.stopAnimation(self)
+		self.results.currentSearchTerm = currentSearch
+		self.results.identifiers = results
+	}
+
+	private func cancelCurrentSearchTask() {
+		// Must be called on the main thread
+		precondition(Thread.isMainThread)
+
+		// Mark the request as invalid
+		self.currentSearchRequestTask?.completion = nil
+		self.currentSearchRequestTask = nil
+	}
+}
+
+// MARK: - Text control handling
+
+extension DSFQuickActionBar.Window: NSTextFieldDelegate {
+	func controlTextDidChange(_: Notification) {
+		self.debouncer.debounce { [weak self] in
+			self?.searchTermDidChange()
+		}
+	}
+
+	func control(_ control: NSControl, textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
 		if commandSelector == #selector(moveDown(_:)) {
 			return self.results.selectNextSelectableRow()
 		}
@@ -277,11 +336,12 @@ extension DSFQuickActionBar.Window: NSTextFieldDelegate {
 			self.results.rowAction()
 			return true
 		}
-		else if self.showKeyboardShortcuts,
-				  let event = self.currentEvent,
-				  event.modifierFlags.contains(.command),
-				  let chars = event.characters,
-				  let index = Int(chars)
+		else if
+			self.showKeyboardShortcuts,
+			let event = self.currentEvent,
+			event.modifierFlags.contains(.command),
+			let chars = event.characters,
+			let index = Int(chars)
 		{
 			return self.results.performShortcutAction(for: index)
 		}
