@@ -83,7 +83,7 @@ extension DSFQuickActionBar {
 
 		// The edit label
 		internal lazy var editLabel: NSTextField = {
-			let t = NSTextField()
+			let t = DSFTextField()
 			t.translatesAutoresizingMaskIntoConstraints = false
 			t.wantsLayer = true
 			t.drawsBackground = false
