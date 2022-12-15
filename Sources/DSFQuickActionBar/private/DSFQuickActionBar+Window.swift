@@ -68,7 +68,7 @@ extension DSFQuickActionBar {
 			stack.identifier = NSUserInterfaceItemIdentifier("primary")
 			stack.translatesAutoresizingMaskIntoConstraints = false
 			stack.orientation = .vertical
-			stack.edgeInsets = NSEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+			stack.edgeInsets = NSEdgeInsets(top: 12, left: 11, bottom: 12, right: 11)
 
 			stack.setContentHuggingPriority(.required, for: .horizontal)
 			stack.setContentHuggingPriority(.required, for: .vertical)
@@ -82,14 +82,14 @@ extension DSFQuickActionBar {
 		}()
 
 		// The edit label
-		internal lazy var editLabel: NSTextField = {
-			let t = NSTextField()
+		internal lazy var editLabel: DFSTextField = {
+			let t = DFSTextField()
 			t.translatesAutoresizingMaskIntoConstraints = false
 			t.wantsLayer = true
 			t.drawsBackground = false
 			t.isBordered = false
 			t.isBezeled = false
-			t.font = NSFont.systemFont(ofSize: 24, weight: .light)
+			t.font = NSFont.systemFont(ofSize: 26, weight: .regular)
 			t.textColor = NSColor.textColor
 			t.alignment = .left
 			t.isEnabled = true
@@ -116,12 +116,15 @@ extension DSFQuickActionBar {
 			imageView.translatesAutoresizingMaskIntoConstraints = false
 			imageView.setContentHuggingPriority(.defaultLow, for: .horizontal)
 			imageView.setContentHuggingPriority(.defaultLow, for: .vertical)
-			imageView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: 24))
-			imageView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 28))
+			imageView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: 27))
+			imageView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .height, multiplier: 1, constant: 27))
 			imageView.imageScaling = .scaleProportionallyUpOrDown
 
 			let image = self.quickActionBar.searchImage!
 			imageView.image = image
+            if #available(macOS 10.14, *) {
+                imageView.contentTintColor = NSColor.secondaryLabelColor
+            }
 			return imageView
 		}()
 
@@ -148,7 +151,7 @@ extension DSFQuickActionBar {
 			stack.setContentHuggingPriority(.defaultHigh, for: .horizontal)
 			stack.setContentHuggingPriority(.defaultHigh, for: .vertical)
 
-			stack.setHuggingPriority(.required, for: .vertical)
+			stack.setHuggingPriority(.defaultHigh, for: .vertical)
 
 			return stack
 		}()
@@ -200,8 +203,8 @@ internal extension DSFQuickActionBar.Window {
 			self.styleMask = [.titled, .fullSizeContentView, .borderless]
 
 			// Make sure the user cannot move the window
-			self.isMovable = false
-			self.isMovableByWindowBackground = false
+			self.isMovable = true
+			self.isMovableByWindowBackground = true
 
 			primaryStack.wantsLayer = true
 			let baseLayer = primaryStack.layer!
@@ -209,9 +212,16 @@ internal extension DSFQuickActionBar.Window {
 			baseLayer.cornerRadius = 10
 			baseLayer.backgroundColor = NSColor.windowBackgroundColor.cgColor
 			baseLayer.borderColor = NSColor.controlColor.cgColor
-			baseLayer.borderWidth = 1
+			baseLayer.borderWidth = 0
 
 			primaryStack.needsLayout = true
+            if #available(macOS 10.14, *) {
+                let blurView = NSVisualEffectView(frame: CGRect(x: 0, y: 0, width: self.primaryStack.frame.width, height: self.primaryStack.frame.height*10))
+                blurView.blendingMode = .behindWindow
+                blurView.material = .menu
+                blurView.state = .active
+                primaryStack.addSubview(blurView)
+            }
 
 			primaryStack.addArrangedSubview(searchStack)
 
@@ -271,7 +281,7 @@ extension DSFQuickActionBar.Window {
 		// Note we don't need to lock here, as we are guaranteed to be on the main thread
 		self.cancelCurrentSearchTask()
 
-		// If we have no content source, there's nothing left to do
+//		 If we have no content source, there's nothing left to do
 		guard let contentSource = self.quickActionBar.contentSource else { return }
 
 		let currentSearch = self.editLabel.stringValue
@@ -279,7 +289,7 @@ extension DSFQuickActionBar.Window {
 
 		self.asyncActivityIndicator.startAnimation(self)
 
-		// Create a search task
+//		 Create a search task
 		let itemsTask = DSFQuickActionBar.SearchTask(searchTerm: currentSearch) { [weak self] results in
 			DispatchQueue.main.async { [weak self] in
 				guard let `self` = self else { return }
@@ -288,17 +298,16 @@ extension DSFQuickActionBar.Window {
 			}
 		}
 
-		// Store the current search so that we can cancel it if needed
+//		 Store the current search so that we can cancel it if needed
 		self.currentSearchRequestTask = itemsTask
 
-		// And finally ask the content source to retrieve an array of identifiers that match
+//		 And finally ask the content source to retrieve an array of identifiers that match
 		contentSource.quickActionBar(self.quickActionBar, itemsForSearchTermTask: itemsTask)
 	}
 
 	private func updateResults(currentSearch: String, results: [AnyHashable]) {
 		// Must always be called on the main thread
 		precondition(Thread.isMainThread)
-
 		self.asyncActivityIndicator.stopAnimation(self)
 		self.results.currentSearchTerm = currentSearch
 		self.results.identifiers = results
