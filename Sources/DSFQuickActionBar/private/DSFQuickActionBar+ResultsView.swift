@@ -110,6 +110,8 @@ extension DSFQuickActionBar.ResultsView {
 		scrollView.documentView = tableView
 		scrollView.hasHorizontalScroller = false
 		scrollView.hasVerticalScroller = true
+		// Set the background of the vertical scroller to transparent
+		scrollView.verticalScroller = TransparentBackgroundScroller()
 
 		// Embedded table view
 		tableView.dataSource = self

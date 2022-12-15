@@ -83,4 +83,8 @@ internal final class DSFTextField: NSTextField {
 		}
 		return super.performKeyEquivalent(with: event)
 	}
+
+	override var allowsVibrancy: Bool {
+		return true
+	}
 }

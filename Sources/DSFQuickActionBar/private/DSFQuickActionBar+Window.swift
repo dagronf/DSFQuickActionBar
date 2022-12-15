@@ -186,14 +186,26 @@ internal extension DSFQuickActionBar.Window {
 
 		// Make sure we adopt the effective appearance
 		UsingEffectiveAppearance(ofWindow: parentWindow) {
+
+			/// The background view for the window
+			let content = DSFPrimaryRoundedView()
+			self.contentView = content
+
+			/// Primary view content
+			primaryStack.wantsLayer = true
 			primaryStack.translatesAutoresizingMaskIntoConstraints = false
 			primaryStack.setContentHuggingPriority(.required, for: .horizontal)
 			primaryStack.setContentHuggingPriority(.required, for: .vertical)
 
-			self.contentView = primaryStack
+			// Attach the stack into the window view
+			content.addSubview(primaryStack)
+			content.addConstraint(NSLayoutConstraint(item: primaryStack, attribute: .leading, relatedBy: .equal, toItem: content, attribute: .leading, multiplier: 1, constant: 0))
+			content.addConstraint(NSLayoutConstraint(item: primaryStack, attribute: .top, relatedBy: .equal, toItem: content, attribute: .top, multiplier: 1, constant: 0))
+			content.addConstraint(NSLayoutConstraint(item: primaryStack, attribute: .trailing, relatedBy: .equal, toItem: content, attribute: .trailing, multiplier: 1, constant: 0))
+			content.addConstraint(NSLayoutConstraint(item: primaryStack, attribute: .bottom, relatedBy: .equal, toItem: content, attribute: .bottom, multiplier: 1, constant: 0))
 
 			self.backgroundColor = NSColor.clear
-			self.isOpaque = true
+			self.isOpaque = false
 
 			// We set 'titled' here AND 'borderless' as it seems to give us a bolder
 			// drop shadow than just 'borderless' itself. How odd!
@@ -203,20 +215,13 @@ internal extension DSFQuickActionBar.Window {
 			self.isMovable = false
 			self.isMovableByWindowBackground = false
 
-			primaryStack.wantsLayer = true
-			let baseLayer = primaryStack.layer!
-
-			baseLayer.cornerRadius = 10
-			baseLayer.backgroundColor = NSColor.windowBackgroundColor.cgColor
-			baseLayer.borderColor = NSColor.controlColor.cgColor
-			baseLayer.borderWidth = 1
-
-			primaryStack.needsLayout = true
-
+			// Add the search stack (the search text field and any imagery)
 			primaryStack.addArrangedSubview(searchStack)
 
 			results.isHidden = true
 			primaryStack.addArrangedSubview(results)
+
+			primaryStack.needsLayout = true
 
 			editLabel.delegate = self
 
