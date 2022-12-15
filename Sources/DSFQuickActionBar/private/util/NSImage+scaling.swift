@@ -75,8 +75,8 @@ public extension NSImage {
 
 		representation.size = targetSize
 
-		let xOffset: Double = (targetSize.width - scaledImageSize.width) / 2.0
-		let yOffset: Double = (targetSize.height - scaledImageSize.height) / 2.0
+		let xOffset = (targetSize.width - scaledImageSize.width) / 2.0
+		let yOffset = (targetSize.height - scaledImageSize.height) / 2.0
 
 		// Write the image into the new image rep
 		do {

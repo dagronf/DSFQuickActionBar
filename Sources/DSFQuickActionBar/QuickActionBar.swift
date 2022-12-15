@@ -152,13 +152,18 @@ public extension QuickActionBar {
 			// Set the required click count
 			quickAction.requiredClickCount = requiredClickCount
 
+			let barWidth: CGFloat = {
+				if let w = self.barWidth { return CGFloat(w) }
+				return DSFQuickActionBar.DefaultWidth
+			}()
+			
 			// We need to present the quick action bar
 			quickAction.present(
 				parentWindow: (self.location == .window) ? nsView.window : nil,
 				placeholderText: self.placeholderText,
 				searchImage: self.searchImage ?? DSFQuickActionBar.DefaultImage,
 				initialSearchText: self.currentSearchText,
-				width: self.barWidth ?? DSFQuickActionBar.DefaultWidth,
+				width: barWidth,
 				showKeyboardShortcuts: self.showKeyboardShortcuts,
 				didClose: {
 					// Make sure we close the quick action var
