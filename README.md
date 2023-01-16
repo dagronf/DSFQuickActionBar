@@ -4,8 +4,8 @@ A spotlight-inspired quick action bar for macOS.
 
 <p align="center">
     <img src="https://img.shields.io/github/v/tag/dagronf/DSFQuickActionBar" />
-    <img src="https://img.shields.io/badge/macOS-10.11+-red" />
-    <img src="https://img.shields.io/badge/Swift-5.3-orange.svg" />
+    <img src="https://img.shields.io/badge/macOS-10.13+-red" />
+    <img src="https://img.shields.io/badge/Swift-5.4-orange.svg" />
     <img src="https://img.shields.io/badge/SwiftUI-2.0+-green" />
     <a href="https://swift.org/package-manager">
         <img src="https://img.shields.io/badge/spm-compatible-brightgreen.svg?style=flat" alt="Swift Package Manager" /></a>
