@@ -13,8 +13,8 @@ class DSFAppKitBuilderCell: DSFAppKitBuilderView, DSFAppKitBuilderViewHandler {
 	init(filter: Filter, currentSearch: String) {
 		self.filter = filter
 		super.init()
-		
-		self.builder = self
+
+		self.element = body
 	}
 	
 	required init?(coder: NSCoder) {
@@ -38,5 +38,5 @@ class DSFAppKitBuilderCell: DSFAppKitBuilderView, DSFAppKitBuilderViewHandler {
 				.horizontalPriorities(compressionResistance: 100)
 		}
 	}
-	.edgeInsets(top: 4, left: 8, bottom: 4, right: 8)
+	.edgeInsets(top: 4, left: 0, bottom: 4, right: 0)
 }

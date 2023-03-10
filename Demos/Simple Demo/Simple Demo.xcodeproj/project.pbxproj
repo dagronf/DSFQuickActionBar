@@ -1212,7 +1212,7 @@
 			repositoryURL = "https://github.com/dagronf/DSFAppKitBuilder";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 9.0.0;
+				minimumVersion = 11.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
