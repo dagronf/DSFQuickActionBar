@@ -23,9 +23,14 @@ let package = Package(
 		// Targets can depend on other targets in this package, and on products in packages this package depends on.
 		.target(
 			name: "DSFQuickActionBar",
-			dependencies: ["DSFAppearanceManager"]),
+			dependencies: ["DSFAppearanceManager"],
+			resources: [
+				.copy("PrivacyInfo.xcprivacy"),
+			]
+		),
 		.testTarget(
 			name: "DSFQuickActionBarTests",
-			dependencies: ["DSFQuickActionBar"]),
+			dependencies: ["DSFQuickActionBar"]
+		),
 	]
 )
